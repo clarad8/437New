@@ -23,23 +23,4 @@ const firebaseApp = initializeApp(firebaseConfig);
 
 const db = getFirestore()
 
-
-
-// collection ref
-const tutorCollections = collection(db, 'tutors')
-
-// get collection data
-getDocs(tutorCollections)
-  .then(snapshot => {
-    // console.log(snapshot.docs)
-    let tutors = []
-    snapshot.docs.forEach(doc => {
-      tutors.push({ ...doc.data(), id: doc.id })
-    })
-    console.log(tutors)
-  })
-  .catch(err => {
-    console.log(err.message)
-  })
-
-  export { db };
+export { db };
