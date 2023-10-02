@@ -1,0 +1,45 @@
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, getDocs } from 'firebase/firestore';
+
+// import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyCNOAjUYkua74UfbJgxhNCD_SL5TritGiA",
+  authDomain: "cse437-400716.firebaseapp.com",
+  projectId: "cse437-400716",
+  storageBucket: "cse437-400716.appspot.com",
+  messagingSenderId: "532689698948",
+  appId: "1:532689698948:web:1b264f2cce5880b03ac2d1",
+  measurementId: "G-2KNEQPMGHT"
+};
+
+// Initialize fireBase
+const firebaseApp = initializeApp(firebaseConfig);
+
+const db = getFirestore()
+
+
+
+// collection ref
+const tutorCollections = collection(db, 'tutors')
+
+// get collection data
+getDocs(tutorCollections)
+  .then(snapshot => {
+    // console.log(snapshot.docs)
+    let tutors = []
+    snapshot.docs.forEach(doc => {
+      tutors.push({ ...doc.data(), id: doc.id })
+    })
+    console.log(tutors)
+  })
+  .catch(err => {
+    console.log(err.message)
+  })
+
+  export { db };
