@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import getTutors from '/Users/liaseo/Desktop/cse437/437New/my-app/src/app/tutors';
+import getTutors from '../../src/app/tutors';
 
 interface Tutor {
   id: string;

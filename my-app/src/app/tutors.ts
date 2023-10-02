@@ -1,6 +1,6 @@
 import { collection, getDocs, onSnapshot } from 'firebase/firestore';
-import app from '/Users/liaseo/Desktop/cse437/437New/my-app/src/app/page'; 
-import { db } from '/Users/liaseo/Desktop/cse437/437New/my-app/index';
+import app from '../app/page'; 
+import { db } from '../../index';
 
 interface Tutor {
   id: string;

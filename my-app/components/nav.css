@@ -1,0 +1,29 @@
+nav {
+    background-color: #d3d1d1;
+    color: white;
+    padding: 10px 0;
+  }
+  
+  ul {
+    list-style: none;
+    display: flex;
+    justify-content: space-around;
+    padding: 0;
+  }
+  
+  li {
+    margin: 0;
+    padding: 0;
+  }
+  
+  a {
+    text-decoration: none;
+    color: rgb(73, 72, 72);
+    font-weight: bold;
+    transition: color 0.2s;
+  }
+  
+  
+  a:hover {
+    color: #232df0; /* Change to your desired hover color */
+  }
