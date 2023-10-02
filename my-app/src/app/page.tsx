@@ -44,6 +44,18 @@ export default function Home() {
       fetchTutorsData();
   }, []); // Empty dependency array ensures the effect runs once after the initial render
 
+
+  useEffect(() => {
+    // Filter tutors based on the selected class when it changes
+    if (selectedClass) {
+      const filteredTutors = tutors.filter((tutor) => tutor.class === selectedClass);
+      setTutors(filteredTutors);
+    } 
+  }, [selectedClass, tutors]);
+  
+
+  
+
   return (
     <>
       <div>{session?.data?.user?.name}</div>
@@ -59,6 +71,7 @@ export default function Home() {
             </option>
           ))}
         </select>
+       {/* <button onClick={loadTutorsForCourse}>Load Tutors for Course</button> */}
       </div>
 
       <h2>Tutors:</h2>

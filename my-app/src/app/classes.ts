@@ -1,5 +1,5 @@
 import { collection, getDocs, query, doc } from 'firebase/firestore';
-import { db } from '/Users/claradu/Desktop/1/437New/my-app/index';
+import { db } from '/Users/liaseo/Desktop/cse437/437New/my-app/index';
 
 interface ClassName {
   id: string;
