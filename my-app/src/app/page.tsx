@@ -13,7 +13,7 @@ interface Tutor {
   id: string;
   name: string;
   class: string;
-  contact: string;
+  zoom: string;
 }
 
 interface classes {
@@ -62,6 +62,14 @@ export default function Home() {
       <NavBar></NavBar>
       <div>{session?.data?.user?.name}</div>
 
+      <h1>Welcome to Find a Tutor!</h1>
+      <p>
+        Whether you're struggling with a particular subject or looking to enhance your understanding of a class, our platform is here to connect you with experienced tutors who can help you succeed.
+      </p>
+      <p>
+        Explore our diverse range of tutors, filter by subjects or classes, and find the perfect match to support your learning journey.
+      </p>
+      
       <h2>Select Class:</h2>
       <div className="dropdown">
         <select

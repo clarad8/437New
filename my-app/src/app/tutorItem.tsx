@@ -8,10 +8,10 @@ interface Tutor {
   id: string;
   name: string;
   class: string;
-  contact: string;
+  zoom: string;
 }
 
-const TutorItem: React.FC<Tutor> = ({ id, name, class: classNumber, contact }) => {
+const TutorItem: React.FC<Tutor> = ({ id, name, class: classNumber, zoom }) => {
  
   const handleButtonClick = () => {
     //const router = useRouter(); 
@@ -36,7 +36,6 @@ const TutorItem: React.FC<Tutor> = ({ id, name, class: classNumber, contact }) =
           </Link>
           
           <p>Class Name: {classNumber}</p>
-          <p>Contact: {contact}</p>
         </div>
     );
 };

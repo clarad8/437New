@@ -8,7 +8,7 @@ interface Tutor {
   id: string;
   name: string;
   class: string;
-  contact: string;
+  zoom: string;
 }
 
 const TutorProfile = () => {
@@ -45,7 +45,8 @@ const TutorProfile = () => {
         <h1>Tutor Profile</h1>
         <h2>{tutor.name}</h2>
         <p>Class Name: {tutor.class}</p>
-        <p>Contact: {tutor.contact}</p>
+        {/* make zoom link clickable */}
+        <p>Zoom: <a href={tutor.zoom} target="_blank" rel="noopener noreferrer">{tutor.zoom}</a></p> 
       </div>
     );
   };

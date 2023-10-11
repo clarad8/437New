@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import getClassNames from "../src/app/classes";
 import { Alert, Button } from "@mui/material";
+import { useRouter } from 'next/router';
 
 interface classes {
   id: string;
@@ -13,11 +14,16 @@ interface classes {
 }
 export default function TutorCourse() {
   //const session = useSession();
-
+  const router = useRouter();
   const [classes, setClasses] = useState<classes[]>([]);
   const [selectedClass, setSelectedClass] = useState<string>("");
   const [addedCourse, setAddedCourse] = useState(false);
   const [alert, setAlert] = useState(false);
+  
+  const handleGoBack = () => {
+    router.back(); // Navigates back to the previous page
+  };
+
   useEffect(() => {
     const fetchClassData = async () => {
       try {
@@ -45,6 +51,7 @@ export default function TutorCourse() {
       <NavBar></NavBar>
 
       <h1>Tutor a Course</h1>
+      <button onClick={handleGoBack}>Go Back</button>
       <h2>Select Class to Tutor:</h2>
       {alert ? (
         <Alert severity="error">Please select a class!</Alert>
