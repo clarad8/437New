@@ -14,29 +14,24 @@ interface Tutor {
 const TutorItem: React.FC<Tutor> = ({ id, name, class: classNumber, zoom }) => {
  
   const handleButtonClick = () => {
-    //const router = useRouter(); 
     console.log(`Tutor ${id} clicked!`);
-    // Navigate to the tutor's profile page with their ID as a parameter
-    //router.push(`/tutors/${id}`);
+    
   };
 
   
-    // return (
-    //   <button className="tutor-box" onClick={handleButtonClick}>
-    //     <h3>{name}</h3>
-    //     <p>Class Name: {classNumber}</p>
-    //     <p>Contact: {contact}</p>
-    //   </button>
-    // );
     return (
-      
-        <div className="tutor-box">
-          <Link href={`/tutors/${id}`}>
+
+
+      <Link href={`/tutors/${id}`} className="tutor-box">
+
           <h3>{name}</h3>
-          </Link>
           
+         
           <p>Class Name: {classNumber}</p>
-        </div>
+        
+      </Link>
+      
+
     );
 };
 

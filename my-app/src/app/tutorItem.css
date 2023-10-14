@@ -16,7 +16,12 @@
     cursor: pointer; 
   }
   
+
   .tutor-box:hover {
     /* light gray when hovered */
     background-color: #d3d3d3; 
+  }
+
+  .tutor-box p {
+    font-style:normal;
   }

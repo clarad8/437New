@@ -39,6 +39,10 @@ const TutorProfile = () => {
     if (!tutor) {
       return <div>Loading...</div>;
     }
+
+    const handleGoBack = () => {
+      router.back(); // Navigates back to the previous page
+    };
   
     return (
       <div>
@@ -47,6 +51,7 @@ const TutorProfile = () => {
         <p>Class Name: {tutor.class}</p>
         {/* make zoom link clickable */}
         <p>Zoom: <a href={tutor.zoom} target="_blank" rel="noopener noreferrer">{tutor.zoom}</a></p> 
+        <button onClick={handleGoBack}>Go Back</button>
       </div>
     );
   };
