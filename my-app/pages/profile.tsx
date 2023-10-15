@@ -16,6 +16,10 @@ export default function Profile() {
     <div>
       <NavBar></NavBar>
       <h1>Profile</h1>
+      <h3>Name: </h3>
+      <h3>Year: </h3>
+      <h3>Classes You've Taken: </h3>
+      <h3>Classes You're In Currently: </h3>
       <button onClick={handleGoBack}>Go Back</button>
 
     </div>

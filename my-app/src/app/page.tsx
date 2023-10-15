@@ -9,6 +9,7 @@ import Button from "@mui/material";
 import NavBar from "@/components/nav";
 import SessionProvider from "./SessionProvider";
 
+
 interface Tutor {
   id: string;
   name: string;
@@ -22,40 +23,52 @@ interface classes {
 }
 
 export default function Home() {
-  //<SessionProvider></SessionProvider>
+
   const session = useSession();
+  const [allTutors, setAllTutors] = useState<Tutor[]>([]);
   const [tutors, setTutors] = useState<Tutor[]>([]);
   const [classes, setClasses] = useState<classes[]>([]);
   const [selectedClass, setSelectedClass] = useState<string>(""); // State to hold selected class
 
+  const fetchTutors = async () => {
+    const tutorsData = await getTutors();
+    setAllTutors(tutorsData);
+    setTutors(tutorsData);
+  };
+
   useEffect(() => {
-    const fetchTutorsData = async () => {
+    const fetchClasses = async () => {
       try {
-        const tutorsData = await getTutors();
         const classNamesData = await getClassNames();
-
-        console.log("Fetched tutors data:", tutorsData); // Log fetched data
         console.log("Fetched class names:", classNamesData);
-
-        setTutors(tutorsData);
         setClasses(classNamesData);
       } catch (error: any) {
         console.error("Error fetching data:", error.message);
       }
     };
 
-    fetchTutorsData();
-  }, []); // Empty dependency array ensures the effect runs once after the initial render
+    fetchTutors();
+    fetchClasses();
+  }, []);
 
   useEffect(() => {
     // Filter tutors based on the selected class when it changes
     if (selectedClass) {
-      const filteredTutors = tutors.filter(
-        (tutor) => tutor.class === selectedClass
-      );
-      setTutors(filteredTutors);
+      if (selectedClass === "Show All Tutors") {
+        setTutors(allTutors);
+      } else {
+        const filteredTutors = allTutors.filter(
+          (tutor) => tutor.class === selectedClass
+        );
+        setTutors(filteredTutors);
+      }
     }
-  }, [selectedClass, tutors]);
+  }, [selectedClass, allTutors]);
+
+
+  const resetPage = () => {
+    setTutors(allTutors);
+  };
 
   return (
     <>
@@ -77,6 +90,8 @@ export default function Home() {
           onChange={(e) => setSelectedClass(e.target.value)}
         >
           <option value="">Select a class</option>
+          <option value="Show All Tutors">Show All Tutors</option>
+
           {classes.map((classItem) => (
             <option key={classItem.id} value={classItem.name}>
               {classItem.name}
