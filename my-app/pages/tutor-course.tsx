@@ -21,7 +21,7 @@ export default function TutorCourse() {
   const [alert, setAlert] = useState(false);
   
   const handleGoBack = () => {
-    router.back(); // Navigates back to the previous page
+    router.push("/");   //go back to home page
   };
 
   useEffect(() => {
