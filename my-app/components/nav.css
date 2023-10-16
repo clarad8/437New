@@ -5,12 +5,17 @@ nav {
   }
   .nav div{
     height:6vh;
-    width:25vh;
+    width:30vh;
+    text-align: center;
+    text-justify: auto;
 
   }
   .nav div.active {
-    background-color: #86baf3; 
+    background-color: #c9e4f5; 
     color: #fff; 
+  }
+  .nav div:hover {
+    background-color: #a9a9a9; 
   }
   ul {
     list-style: none;
@@ -19,8 +24,8 @@ nav {
     padding: 0;
   }
   
-  li {
-    margin: 0;
+  .nav li {
+    margin-top: 1vh;
     padding: 0;
   }
   
@@ -31,7 +36,7 @@ nav {
     transition: color 0.2s;
   }
   
-  
+  /*
   a:hover {
     color: #232df0; 
-  }
+  }*/

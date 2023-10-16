@@ -2,7 +2,7 @@ import { useState } from "react";
 import NavBar from "@/components/nav";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Alert, Button } from "@mui/material";
+import { Alert, Button, TextField } from "@mui/material";
 import getClassNames from "../src/app/classes";
 import { db } from "../index";
 import { collection, getDocs, query, doc } from "firebase/firestore";
@@ -64,21 +64,31 @@ const Profile: React.FC = (
   return (
     <div>
       <NavBar></NavBar>
+      <br></br>
+      <Button variant="contained" color="primary" onClick={handleGoBack}>
+        Back
+      </Button>
       <h1>Profile</h1>
       {isEditing ? (
         <>
           <p>Name: </p>
-          <input
+          <TextField
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            id="outlined-basic"
+            variant="outlined"
           />
+
           <p>Grade: </p>
-          <input
+          <TextField
             type="text"
             value={year}
             onChange={(e) => setYear(e.target.value)}
+            id="outlined-basic"
+            variant="outlined"
           />
+
           <p></p>
           <p>Classes You've Taken:</p>
           {classes.map((classItem) => (
@@ -133,8 +143,10 @@ const Profile: React.FC = (
           <h3>Year: {year}</h3>
           <h3>Classes You've Taken: {takenClasses.join(", ")}</h3>
           <h3>Classes You Are Tutoring: {tutoredClasses.join(", ")}</h3>
-          <button onClick={handleGoBack}>Go Back</button>
-          <button onClick={handleEdit}>Edit Info</button>
+
+          <Button variant="contained" color="primary" onClick={handleEdit}>
+            Edit
+          </Button>
         </>
       )}
     </div>
