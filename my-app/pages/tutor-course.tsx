@@ -1,12 +1,13 @@
 "use client";
 
-import NavBar from "@/components/nav";
+import NavBar from "./../components/nav";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import getClassNames from "../src/app/classes";
 import { Alert, Button } from "@mui/material";
 import { useRouter } from 'next/router';
+import React from "react";
 
 interface classes {
   id: string;
