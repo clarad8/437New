@@ -1,11 +1,12 @@
 import { useState } from "react";
-import NavBar from "@/components/nav";
+import NavBar from "../components/nav";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Alert, Button, TextField } from "@mui/material";
 import getClassNames from "../src/app/classes";
 import { db } from "../index";
 import { collection, getDocs, query, doc } from "firebase/firestore";
+import React from "react";
 
 /*interface ProfileProps {
   passUserInfo: {
@@ -90,7 +91,7 @@ const Profile: React.FC = (
           />
 
           <p></p>
-          <p>Classes You've Taken:</p>
+          <p>Classes You&apos;ve Taken:</p>
           {classes.map((classItem) => (
             <div key={classItem.id}>
               <label>
@@ -141,7 +142,7 @@ const Profile: React.FC = (
         <>
           <h3>Name: {name}</h3>
           <h3>Year: {year}</h3>
-          <h3>Classes You've Taken: {takenClasses.join(", ")}</h3>
+          <h3>Classes You&apos;ve Taken: {takenClasses.join(", ")}</h3>
           <h3>Classes You Are Tutoring: {tutoredClasses.join(", ")}</h3>
 
           <Button variant="contained" color="primary" onClick={handleEdit}>
