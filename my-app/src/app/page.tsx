@@ -8,7 +8,7 @@ import Link from "next/link";
 import Button from "@mui/material";
 import NavBar from "@/components/nav";
 import SessionProvider from "./SessionProvider";
-
+import Profile from "@/pages/profile";
 
 interface Tutor {
   id: string;
@@ -23,17 +23,17 @@ interface classes {
 }
 
 export default function Home() {
-
   const session = useSession();
   const [allTutors, setAllTutors] = useState<Tutor[]>([]);
   const [tutors, setTutors] = useState<Tutor[]>([]);
   const [classes, setClasses] = useState<classes[]>([]);
   const [selectedClass, setSelectedClass] = useState<string>(""); // State to hold selected class
-
+  const [username, setUserName] = useState<string>("");
   const fetchTutors = async () => {
     const tutorsData = await getTutors();
     setAllTutors(tutorsData);
     setTutors(tutorsData);
+    setUserName(session?.data?.user?.name ?? ""); //need to fix this
   };
 
   useEffect(() => {
@@ -65,24 +65,25 @@ export default function Home() {
     }
   }, [selectedClass, allTutors]);
 
-
   const resetPage = () => {
     setTutors(allTutors);
   };
-
   return (
     <>
       <NavBar></NavBar>
-      <div>{session?.data?.user?.name}</div>
+      <div>{/*username*/ session?.data?.user?.name}</div>
 
       <h1>Welcome to Find a Tutor!</h1>
       <p>
-        Whether you're struggling with a particular subject or looking to enhance your understanding of a class, our platform is here to connect you with experienced tutors who can help you succeed.
+        Whether you're struggling with a particular subject or looking to
+        enhance your understanding of a class, our platform is here to connect
+        you with experienced tutors who can help you succeed.
       </p>
       <p>
-        Explore our diverse range of tutors, filter by subjects or classes, and find the perfect match to support your learning journey.
+        Explore our diverse range of tutors, filter by subjects or classes, and
+        find the perfect match to support your learning journey.
       </p>
-      
+
       <h2>Select Class:</h2>
       <div className="dropdown">
         <select
@@ -106,6 +107,7 @@ export default function Home() {
         {tutors.map((tutor) => (
           <TutorItem key={tutor.id} {...tutor} />
         ))}
+        {/*<Profile passUserInfo={session?.data?.user?.name}></Profile>*/}
       </div>
     </>
   );

@@ -1,10 +1,17 @@
-import { Button } from "@mui/material";
-import Link from "next/link";
+import { Button, Link } from "@mui/material";
 import { signOut, useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 import "./nav.css";
-import { useEffect } from "react";
+
+const student = true;
 
 export default function NavBar() {
+  const [activeTab, setActiveTab] = useState("");
+  function getActiveTabFromURL() {
+    const pathname = window.location.pathname;
+    const parts = pathname.split("/").filter((part) => part !== "");
+    return parts[parts.length - 1] || "";
+  }
   function redirect() {
     const delay = 3000;
 
@@ -12,18 +19,32 @@ export default function NavBar() {
       window.location.href = "/";
     }, delay);
   }
+  useEffect(() => {
+    setActiveTab(getActiveTabFromURL());
+  }, []);
   return (
     <nav className="nav">
       <ul>
-        <li>
-          <Link href="/profile">Profile</Link>
-        </li>
-        <li>
-          <Link href="/">Find a Tutor</Link>
-        </li>
-        <li>
-          <Link href="/tutor-course">Tutor a Course</Link>
-        </li>
+        <div className={activeTab === "profile" ? "active" : ""}>
+          <li onClick={() => setActiveTab("profile")}>
+            <Link href="/profile">Profile</Link>
+          </li>
+        </div>
+
+        {student ? (
+          <div className={activeTab === "" ? "active" : ""}>
+            <li onClick={() => setActiveTab("")}>
+              <Link href="/">Find a Tutor</Link>
+            </li>
+          </div>
+        ) : (
+          <div className={activeTab === "tutor-course" ? "active" : ""}>
+            <li onClick={() => setActiveTab("tutor-course")}>
+              <Link href="/tutor-course">Tutor a Course</Link>
+            </li>
+          </div>
+        )}
+
         <li>
           <Button
             onClick={() => {

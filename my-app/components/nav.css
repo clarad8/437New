@@ -3,7 +3,15 @@ nav {
     color: white;
     padding: 10px 0;
   }
-  
+  .nav div{
+    height:6vh;
+    width:25vh;
+
+  }
+  .nav div.active {
+    background-color: #86baf3; 
+    color: #fff; 
+  }
   ul {
     list-style: none;
     display: flex;
@@ -25,5 +33,5 @@ nav {
   
   
   a:hover {
-    color: #232df0; /* Change to your desired hover color */
+    color: #232df0; 
   }

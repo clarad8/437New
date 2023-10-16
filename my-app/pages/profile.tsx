@@ -1,55 +1,61 @@
-import { useState } from 'react';
-import NavBar from '@/components/nav';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { useState } from "react";
+import NavBar from "@/components/nav";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import { Alert, Button } from "@mui/material";
 import getClassNames from "../src/app/classes";
-import { db } from '../index';
-import { collection, getDocs, query, doc } from 'firebase/firestore';
+import { db } from "../index";
+import { collection, getDocs, query, doc } from "firebase/firestore";
 
-
+/*interface ProfileProps {
+  passUserInfo: {
+    name: any;
+  };
+}*/
 interface classes {
   id: string;
   name: string;
 }
 
-export default function Profile() {
+const Profile: React.FC = (
+  {
+    /*passUserInfo*/
+  }
+) => {
   const router = useRouter();
-
-  const [name, setName] = useState(' '); 
-  const [year, setYear] = useState(' '); 
-  const [takenClasses, setTakenClasses] = useState<string[]>([]); 
-  const [tutoredClasses, setTutoredClasses] = useState<string[]>([]); 
+  //console.log(passUserInfo);
+  const [name, setName] = useState(" ");
+  const [year, setYear] = useState(" ");
+  const [takenClasses, setTakenClasses] = useState<string[]>([]);
+  const [tutoredClasses, setTutoredClasses] = useState<string[]>([]);
   const [isEditing, setIsEditing] = useState(false);
   const [classes, setClasses] = useState<classes[]>([]);
-    
+  //console.log(passUserInfo);
 
-  
   const handleGoBack = () => {
-    router.push("/");   //go back to home page
+    router.push("/"); //go back to home page
   };
 
   const handleEdit = () => {
     setIsEditing(true);
   };
 
-
   const handleSaveChanges = () => {
-    setIsEditing(false); 
+    setIsEditing(false);
   };
-  
+
   const fetchClasses = async () => {
     try {
       const classNamesData = await getClassNames();
-      console.log("Fetched class names:", classNamesData);
+      // console.log("Fetched class names:", classNamesData);
       setClasses(classNamesData);
     } catch (error: any) {
       console.error("Error fetching data:", error.message);
     }
   };
 
-  //  NEED TO SAVE INFO INTO DATABASE!!!!! 
-  //  right now this code only shows the new info that user has put in on the webpage for a moment 
+  //  NEED TO SAVE INFO INTO DATABASE!!!!!
+  //  right now this code only shows the new info that user has put in on the webpage for a moment
   //  at some point we need to save the info so that the info will show again when user comes back to profile page or logs in again
   //  i made a new collection called users which currently has the fields name and grade
 
@@ -62,9 +68,17 @@ export default function Profile() {
       {isEditing ? (
         <>
           <p>Name: </p>
-          <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
           <p>Grade: </p>
-          <input type="text" value={year} onChange={(e) => setYear(e.target.value)} />
+          <input
+            type="text"
+            value={year}
+            onChange={(e) => setYear(e.target.value)}
+          />
           <p></p>
           <p>Classes You've Taken:</p>
           {classes.map((classItem) => (
@@ -112,12 +126,9 @@ export default function Profile() {
           ))}
           <p> </p>
           <button onClick={handleSaveChanges}>Save Changes</button>
-
         </>
-      ):(
+      ) : (
         <>
-         
-
           <h3>Name: {name}</h3>
           <h3>Year: {year}</h3>
           <h3>Classes You've Taken: {takenClasses.join(", ")}</h3>
@@ -126,8 +137,7 @@ export default function Profile() {
           <button onClick={handleEdit}>Edit Info</button>
         </>
       )}
-      
-      
     </div>
   );
-}
+};
+export default Profile;
