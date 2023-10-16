@@ -30,8 +30,10 @@ export default function NavBar() {
     <nav className="nav">
       <ul>
         <div className={activeTab === "profile" ? "active" : ""}>
-          <li onClick={() => setActiveTab("profile")}>
-            <Link href="/profile">Profile</Link>
+          <li>
+            <Link onClick={() => setActiveTab("profile")} href="/profile">
+              Profile
+            </Link>
           </li>
         </div>
 
@@ -40,14 +42,21 @@ export default function NavBar() {
 
         {userType === "student" ? (
           <div className={activeTab === "" ? "active" : ""}>
-            <li onClick={() => setActiveTab("")}>
-              <Link href="/">Find a Tutor</Link>
+            <li>
+              <Link onClick={() => setActiveTab("")} href="/">
+                Find a Tutor
+              </Link>
             </li>
           </div>
         ) : (
           <div className={activeTab === "tutor-course" ? "active" : ""}>
-            <li onClick={() => setActiveTab("tutor-course")}>
-              <Link href="/tutor-course">Tutor a Course</Link>
+            <li>
+              <Link
+                onClick={() => setActiveTab("tutor-course")}
+                href="/tutor-course"
+              >
+                Tutor a Course
+              </Link>
             </li>
           </div>
         )}
