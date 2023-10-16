@@ -10,6 +10,7 @@ import "./nav.css";
 
 export default function NavBar() {
   const [activeTab, setActiveTab] = useState("");
+  const userType = "student";
   function getActiveTabFromURL() {
     const pathname = window.location.pathname;
     const parts = pathname.split("/").filter((part) => part !== "");
@@ -36,8 +37,8 @@ export default function NavBar() {
 
         {/* this code makes "find a tutor" appear if the user is a student and "tutor course" appear if user is tutor 
         should change it back to commented out version when it works */}
-        
-        {/* {userType === "student" ? (
+
+        {userType === "student" ? (
           <div className={activeTab === "" ? "active" : ""}>
             <li onClick={() => setActiveTab("")}>
               <Link href="/">Find a Tutor</Link>
@@ -49,8 +50,8 @@ export default function NavBar() {
               <Link href="/tutor-course">Tutor a Course</Link>
             </li>
           </div>
-        )} */}
-
+        )}
+        {/*
         
         <div className={activeTab === "" ? "active" : ""}>
             <li onClick={() => setActiveTab("")}>
@@ -64,7 +65,7 @@ export default function NavBar() {
             </li>
           </div>
 
-
+      */}
         <li>
           <Button
             onClick={() => {
