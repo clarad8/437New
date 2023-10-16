@@ -3,7 +3,10 @@ import { signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import "./nav.css";
 
-const student = true;
+// const student = true;
+// type NavBarProps = {
+//   userType:string;
+// };
 
 export default function NavBar() {
   const [activeTab, setActiveTab] = useState("");
@@ -31,7 +34,10 @@ export default function NavBar() {
           </li>
         </div>
 
-        {student ? (
+        {/* this code makes "find a tutor" appear if the user is a student and "tutor course" appear if user is tutor 
+        should change it back to commented out version when it works */}
+        
+        {/* {userType === "student" ? (
           <div className={activeTab === "" ? "active" : ""}>
             <li onClick={() => setActiveTab("")}>
               <Link href="/">Find a Tutor</Link>
@@ -43,7 +49,21 @@ export default function NavBar() {
               <Link href="/tutor-course">Tutor a Course</Link>
             </li>
           </div>
-        )}
+        )} */}
+
+        
+        <div className={activeTab === "" ? "active" : ""}>
+            <li onClick={() => setActiveTab("")}>
+              <Link href="/">Find a Tutor</Link>
+            </li>
+        </div>
+
+        <div className={activeTab === "tutor-course" ? "active" : ""}>
+            <li onClick={() => setActiveTab("tutor-course")}>
+              <Link href="/tutor-course">Tutor a Course</Link>
+            </li>
+          </div>
+
 
         <li>
           <Button

@@ -41,7 +41,12 @@ export default function TutorCourse() {
   }, []);
   const addTutor = async () => {
     if (selectedClass != "") {
+
       console.log(selectedClass);
+      setAddedCourse(true);
+      setTimeout(() => {
+        setAddedCourse(false); // Remove the success message after 3 seconds
+      }, 3000);
     } else {
       setAlert(true);
     }
@@ -53,11 +58,14 @@ export default function TutorCourse() {
       <h1>Tutor a Course</h1>
       <button onClick={handleGoBack}>Go Back</button>
       <h2>Select Class to Tutor:</h2>
-      {alert ? (
+      
+       {alert ? (
         <Alert severity="error">Please select a class!</Alert>
-      ) : (
-        <div></div>
-      )}
+        ) : null}
+      {addedCourse ? (
+        <Alert severity="success">Successfully added {selectedClass}</Alert>
+      ) : null}
+      
       <div className="dropdown">
         <select
           value={selectedClass}

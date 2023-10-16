@@ -3,10 +3,14 @@ import { Box, Button, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import NavBar from "@/components/nav";
+
+
+
 
 export default function Login() {
   const { data: session, status } = useSession();
-  const [userType, setUserType] = useState("student");
+  const [userType, setUserType] = useState("");
 
   useEffect(() => {
     let logoutTimer: NodeJS.Timeout;
@@ -34,14 +38,22 @@ export default function Login() {
   }, [status]);
 
   const handleLogin = () => {
-    if (userType === "student") {
-      signIn("google");
-    } else if (userType === "tutor") {
-      //*need to bring this back later for redirecting student/tutor to different home page */
-      // router.push('/tutor-login');
-      window.location.href = "/tutor-course";
-    }
+    // if (userType === "student") {
+    //   signIn("google");
+    // } else if (userType === "tutor") {
+    //   //*need to bring this back later for redirecting student/tutor to different home page */
+    //   // router.push('/tutor-login');
+    //   signIn("google");
+
+    //   window.location.href = "/tutor-course";
+    // }
+
+    //log in through google for both student & tutor for now
+    signIn("google");
+    
   };
+
+ 
 
   return (
     <div style={{ textAlign: "center", padding: "20px" }}>
@@ -70,6 +82,7 @@ export default function Login() {
             color="primary"
             onClick={() => {
               setUserType("student");
+              // <NavBar userType={userType} />
               handleLogin();
             }}
           >
@@ -91,6 +104,8 @@ export default function Login() {
             color="primary"
             onClick={() => {
               setUserType("tutor");
+              // <NavBar userType={userType} />
+
               handleLogin();
             }}
           >
@@ -99,5 +114,7 @@ export default function Login() {
         </div>
       </Box>
     </div>
+   
+
   );
 }
