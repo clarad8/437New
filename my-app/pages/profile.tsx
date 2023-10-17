@@ -32,6 +32,7 @@ const Profile: React.FC = (
   const [isEditing, setIsEditing] = useState(false);
   const [classes, setClasses] = useState<classes[]>([]);
   //console.log(passUserInfo);
+  const [isOnline, setIsOnline] = useState(false);
 
   const handleGoBack = () => {
     router.push("/"); //go back to home page
@@ -66,8 +67,34 @@ const Profile: React.FC = (
     <div>
       <NavBar></NavBar>
       <br></br>
-      
+
       <h1>Profile</h1>
+
+      <div>
+        <h3>Online Status:</h3>
+        <label>
+          <input
+            type="radio"
+            value="online"
+            checked={isOnline}
+            onChange={() => setIsOnline(true)}
+          />
+          Online
+        </label>
+        <label>
+          <input
+            type="radio"
+            value="offline"
+            checked={!isOnline}
+            onChange={() => setIsOnline(false)}
+          />
+          Offline
+        </label>
+      </div>
+      <div>
+        <h3>Your Status: {isOnline ? 'Online' : 'Offline'}</h3>
+      </div>
+
       {isEditing ? (
         <>
           <p>Name: </p>
@@ -138,16 +165,16 @@ const Profile: React.FC = (
         </>
       ) : (
         <>
-          <h3 style={{display: 'inline'}}>Name: </h3>
+          <h3 style={{ display: 'inline' }}>Name: </h3>
           <span>{name}</span>
           <p></p>
-          <h3 style={{display: 'inline'}}>Year: </h3>
+          <h3 style={{ display: 'inline' }}>Year: </h3>
           <span>{year}</span>
           <p></p>
-          <h3 style={{display: 'inline'}}>Classes You&apos;ve Taken: </h3>
+          <h3 style={{ display: 'inline' }}>Classes You&apos;ve Taken: </h3>
           <span>{takenClasses.join(", ")}</span>
           <p></p>
-          <h3 style={{display: 'inline'}}>Classes You Are Tutoring: </h3>
+          <h3 style={{ display: 'inline' }}>Classes You Are Tutoring: </h3>
           <span>{tutoredClasses.join(", ")}</span>
           <p></p>
 
