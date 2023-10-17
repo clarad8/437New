@@ -40,7 +40,7 @@ export default function NavBar() {
         {/* this code makes "find a tutor" appear if the user is a student and "tutor course" appear if user is tutor 
         should change it back to commented out version when it works */}
 
-        {userType === "student" ? (
+        {/* {userType === "student" ? (
           <div className={activeTab === "" ? "active" : ""}>
             <li>
               <Link onClick={() => setActiveTab("")} href="/">
@@ -59,8 +59,8 @@ export default function NavBar() {
               </Link>
             </li>
           </div>
-        )}
-        {/*
+        )} */}
+        
         
         <div className={activeTab === "" ? "active" : ""}>
             <li onClick={() => setActiveTab("")}>
@@ -74,7 +74,7 @@ export default function NavBar() {
             </li>
           </div>
 
-      */}
+     
         <li>
           <Button
             onClick={() => {

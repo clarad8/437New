@@ -66,9 +66,7 @@ const Profile: React.FC = (
     <div>
       <NavBar></NavBar>
       <br></br>
-      <Button variant="contained" color="primary" onClick={handleGoBack}>
-        Back
-      </Button>
+      
       <h1>Profile</h1>
       {isEditing ? (
         <>
@@ -140,13 +138,24 @@ const Profile: React.FC = (
         </>
       ) : (
         <>
-          <h3>Name: {name}</h3>
-          <h3>Year: {year}</h3>
-          <h3>Classes You&apos;ve Taken: {takenClasses.join(", ")}</h3>
-          <h3>Classes You Are Tutoring: {tutoredClasses.join(", ")}</h3>
+          <h3 style={{display: 'inline'}}>Name: </h3>
+          <span>{name}</span>
+          <p></p>
+          <h3 style={{display: 'inline'}}>Year: </h3>
+          <span>{year}</span>
+          <p></p>
+          <h3 style={{display: 'inline'}}>Classes You&apos;ve Taken: </h3>
+          <span>{takenClasses.join(", ")}</span>
+          <p></p>
+          <h3 style={{display: 'inline'}}>Classes You Are Tutoring: </h3>
+          <span>{tutoredClasses.join(", ")}</span>
+          <p></p>
 
           <Button variant="contained" color="primary" onClick={handleEdit}>
             Edit
+          </Button>
+          <Button variant="contained" color="primary" onClick={handleGoBack}>
+            Back
           </Button>
         </>
       )}
