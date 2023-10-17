@@ -71,7 +71,7 @@ const Profile: React.FC = (
       <h1>Profile</h1>
 
       <div>
-        <h3>Online Status:</h3>
+        <h3>Online Status: (please select "online" if you are currently available to tutor)</h3>
         <label>
           <input
             type="radio"
