@@ -1,59 +1,60 @@
 "use client";
-import { Box, Button, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
-import { signIn, signOut, useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import NavBar from "@/components/nav";
+import React, { useState, useEffect } from "react";
+import { Typography, Box, Button, Modal } from "@mui/material";
+import { signInWithPopup, GoogleAuthProvider, sendEmailVerification, onAuthStateChanged } from "firebase/auth";
+import { auth } from "/Users/claradu/Desktop/1/437New/my-app/index";
+
+const googleProvider = new GoogleAuthProvider();
+
+const Login = () => {
+
+  const [isVerificationPopupOpen, setVerificationPopupOpen] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
+
+  const handleGoogleSignIn = () => {
+    signInWithPopup(auth, googleProvider)
+      .then((userCredential) => {
+        const user = userCredential.user;
+
+        if (user) {
+          // Send email verification
+          sendEmailVerification(user)
+            .then(() => {
+              // Email verification sent
+              const message = `Email verification sent to: ${user.email}`;
+              setPopupMessage(message);
+              console.log("Email verification sent to:", user.email);
+              setVerificationPopupOpen(true);
+            })
+            .catch((error) => {
+              console.error("Error sending email verification:", error.message);
+            });
 
 
-
-
-export default function Login() {
-  const { data: session, status } = useSession();
-  const [userType, setUserType] = useState("");
-
-  useEffect(() => {
-    let logoutTimer: NodeJS.Timeout;
-
-    const resetLogoutTimer = () => {
-      clearTimeout(logoutTimer);
-      logoutTimer = setTimeout(() => {
-        signOut(); // Logout the user after the 15 min
-      }, 15 * 60 * 1000);
-    };
-
-    if (status === "authenticated") {
-      resetLogoutTimer();
-
-      // Reset the timer whenever there is user activity
-      window.addEventListener("mousemove", resetLogoutTimer);
-      window.addEventListener("keydown", resetLogoutTimer);
-    }
-
-    return () => {
-      clearTimeout(logoutTimer);
-      window.removeEventListener("mousemove", resetLogoutTimer);
-      window.removeEventListener("keydown", resetLogoutTimer);
-    };
-  }, [status]);
-
-  const handleLogin = () => {
-    // if (userType === "student") {
-    //   signIn("google");
-    // } else if (userType === "tutor") {
-    //   //*need to bring this back later for redirecting student/tutor to different home page */
-    //   // router.push('/tutor-login');
-    //   signIn("google");
-
-    //   window.location.href = "/tutor-course";
-    // }
-
-    //log in through google for both student & tutor for now
-    signIn("google");
-    
+          console.log("Google User:", user);
+          // router.push("/Users/claradu/Desktop/1/437New/my-app/src/app/page");
+        }
+        else {
+          console.error("User is not signed in.");
+        }
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.error(`Error during Google sign-in: ${errorCode} - ${errorMessage}`);
+      });
   };
 
- 
+
+  const handleStudentLogin = () => {
+    // Handle student login logic here
+  };
+
+
+  const handleTutorLogin = () => {
+    // Handle tutor login logic here
+  };
+
 
   return (
     <div style={{ textAlign: "center", padding: "20px" }}>
@@ -67,54 +68,32 @@ export default function Login() {
         alignItems="center"
         style={{ backgroundColor: "#f0f0f0" }}
       >
-        <div
-          style={{
-            backgroundColor: "#c9e4f5",
-            padding: "20px",
-            borderRadius: "10px",
-          }}
-        >
-          <Typography variant="h4" gutterBottom>
-            Looking to find a tutor?
-          </Typography>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => {
-              setUserType("student");
-              // <NavBar userType={userType} />
-              handleLogin();
-            }}
-          >
-            Student Login
-          </Button>
-        </div>
-        <div
-          style={{
-            backgroundColor: "#c9e4f5",
-            padding: "20px",
-            borderRadius: "10px",
-          }}
-        >
-          <Typography variant="h4" gutterBottom>
-            Tutor a student
-          </Typography>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => {
-              setUserType("tutor");
-              // <NavBar userType={userType} />
-
-              handleLogin();
-            }}
-          >
-            Tutor Login
+        {/* ... other components */}
+        <div style={{ marginTop: "20px" }}>
+          <Button variant="contained" color="primary" onClick={handleGoogleSignIn}>
+            Sign in with Google
           </Button>
         </div>
       </Box>
+      <Modal open={isVerificationPopupOpen} onClose={() => setVerificationPopupOpen(false)}>
+        <div style={{
+          position: 'absolute',
+          width: 400,
+          backgroundColor: 'white',
+          padding: 20,
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+        }}>
+          <Typography variant="h6">{popupMessage}</Typography>
+          <Button variant="contained" color="primary" onClick={() => setVerificationPopupOpen(false)}>
+            Close
+          </Button>
+        </div>
+      </Modal>
     </div>
-   
-
   );
-}
+};
+
+
+export default Login;
