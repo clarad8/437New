@@ -53,7 +53,8 @@ const Login = () => {
               });
           } else {
             signIn("google");
-            console.log("User is already verified. Signing in with Google.");
+            console.log("User is already verified. Signing in with Google."); 
+            // use local storage -> store user email then login
           }
 
           console.log("Google User:", user);
@@ -102,7 +103,7 @@ const Login = () => {
           </Button>
         </div>
       </Box>
-      {/* <Modal
+      <Modal
         open={isVerificationPopupOpen}
         onClose={() => setVerificationPopupOpen(false)}
       >
@@ -126,7 +127,7 @@ const Login = () => {
             Close
           </Button>
         </div>
-      </Modal> */}
+      </Modal>
     </div>
   );
 };
