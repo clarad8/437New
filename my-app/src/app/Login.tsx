@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import { Typography, Box, Button, Modal } from "@mui/material";
 import { signInWithPopup, GoogleAuthProvider, sendEmailVerification, onAuthStateChanged } from "firebase/auth";
 import { auth } from "/Users/claradu/Desktop/1/437New/my-app/index";
+import { signIn, signOut, useSession } from "next-auth/react";
+
 
 const googleProvider = new GoogleAuthProvider();
 
@@ -18,7 +20,8 @@ const Login = () => {
 
         if (user) {
           // Send email verification
-          sendEmailVerification(user)
+          // if(!user.emailVerified) {
+            sendEmailVerification(user)
             .then(() => {
               // Email verification sent
               const message = `Email verification sent to: ${user.email}`;
@@ -30,6 +33,11 @@ const Login = () => {
               console.error("Error sending email verification:", error.message);
             });
 
+          // }
+          // else {
+            signIn("google");
+            console.log("User is already verified. Signing in with Google.");
+          // }
 
           console.log("Google User:", user);
           // router.push("/Users/claradu/Desktop/1/437New/my-app/src/app/page");

@@ -27,3 +27,5 @@ const db = getFirestore(firebaseApp);
 
 export { db, auth };
 
+
+

@@ -5,9 +5,9 @@ import "./globals.css";
 import SessionProvider from "./SessionProvider";
 import Login from "./Login";
 import Home from "./page";
+import RegistrationForm from ""; // Import your RegistrationForm component
 import TutorCourse from "../../pages/tutor-course";
 import React from "react";
-// const inter = Inter({ subsets: ["latin"] });
 
 export default async function RootLayout({
   children,
@@ -33,3 +33,7 @@ export default async function RootLayout({
     </html>
   );
 }
+
+
+
+
