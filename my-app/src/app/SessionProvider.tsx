@@ -10,7 +10,7 @@ type Props = {
 
 export default function SessionProvider({children, session}: Props) {
   return (
-    <Provider>
+    <Provider children={undefined}>
       {children}
     </Provider>
   )
