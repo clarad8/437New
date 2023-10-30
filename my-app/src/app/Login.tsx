@@ -102,7 +102,7 @@ const Login = () => {
           </Button>
         </div>
       </Box>
-      <Modal
+      {/* <Modal
         open={isVerificationPopupOpen}
         onClose={() => setVerificationPopupOpen(false)}
       >
@@ -126,7 +126,7 @@ const Login = () => {
             Close
           </Button>
         </div>
-      </Modal>
+      </Modal> */}
     </div>
   );
 };
