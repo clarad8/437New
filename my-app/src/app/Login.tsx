@@ -9,7 +9,6 @@ import { signIn, signOut, useSession } from "next-auth/react";
 const googleProvider = new GoogleAuthProvider();
 
 const Login = () => {
-
   const [isVerificationPopupOpen, setVerificationPopupOpen] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
 
@@ -41,28 +40,26 @@ const Login = () => {
 
           console.log("Google User:", user);
           // router.push("/Users/claradu/Desktop/1/437New/my-app/src/app/page");
-        }
-        else {
+        } else {
           console.error("User is not signed in.");
         }
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        console.error(`Error during Google sign-in: ${errorCode} - ${errorMessage}`);
+        console.error(
+          `Error during Google sign-in: ${errorCode} - ${errorMessage}`
+        );
       });
   };
-
 
   const handleStudentLogin = () => {
     // Handle student login logic here
   };
 
-
   const handleTutorLogin = () => {
     // Handle tutor login logic here
   };
-
 
   return (
     <div style={{ textAlign: "center", padding: "20px" }}>
@@ -78,23 +75,36 @@ const Login = () => {
       >
         {/* ... other components */}
         <div style={{ marginTop: "20px" }}>
-          <Button variant="contained" color="primary" onClick={handleGoogleSignIn}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleGoogleSignIn}
+          >
             Sign in with Google
           </Button>
         </div>
       </Box>
-      <Modal open={isVerificationPopupOpen} onClose={() => setVerificationPopupOpen(false)}>
-        <div style={{
-          position: 'absolute',
-          width: 400,
-          backgroundColor: 'white',
-          padding: 20,
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-        }}>
+      <Modal
+        open={isVerificationPopupOpen}
+        onClose={() => setVerificationPopupOpen(false)}
+      >
+        <div
+          style={{
+            position: "absolute",
+            width: 400,
+            backgroundColor: "white",
+            padding: 20,
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+          }}
+        >
           <Typography variant="h6">{popupMessage}</Typography>
-          <Button variant="contained" color="primary" onClick={() => setVerificationPopupOpen(false)}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => setVerificationPopupOpen(false)}
+          >
             Close
           </Button>
         </div>
@@ -102,6 +112,5 @@ const Login = () => {
     </div>
   );
 };
-
 
 export default Login;
