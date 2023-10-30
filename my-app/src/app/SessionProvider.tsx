@@ -1,7 +1,7 @@
 'use client';
 import { Session } from 'next-auth';
 import { SessionProvider as Provider } from 'next-auth/react';
-import React from 'react';
+import React, { Children } from 'react';
 
 type Props = {
   children: React.ReactNode;
@@ -10,7 +10,7 @@ type Props = {
 
 export default function SessionProvider({children, session}: Props) {
   return (
-    <Provider children={undefined}>
+    <Provider children={children}>
       {children}
     </Provider>
   )

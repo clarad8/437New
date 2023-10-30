@@ -17,7 +17,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body>
-        <SessionProvider session={session} children={undefined}>
+        <SessionProvider session={session} children={children}>
           {!session ? (
             <Login />
           ) : (
