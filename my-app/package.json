@@ -18,6 +18,8 @@
     "node-fetch": "^3.3.2",
     "react": "latest",
     "react-dom": "latest",
+    "react-router": "^6.17.0",
+    "react-router-dom": "^6.17.0",
     "webpack": "^5.89.0"
   },
   "devDependencies": {

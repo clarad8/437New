@@ -7,7 +7,7 @@ import getClassNames from "./classes";
 import Link from "next/link";
 import Button from "@mui/material";
 import NavBar from "../../components/nav";
-import SessionProvider from "./SessionProvider";
+// import SessionProvider from "./SessionProvider";
 import Profile from "../../pages/profile";
 import React from "react";
 
