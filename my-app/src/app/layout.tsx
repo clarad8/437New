@@ -2,7 +2,7 @@ import { authOptions } from "../../pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth";
 import "./globals.css";
 // import { Inter } from "next/";
-import SessionProvider from "./SessionProvider";
+import { SessionProvider as Provider } from 'next-auth/react';
 import Login from "./Login";
 import Home from "./page";
 import TutorCourse from "../../pages/tutor-course";
@@ -17,7 +17,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body>
-        <SessionProvider session={session} children={children}>
+        <Provider session={session}>
           {!session ? (
             <Login />
           ) : (
@@ -27,7 +27,7 @@ export default async function RootLayout({
               <TutorCourse />
             </>*/
           )}
-        </SessionProvider>
+        </Provider>
       </body>
     </html>
   );
