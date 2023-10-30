@@ -4,7 +4,7 @@ import { Typography, Box, Button, Modal } from "@mui/material";
 import { signInWithPopup, GoogleAuthProvider, sendEmailVerification, onAuthStateChanged } from "firebase/auth";
 import { auth } from "/Users/claradu/Desktop/1/437New/my-app/index";
 import { signIn, signOut, useSession } from "next-auth/react";
-import { db } from "/Users/claradu/Desktop/1/437New/my-app/index";
+// import { db } from "/Users/claradu/Desktop/1/437New/my-app/index";
 import { doc, setDoc, getFirestore } from "firebase/firestore";
 
 
@@ -132,3 +132,4 @@ const Login = () => {
 };
 
 export default Login;
+
