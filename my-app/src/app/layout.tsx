@@ -37,25 +37,33 @@ import "./globals.css";
 import Login from "./Login";
 import Home from "./page";
 import React from "react";
-import { SessionProvider as Provider } from 'next-auth/react';
+import { SessionProvider as Provider, useSession } from 'next-auth/react';
 import Link from "next/link";
+import { Session } from "inspector";
 
-export default function RootLayout(){
+export default function RootLayout() {
+  const { data: session } = useSession();
 
-  // Render the client-side components directly, no Server Components
-  return (
-    <div>
-      <Provider>
-        {/* Include a dynamic route for rendering your pages */}
-        <main>
-          <Login />
-          <Home />
-          {/* You can use dynamic routes if needed */}
-          {/* <TutorCourse /> */}
-        </main>
-      </Provider>
-    </div>
-  );
+  if (session) {
+    // Render your component when the session is available
+    return (
+      <div>
+        <nav>
+          <Link href="/">Login</Link>
+          <Link href="/home">Home</Link>
+        </nav>
+        <Provider session={session}>
+          <main>
+            <Login />
+            <Home />
+          </main>
+        </Provider>
+      </div>
+    );
+  } else {
+    // You can show a loading indicator or a message while waiting for the session
+    return <div>Loading...</div>;
+  }
 }
 
 
