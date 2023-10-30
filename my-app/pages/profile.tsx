@@ -7,6 +7,8 @@ import getClassNames from "../src/app/classes";
 import { db } from "../index";
 import { collection, getDocs, query, doc } from "firebase/firestore";
 import React from "react";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+
 
 /*interface ProfileProps {
   passUserInfo: {
@@ -27,12 +29,41 @@ const Profile: React.FC = (
   //console.log(passUserInfo);
   const [name, setName] = useState(" ");
   const [year, setYear] = useState(" ");
+  const [email, setEmail] = useState(" ");
   const [takenClasses, setTakenClasses] = useState<string[]>([]);
   const [tutoredClasses, setTutoredClasses] = useState<string[]>([]);
   const [isEditing, setIsEditing] = useState(false);
   const [classes, setClasses] = useState<classes[]>([]);
   //console.log(passUserInfo);
   const [isOnline, setIsOnline] = useState(false);
+  const auth = getAuth();
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      const displayName = user.displayName;
+      const uid = user.uid;
+      const email = user.email;
+      if(displayName != null)
+      {
+        setName(displayName);
+      }
+      if(email != null)
+      {
+        setEmail(email);
+      }
+      
+    
+
+    console.log(uid);
+    console.log(email);
+    console.log(name);
+
+  } else {
+
+    //user is not signed in
+    router.push("/");
+  }
+});
 
   const handleGoBack = () => {
     router.push("/"); //go back to home page
@@ -106,6 +137,16 @@ const Profile: React.FC = (
             variant="outlined"
           />
 
+          <p>Email: </p>
+          <TextField
+            type="text"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            id="outlined-basic"
+            variant="outlined"
+          />
+
+
           <p>Grade: </p>
           <TextField
             type="text"
@@ -167,6 +208,9 @@ const Profile: React.FC = (
         <>
           <h3 style={{ display: 'inline' }}>Name: </h3>
           <span>{name}</span>
+          <p></p>
+          <h3 style={{ display: 'inline' }}>Email: </h3>
+          <span>{email}</span>
           <p></p>
           <h3 style={{ display: 'inline' }}>Year: </h3>
           <span>{year}</span>

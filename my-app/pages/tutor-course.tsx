@@ -57,6 +57,8 @@ export default function TutorCourse() {
       <NavBar></NavBar>
 
       <h1>Tutor a Course</h1>
+      <p>Thank you for signing up to tutor! Please use the dropdown menu below to select the class you would like to tutor for. </p>
+      <p><b>Please note: There will be a 1-week period of time for us to verify and approve your eligibility to tutor for the course before you can start. </b>You will be able to track the status of the course in your profile page.</p> 
       <button onClick={handleGoBack}>Go Back</button>
       <h2>Select Class to Tutor:</h2>
       
@@ -64,7 +66,7 @@ export default function TutorCourse() {
         <Alert severity="error">Please select a class!</Alert>
         ) : null}
       {addedCourse ? (
-        <Alert severity="success">Successfully added {selectedClass}</Alert>
+        <Alert severity="success">Request submitted for {selectedClass}</Alert>
       ) : null}
       
       <div className="dropdown">

@@ -24,7 +24,7 @@ const Login = () => {
         if (user) {
           // Send email verification
           console.log(user.emailVerified);
-          if (!verified) {
+          if (!user.emailVerified) {
             verified = true;
             sendEmailVerification(user)
               .then(() => {
@@ -43,7 +43,10 @@ const Login = () => {
                 const userDocRef = doc(db, "users", user.uid);
         
                 // Update the verified status in the user's document
-                return setDoc(userDocRef, { verified: true }, { merge: true });
+                return setDoc(userDocRef, { 
+                  verified: true,
+                  name: user.displayName,
+                  email: user.email }, { merge: true });
               })
               .then(() => {
                 console.log("User verified status updated in Firestore.");
