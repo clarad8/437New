@@ -2,7 +2,17 @@ import { useState } from "react";
 import NavBar from "../components/nav";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Alert, Button, TextField } from "@mui/material";
+import {
+  Alert,
+  Button,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Radio,
+  RadioGroup,
+  TextField,
+  Typography,
+} from "@mui/material";
 import getClassNames from "../src/app/classes";
 import { db } from "../index";
 import { collection, getDocs, query, doc } from "firebase/firestore";
@@ -67,37 +77,49 @@ const Profile: React.FC = (
     <div>
       <NavBar></NavBar>
       <br></br>
-
-      <h1>Profile</h1>
+      <Typography variant="h4" gutterBottom>
+        Profile
+      </Typography>
 
       <div>
-        <h3>Online Status: (please select "online" if you are currently available to tutor)</h3>
-        <label>
-          <input
-            type="radio"
-            value="online"
-            checked={isOnline}
-            onChange={() => setIsOnline(true)}
-          />
-          Online
-        </label>
-        <label>
-          <input
-            type="radio"
-            value="offline"
-            checked={!isOnline}
-            onChange={() => setIsOnline(false)}
-          />
-          Offline
-        </label>
+        <Typography variant="h5" gutterBottom>
+          Online Status: (please select "online" if you are currently available
+          to tutor)
+        </Typography>
+        <FormControl>
+          <RadioGroup
+            aria-labelledby="demo-row-radio-buttons-group-label"
+            defaultValue="offline"
+            name="radio-buttons-group"
+          >
+            <FormControlLabel
+              value="online"
+              checked={isOnline}
+              onChange={() => setIsOnline(true)}
+              control={<Radio />}
+              label="Online"
+            />
+            <FormControlLabel
+              value="offline"
+              checked={!isOnline}
+              onChange={() => setIsOnline(false)}
+              control={<Radio />}
+              label="Offline"
+            />
+          </RadioGroup>
+        </FormControl>
       </div>
       <div>
-        <h3>Your Status: {isOnline ? 'Online' : 'Offline'}</h3>
+        <Typography variant="body1" gutterBottom>
+          Your Status: {isOnline ? "Online" : "Offline"}
+        </Typography>
       </div>
 
       {isEditing ? (
         <>
-          <p>Name: </p>
+          <Typography variant="body1" gutterBottom>
+            Name:
+          </Typography>
           <TextField
             type="text"
             value={name}
@@ -106,7 +128,9 @@ const Profile: React.FC = (
             variant="outlined"
           />
 
-          <p>Grade: </p>
+          <Typography variant="body1" gutterBottom>
+            Grade:
+          </Typography>
           <TextField
             type="text"
             value={year}
@@ -116,7 +140,9 @@ const Profile: React.FC = (
           />
 
           <p></p>
-          <p>Classes You&apos;ve Taken:</p>
+          <Typography variant="body1" gutterBottom>
+            Classes You&apos;ve Taken:
+          </Typography>
           {classes.map((classItem) => (
             <div key={classItem.id}>
               <label>
@@ -138,7 +164,9 @@ const Profile: React.FC = (
               </label>
             </div>
           ))}
-          <p>Classes You Are Tutoring:</p>
+          <Typography variant="body1" gutterBottom>
+            Classes You&apos;re Tutoring:
+          </Typography>
           {classes.map((classItem) => (
             <div key={classItem.id}>
               <label>
@@ -161,20 +189,51 @@ const Profile: React.FC = (
             </div>
           ))}
           <p> </p>
-          <button onClick={handleSaveChanges}>Save Changes</button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleSaveChanges}
+          >
+            Save Changes
+          </Button>
         </>
       ) : (
         <>
-          <h3 style={{ display: 'inline' }}>Name: </h3>
+          <Typography
+            style={{ display: "inline" }}
+            variant="body1"
+            gutterBottom
+          >
+            Name:
+          </Typography>
+
           <span>{name}</span>
           <p></p>
-          <h3 style={{ display: 'inline' }}>Year: </h3>
+          <Typography
+            style={{ display: "inline" }}
+            variant="body1"
+            gutterBottom
+          >
+            Year:
+          </Typography>
           <span>{year}</span>
           <p></p>
-          <h3 style={{ display: 'inline' }}>Classes You&apos;ve Taken: </h3>
+          <Typography
+            style={{ display: "inline" }}
+            variant="body1"
+            gutterBottom
+          >
+            Classes You&apos;ve Taken:
+          </Typography>
           <span>{takenClasses.join(", ")}</span>
           <p></p>
-          <h3 style={{ display: 'inline' }}>Classes You Are Tutoring: </h3>
+          <Typography
+            style={{ display: "inline" }}
+            variant="body1"
+            gutterBottom
+          >
+            Classes You&apos;re Tutoring:
+          </Typography>
           <span>{tutoredClasses.join(", ")}</span>
           <p></p>
 

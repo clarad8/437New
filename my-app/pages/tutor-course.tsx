@@ -5,8 +5,16 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import getClassNames from "../src/app/classes";
-import { Alert, Button } from "@mui/material";
-import { useRouter } from 'next/router';
+import {
+  Alert,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Typography,
+} from "@mui/material";
+import { useRouter } from "next/router";
 import React from "react";
 
 interface classes {
@@ -20,9 +28,9 @@ export default function TutorCourse() {
   const [selectedClass, setSelectedClass] = useState<string>("");
   const [addedCourse, setAddedCourse] = useState(false);
   const [alert, setAlert] = useState(false);
-  
+
   const handleGoBack = () => {
-    router.push("/");   //go back to home page
+    router.push("/"); //go back to home page
   };
 
   useEffect(() => {
@@ -42,7 +50,6 @@ export default function TutorCourse() {
   }, []);
   const addTutor = async () => {
     if (selectedClass != "") {
-
       console.log(selectedClass);
       setAddedCourse(true);
       setTimeout(() => {
@@ -56,31 +63,42 @@ export default function TutorCourse() {
     <div>
       <NavBar></NavBar>
 
-      <h1>Tutor a Course</h1>
-      <button onClick={handleGoBack}>Go Back</button>
-      <h2>Select Class to Tutor:</h2>
-      
-       {alert ? (
-        <Alert severity="error">Please select a class!</Alert>
-        ) : null}
+      <Typography variant="h4" gutterBottom>
+        Tutor a Course
+      </Typography>
+      <Button variant="contained" onClick={handleGoBack}>
+        Go Back
+      </Button>
+      <br></br>
+      <Typography variant="h5" gutterBottom>
+        Select Class to Tutor:{" "}
+      </Typography>
+
+      {alert ? <Alert severity="error">Please select a class!</Alert> : null}
       {addedCourse ? (
         <Alert severity="success">Successfully added {selectedClass}</Alert>
       ) : null}
-      
-      <div className="dropdown">
-        <select
+      <FormControl sx={{ m: 1, minWidth: 180 }} size="small">
+        <InputLabel id="demo-simple-select-label">Select a class</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
           value={selectedClass}
+          label="Select a class"
           onChange={(e) => setSelectedClass(e.target.value)}
         >
-          <option value="">Select a class</option>
+          <MenuItem value="Show All Tutors">Show All Tutors</MenuItem>
           {classes.map((classItem) => (
-            <option key={classItem.id} value={classItem.name}>
+            <MenuItem key={classItem.id} value={classItem.name}>
               {classItem.name}
-            </option>
+            </MenuItem>
           ))}
-        </select>
-        <Button onClick={addTutor}>Submit</Button>
-      </div>
+        </Select>
+      </FormControl>
+
+      <Button variant="contained" onClick={addTutor}>
+        Submit
+      </Button>
     </div>
   );
 }

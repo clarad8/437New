@@ -1,4 +1,4 @@
-import { Button, Link } from "@mui/material";
+import { Button, Link, Typography } from "@mui/material";
 import { signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import "./nav.css";
@@ -32,7 +32,9 @@ export default function NavBar() {
         <div className={activeTab === "profile" ? "active" : ""}>
           <li>
             <Link onClick={() => setActiveTab("profile")} href="/profile">
-              Profile
+              <Typography variant="h5" gutterBottom>
+                Profile
+              </Typography>
             </Link>
           </li>
         </div>
@@ -60,31 +62,41 @@ export default function NavBar() {
             </li>
           </div>
         )} */}
-        
-        
+
         <div className={activeTab === "" ? "active" : ""}>
-            <li onClick={() => setActiveTab("")}>
-              <Link href="/">Find a Tutor</Link>
-            </li>
+          <li onClick={() => setActiveTab("")}>
+            <Link href="/">
+              {" "}
+              <Typography variant="h5" gutterBottom>
+                Find a Tutor
+              </Typography>
+            </Link>
+          </li>
         </div>
 
         <div className={activeTab === "tutor-course" ? "active" : ""}>
-            <li onClick={() => setActiveTab("tutor-course")}>
-              <Link href="/tutor-course">Tutor a Course</Link>
-            </li>
-          </div>
-
-     
-        <li>
-          <Button
+          <li onClick={() => setActiveTab("tutor-course")}>
+            <Link href="/tutor-course">
+              <Typography variant="h5" gutterBottom>
+                Tutor a course
+              </Typography>
+            </Link>
+          </li>
+        </div>
+        <div>
+          <li
             onClick={() => {
               signOut();
               redirect();
             }}
           >
-            Logout
-          </Button>
-        </li>
+            <Link href="">
+              <Typography variant="h5" gutterBottom>
+                Logout
+              </Typography>
+            </Link>
+          </li>
+        </div>
       </ul>
     </nav>
   );
