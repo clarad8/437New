@@ -4,7 +4,11 @@ import { Typography, Box, Button, Modal } from "@mui/material";
 import { signInWithPopup, GoogleAuthProvider, sendEmailVerification, onAuthStateChanged } from "firebase/auth";
 import { auth } from "/Users/claradu/Desktop/1/437New/my-app/index";
 import { signIn, signOut, useSession } from "next-auth/react";
+import { db } from "/Users/claradu/Desktop/1/437New/my-app/index";
+import { doc, setDoc, getFirestore } from "firebase/firestore";
 
+
+let verified:boolean = false;
 
 const googleProvider = new GoogleAuthProvider();
 
@@ -19,24 +23,38 @@ const Login = () => {
 
         if (user) {
           // Send email verification
-          // if(!user.emailVerified) {
+          console.log(user.emailVerified);
+          if (!verified) {
+            verified = true;
             sendEmailVerification(user)
-            .then(() => {
-              // Email verification sent
-              const message = `Email verification sent to: ${user.email}`;
-              setPopupMessage(message);
-              console.log("Email verification sent to:", user.email);
-              setVerificationPopupOpen(true);
-            })
-            .catch((error) => {
-              console.error("Error sending email verification:", error.message);
-            });
-
-          // }
-          // else {
+              .then(() => {
+                // Email verification sent
+                const message = `Email verification sent to: ${user.email}`;
+                setPopupMessage(message);
+                console.log("Email verification sent to:", user.email);
+                setVerificationPopupOpen(true);
+        
+                // Resolve the promise to indicate successful email verification
+                return Promise.resolve(user);
+              })
+              .then((user) => {
+                // Get a reference to the user's document in Firestore
+                const db = getFirestore();
+                const userDocRef = doc(db, "users", user.uid);
+        
+                // Update the verified status in the user's document
+                return setDoc(userDocRef, { verified: true }, { merge: true });
+              })
+              .then(() => {
+                console.log("User verified status updated in Firestore.");
+              })
+              .catch((error) => {
+                console.error("Error sending email verification:", error.message);
+              });
+          } else {
             signIn("google");
             console.log("User is already verified. Signing in with Google.");
-          // }
+          }
 
           console.log("Google User:", user);
           // router.push("/Users/claradu/Desktop/1/437New/my-app/src/app/page");
