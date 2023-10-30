@@ -1,6 +1,6 @@
 // firebaseUtils.js
 
-import { db } from "/Users/claradu/Desktop/1/437New/my-app/index"; // Import your Firebase configuration
+import { db } from "../../index"; // Import your Firebase configuration
 import { collection, doc, getDoc, setDoc } from "firebase/firestore";
 
 
