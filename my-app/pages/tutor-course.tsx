@@ -1,7 +1,6 @@
 "use client";
 
 import NavBar from "./../components/nav";
-import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import getClassNames from "../src/app/classes";
@@ -40,6 +39,7 @@ export default function TutorCourse() {
 
     fetchClassData();
   }, []);
+
   const addTutor = async () => {
     if (selectedClass != "") {
 
@@ -51,7 +51,11 @@ export default function TutorCourse() {
     } else {
       setAlert(true);
     }
+
+    // add this info to tutor or user database depending on if there is a new database for tutors
+
   };
+
   return (
     <div>
       <NavBar></NavBar>
@@ -86,3 +90,4 @@ export default function TutorCourse() {
     </div>
   );
 }
+
