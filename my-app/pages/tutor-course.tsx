@@ -69,17 +69,23 @@ export default function TutorCourse() {
       <Typography variant="h4" gutterBottom>
         Tutor a Course
       </Typography>
-      <p>
+      <Typography variant="body1" gutterBottom>
         Thank you for signing up to tutor! Please use the dropdown menu below to
         select the class you would like to tutor for.{" "}
-      </p>
+      </Typography>
+
       <p>
         <b>
-          Please note: There will be a 1-week period of time for us to verify
-          and approve your eligibility to tutor for the course before you can
-          start.{" "}
+          <Typography variant="body1" gutterBottom>
+            Please note: There will be a 1-week period of time for us to verify
+            and approve your eligibility to tutor for the course before you can
+            start.{" "}
+          </Typography>
         </b>
-        You will be able to track the status of the course in your profile page.
+        <Typography variant="body1" gutterBottom>
+          You will be able to track the status of the course in your profile
+          page.
+        </Typography>
       </p>
       <Button variant="contained" onClick={handleGoBack}>
         Go Back

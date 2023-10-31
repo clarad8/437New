@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import { useEffect, useState } from "react";
 import NavBar from "../components/nav";
 import { useRouter } from "next/router";
@@ -15,10 +15,17 @@ import {
 } from "@mui/material";
 import getClassNames from "../src/app/classes";
 import { db } from "../index";
-import { collection, getDoc, query, doc, getFirestore, setDoc, DocumentSnapshot } from "firebase/firestore";
+import {
+  collection,
+  getDoc,
+  query,
+  doc,
+  getFirestore,
+  setDoc,
+  DocumentSnapshot,
+} from "firebase/firestore";
 import React from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-
 
 /*interface ProfileProps {
   passUserInfo: {
@@ -45,8 +52,6 @@ export default function Profile() {
   const auth = getAuth();
   const user = auth.currentUser;
 
-
-  
   // if(user) {
   //     const displayName = user.displayName;
   //     const uid = user.uid;
@@ -64,8 +69,6 @@ export default function Profile() {
   //   //user is not signed in
   // }
 
-
-
   const handleGoBack = () => {
     router.push("/"); //go back to home page
   };
@@ -75,23 +78,18 @@ export default function Profile() {
   };
 
   const handleSaveChanges = async () => {
-
     setIsEditing(false);
 
     try {
       const firestore = getFirestore();
-      if(user!=null)
-      {
+      if (user != null) {
         const userDocRef = doc(firestore, "users", user.uid);
-        await setDoc(userDocRef, {grade: grade}, {merge: true});
+        await setDoc(userDocRef, { grade: grade }, { merge: true });
         console.log("Grade updated successfully in the database!");
-      }
-      else{
+      } else {
         console.log("user is null!");
       }
-
-    }
-    catch(error) {
+    } catch (error) {
       console.error("Error updating grade:", error);
     }
   };
@@ -115,41 +113,36 @@ export default function Profile() {
         const firestore = getFirestore();
 
         // getDocs returns a QuerySnapshot which is a collection of DocumentSnapshot. getDoc returns the specific document.
-        
+
         const userDocRef = doc(firestore, "users", user.uid);
         const docSnap = await getDoc(userDocRef);
 
-        if(docSnap.exists())
-        {
+        if (docSnap.exists()) {
           const userData = docSnap.data();
-          if(userData) {
-            const {name, email, grade} = userData;
+          if (userData) {
+            const { name, email, grade } = userData;
 
-            if(grade) {
+            if (grade) {
               setGrade(grade);
             }
 
-            if(email) {
+            if (email) {
               setEmail(email);
             }
 
-            if(name) {
+            if (name) {
               setName(name);
             }
           }
-          
         }
 
-  
-      console.log(uid);
-      console.log(email);
-      console.log(name);
-  
-    } else {
-  
-      //user is not signed in
-      router.push("/");
-    }
+        console.log(uid);
+        console.log(email);
+        console.log(name);
+      } else {
+        //user is not signed in
+        router.push("/");
+      }
     });
     // const fetchUserData = async () => {
     //   try {
@@ -172,13 +165,10 @@ export default function Profile() {
     // fetchUserData();
   }, []);
 
-
   //  NEED TO SAVE INFO INTO DATABASE!!!!!
   //  right now this code only shows the new info that user has put in on the webpage for a moment
   //  at some point we need to save the info so that the info will show again when user comes back to profile page or logs in again
   //  i made a new collection called users which currently has the fields name and grade
-
-  
 
   return (
     <div>
@@ -221,18 +211,22 @@ export default function Profile() {
           Your Status: {isOnline ? "Online" : "Offline"}
         </Typography>
       </div>
+      <Typography style={{ display: "inline" }} variant="body1" gutterBottom>
+        Name: <span>{name}</span>
+      </Typography>
 
-      <h3 style={{ display: 'inline' }}>Name: </h3>
-          <span>{name}</span>
-          <p></p>
-          <h3 style={{ display: 'inline' }}>Email: </h3>
-          <span>{email}</span>
-          <p></p>
+      <p></p>
+      <Typography style={{ display: "inline" }} variant="body1" gutterBottom>
+        Email: <span>{email}</span>
+      </Typography>
+
+      <p></p>
 
       {/* user can't edit their name and email through the edit buttion */}
 
       {isEditing ? (
         <>
+          {/*
           <Typography variant="body1" gutterBottom>
             Name:
           </Typography>
@@ -242,7 +236,7 @@ export default function Profile() {
             onChange={(e) => setName(e.target.value)}
             id="outlined-basic"
             variant="outlined"
-          />
+      />*/}
 
           <Typography variant="body1" gutterBottom>
             Grade:
@@ -256,6 +250,7 @@ export default function Profile() {
           />
 
           <p></p>
+          {/*
           <Typography variant="body1" gutterBottom>
             Classes You&apos;ve Taken:
           </Typography>
@@ -303,7 +298,7 @@ export default function Profile() {
                 {classItem.name}
               </label>
             </div>
-          ))} */}
+                ))}*/}
           <p> </p>
           <Button
             variant="contained"
@@ -315,6 +310,7 @@ export default function Profile() {
         </>
       ) : (
         <>
+          {/*
           <Typography
             style={{ display: "inline" }}
             variant="body1"
@@ -324,7 +320,7 @@ export default function Profile() {
           </Typography>
 
           <span>{name}</span>
-          <p></p>
+      <p></p>*/}
           <Typography
             style={{ display: "inline" }}
             variant="body1"
@@ -332,7 +328,7 @@ export default function Profile() {
           >
             Year:
           </Typography>
-          <span>{year}</span>
+          <span>{grade}</span>
           <p></p>
           <Typography
             style={{ display: "inline" }}
@@ -360,16 +356,8 @@ export default function Profile() {
             Back
           </Button>
           <p></p>
-
-          <h1>Tutor Profile</h1>
-          <h3 style={{ display: 'inline' }}>Classes You Are Tutoring: </h3>
-          <span>{tutoredClasses.join(", ")}</span>
-          <p></p>
-
-          
-
         </>
       )}
     </div>
   );
-};
+}
