@@ -7,7 +7,6 @@ import Login from "./Login";
 import Home from "./page";
 import TutorCourse from "../../pages/tutor-course";
 import React from "react";
-// const inter = Inter({ subsets: ["latin"] });
 
 export default async function RootLayout({
   children,

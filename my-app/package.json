@@ -12,10 +12,14 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.14.11",
+    "encoding": "^0.1.13",
     "firebase": "^10.4.0",
     "next-auth": "^4.23.2",
+    "node-fetch": "^3.3.2",
     "react": "latest",
     "react-dom": "latest",
+    "react-router": "^6.17.0",
+    "react-router-dom": "^6.17.0",
     "webpack": "^5.89.0"
   },
   "devDependencies": {

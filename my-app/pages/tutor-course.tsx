@@ -1,7 +1,6 @@
 "use client";
 
 import NavBar from "./../components/nav";
-import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import getClassNames from "../src/app/classes";
@@ -48,6 +47,7 @@ export default function TutorCourse() {
 
     fetchClassData();
   }, []);
+
   const addTutor = async () => {
     if (selectedClass != "") {
       console.log(selectedClass);
@@ -58,7 +58,10 @@ export default function TutorCourse() {
     } else {
       setAlert(true);
     }
+
+    // add this info to tutor or user database depending on if there is a new database for tutors
   };
+
   return (
     <div>
       <NavBar></NavBar>
@@ -66,6 +69,18 @@ export default function TutorCourse() {
       <Typography variant="h4" gutterBottom>
         Tutor a Course
       </Typography>
+      <p>
+        Thank you for signing up to tutor! Please use the dropdown menu below to
+        select the class you would like to tutor for.{" "}
+      </p>
+      <p>
+        <b>
+          Please note: There will be a 1-week period of time for us to verify
+          and approve your eligibility to tutor for the course before you can
+          start.{" "}
+        </b>
+        You will be able to track the status of the course in your profile page.
+      </p>
       <Button variant="contained" onClick={handleGoBack}>
         Go Back
       </Button>
@@ -76,7 +91,7 @@ export default function TutorCourse() {
 
       {alert ? <Alert severity="error">Please select a class!</Alert> : null}
       {addedCourse ? (
-        <Alert severity="success">Successfully added {selectedClass}</Alert>
+        <Alert severity="success">Request submitted for {selectedClass}</Alert>
       ) : null}
       <FormControl sx={{ m: 1, minWidth: 180 }} size="small">
         <InputLabel id="demo-simple-select-label">Select a class</InputLabel>
