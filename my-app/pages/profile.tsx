@@ -223,7 +223,7 @@ export default function Profile() {
           />
 
           <p></p>
-          <p>Classes You&apos;ve Taken:</p>
+          {/* <p>Classes You&apos;ve Taken:</p>
           {classes.map((classItem) => (
             <div key={classItem.id}>
               <label>
@@ -244,7 +244,7 @@ export default function Profile() {
                 {classItem.name}
               </label>
             </div>
-          ))}
+          ))} */}
           
           {/* if we are doing verification for users before they can tutor, users shouldn't be able to edit classes either */}
           {/* <p>Classes You Are Tutoring:</p>
@@ -278,10 +278,12 @@ export default function Profile() {
           <h3 style={{ display: 'inline' }}>Grade: </h3>
           <span>{grade}</span>
           <p></p>
-          <h3 style={{ display: 'inline' }}>Classes You&apos;ve Taken: </h3>
+
+
+          {/* <h3 style={{ display: 'inline' }}>Classes You&apos;ve Taken: </h3>
           <span>{takenClasses.join(", ")}</span>
           <p></p>
-          
+           */}
 
           <Button variant="contained" color="primary" onClick={handleEdit}>
             Edit
