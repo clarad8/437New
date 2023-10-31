@@ -74,19 +74,15 @@ export default function TutorCourse() {
         select the class you would like to tutor for.{" "}
       </Typography>
 
-      <p>
-        <b>
-          <Typography variant="body1" gutterBottom>
-            Please note: There will be a 1-week period of time for us to verify
-            and approve your eligibility to tutor for the course before you can
-            start.{" "}
-          </Typography>
-        </b>
-        <Typography variant="body1" gutterBottom>
-          You will be able to track the status of the course in your profile
-          page.
-        </Typography>
-      </p>
+      <Typography variant="body1" gutterBottom>
+        Please note: There will be a 1-week period of time for us to verify and
+        approve your eligibility to tutor for the course before you can start.{" "}
+      </Typography>
+
+      <Typography variant="body1" gutterBottom>
+        You will be able to track the status of the course in your profile page.
+      </Typography>
+
       <Button variant="contained" onClick={handleGoBack}>
         Go Back
       </Button>
