@@ -136,16 +136,7 @@ const Login = () => {
             color="primary"
             onClick={handleGoogleSignIn}
           >
-            Sign in as a STUDENT
-          </Button>
-        </div>
-        <div style={{ marginTop: "20px" }}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleGoogleSignIn}
-          >
-            Sign in as a TUTOR
+            Sign in with Google
           </Button>
         </div>
       </Box>
