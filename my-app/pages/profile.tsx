@@ -326,7 +326,7 @@ export default function Profile() {
             variant="body1"
             gutterBottom
           >
-            Year:
+            Grade:
           </Typography>
           <span>{grade}</span>
           <p></p>

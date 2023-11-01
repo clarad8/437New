@@ -8,7 +8,7 @@ import { Button, Typography } from "@mui/material";
 interface Tutor {
   id: string;
   name: string;
-  class: string;
+  class: string[];
   zoom: string;
 }
 
@@ -54,7 +54,7 @@ const TutorProfile = () => {
         {tutor.name}
       </Typography>
       <Typography variant="h5" gutterBottom>
-        Class Name: {tutor.class}
+        Class Name: {tutor.class.join(", ")}
       </Typography>
 
       {/* make zoom link clickable */}

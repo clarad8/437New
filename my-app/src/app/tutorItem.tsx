@@ -8,7 +8,7 @@ import { Typography } from "@mui/material";
 interface Tutor {
   id: string;
   name: string;
-  class: string;
+  class: string[];
   zoom: string;
 }
 
@@ -23,7 +23,7 @@ const TutorItem: React.FC<Tutor> = ({ id, name, class: classNumber, zoom }) => {
         {name}
       </Typography>
       <Typography variant="body1" gutterBottom>
-        Class Name: {classNumber}
+        Class Name: {classNumber.join(", ")}
       </Typography>
     </Link>
   );

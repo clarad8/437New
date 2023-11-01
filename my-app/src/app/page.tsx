@@ -20,7 +20,7 @@ import React from "react";
 interface Tutor {
   id: string;
   name: string;
-  class: string;
+  class: string[];
   zoom: string;
 }
 
@@ -65,7 +65,7 @@ export default function Home() {
         setTutors(allTutors);
       } else {
         const filteredTutors = allTutors.filter(
-          (tutor) => tutor.class === selectedClass
+          (tutor) => tutor.class.includes(selectedClass)
         );
         setTutors(filteredTutors);
       }
