@@ -57,6 +57,10 @@ const TutorProfile = () => {
         Class Name: {tutor.class.join(", ")}
       </Typography>
 
+      <Typography variant="body1" gutterBottom>
+        Below is the tutor's zoom meeting room! Please join whenever you are ready. 
+      </Typography>
+
       {/* make zoom link clickable */}
       <Typography variant="body1" gutterBottom>
         Zoom:{" "}

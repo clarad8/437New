@@ -178,9 +178,9 @@ export default function Profile() {
         Profile
       </Typography>
 
-      <div>
-        <Typography variant="h5" gutterBottom>
-          Online Status: (please select "online" if you are currently available
+      
+        <Typography variant="h6" gutterBottom>
+          Tutor Status: (please only select "online" if you are currently available
           to tutor)
         </Typography>
         <FormControl>
@@ -205,22 +205,32 @@ export default function Profile() {
             />
           </RadioGroup>
         </FormControl>
-      </div>
-      <div>
+      
+      
         <Typography variant="body1" gutterBottom>
           Your Status: {isOnline ? "Online" : "Offline"}
         </Typography>
-      </div>
+        
+        <Typography variant="body2">
+        <p></p>
+        </Typography>
+        
+      
       <Typography style={{ display: "inline" }} variant="body1" gutterBottom>
         Name: <span>{name}</span>
       </Typography>
 
-      <p></p>
+      <Typography variant="body2">
+        <p></p>
+        </Typography>
+
       <Typography style={{ display: "inline" }} variant="body1" gutterBottom>
         Email: <span>{email}</span>
       </Typography>
 
-      <p></p>
+      <Typography variant="body2">
+        <p></p>
+      </Typography>
 
       {/* user can't edit their name and email through the edit buttion */}
 
@@ -249,7 +259,9 @@ export default function Profile() {
             variant="outlined"
           />
 
+        <Typography variant="body2">
           <p></p>
+        </Typography>
           {/*
           <Typography variant="body1" gutterBottom>
             Classes You&apos;ve Taken:
@@ -299,7 +311,9 @@ export default function Profile() {
               </label>
             </div>
                 ))}*/}
-          <p> </p>
+          <Typography variant="body2">
+            <p></p>
+          </Typography>
           <Button
             variant="contained"
             color="primary"
@@ -329,16 +343,23 @@ export default function Profile() {
             Grade:
           </Typography>
           <span>{grade}</span>
-          <p></p>
+          <Typography variant="body2">
+            <p></p>
+          </Typography>
           <Typography
             style={{ display: "inline" }}
             variant="body1"
             gutterBottom
           >
+
+        {/* Classes You've Taken and Classes You're Tutoring should only show up if user is a tutor that has registered in database */}
+            
             Classes You&apos;ve Taken:
           </Typography>
           <span>{takenClasses.join(", ")}</span>
-          <p></p>
+          <Typography variant="body2">
+            <p></p>
+          </Typography>
           <Typography
             style={{ display: "inline" }}
             variant="body1"
@@ -347,7 +368,9 @@ export default function Profile() {
             Classes You&apos;re Tutoring:
           </Typography>
           <span>{tutoredClasses.join(", ")}</span>
-          <p></p>
+          <Typography variant="body2">
+            <p></p>
+          </Typography>
 
           <Button variant="contained" color="primary" onClick={handleEdit}>
             Edit
@@ -355,7 +378,7 @@ export default function Profile() {
           <Button variant="contained" color="primary" onClick={handleGoBack}>
             Back
           </Button>
-          <p></p>
+          
         </>
       )}
     </div>
