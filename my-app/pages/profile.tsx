@@ -212,7 +212,7 @@ export default function Profile() {
         </Typography>
         
         <Typography variant="body2">
-        <p></p>
+        {/* <p></p> */}
         </Typography>
         
       
@@ -221,7 +221,7 @@ export default function Profile() {
       </Typography>
 
       <Typography variant="body2">
-        <p></p>
+        {/* <p></p> */}
         </Typography>
 
       <Typography style={{ display: "inline" }} variant="body1" gutterBottom>
@@ -229,7 +229,7 @@ export default function Profile() {
       </Typography>
 
       <Typography variant="body2">
-        <p></p>
+        {/* <p></p> */}
       </Typography>
 
       {/* user can't edit their name and email through the edit buttion */}
@@ -260,7 +260,7 @@ export default function Profile() {
           />
 
         <Typography variant="body2">
-          <p></p>
+          {/* <p></p> */}
         </Typography>
           {/*
           <Typography variant="body1" gutterBottom>
@@ -312,7 +312,7 @@ export default function Profile() {
             </div>
                 ))}*/}
           <Typography variant="body2">
-            <p></p>
+            {/* <p></p> */}
           </Typography>
           <Button
             variant="contained"
@@ -344,7 +344,7 @@ export default function Profile() {
           </Typography>
           <span>{grade}</span>
           <Typography variant="body2">
-            <p></p>
+            {/* <p></p> */}
           </Typography>
           <Typography
             style={{ display: "inline" }}
@@ -358,7 +358,7 @@ export default function Profile() {
           </Typography>
           <span>{takenClasses.join(", ")}</span>
           <Typography variant="body2">
-            <p></p>
+            {/* <p></p> */}
           </Typography>
           <Typography
             style={{ display: "inline" }}
@@ -369,7 +369,7 @@ export default function Profile() {
           </Typography>
           <span>{tutoredClasses.join(", ")}</span>
           <Typography variant="body2">
-            <p></p>
+            {/* <p></p> */}
           </Typography>
 
           <Button variant="contained" color="primary" onClick={handleEdit}>
