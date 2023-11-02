@@ -11,6 +11,8 @@ import { auth } from "../../index";
 import { signIn, signOut, useSession } from "next-auth/react";
 // import { db } from "/Users/claradu/Desktop/1/437New/my-app/index";
 import { doc, getDoc, setDoc, getFirestore } from "firebase/firestore";
+import router, { useRouter } from "next/router";
+import Page from "./page";
 
 let verified: boolean = false;
 
@@ -19,6 +21,7 @@ const googleProvider = new GoogleAuthProvider();
 const Login = () => {
   const [isVerificationPopupOpen, setVerificationPopupOpen] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
+  // const router = useRouter();
 
   const handleGoogleSignIn = () => {
     signInWithPopup(auth, googleProvider)
@@ -72,18 +75,25 @@ const Login = () => {
                     })
                     .then(() => {
                       console.log("User verified status updated in Firestore.");
+                      //signIn("google");
                     })
+                    // .then(() => {
+                    //   // router.push("/app/page"); //redirect to home page after email verification
+                    //   // window.location.href = "/app/page"; 
+                    //   console.log("redirect successful")
+                    // })
                     .catch((error) => {
+
                       console.error(
                         "Error sending email verification:",
                         error.message
                       );
                     });
-                } else {
-                  signIn("google");
-                  console.log(
-                    "User is already verified. Signing in with Google."
-                  );
+                // } else {
+                //   signIn("google");
+                //   console.log(
+                //     "User is already verified. Signing in with Google."
+                //   );
                   // use local storage -> store user email then login
                 }
 
