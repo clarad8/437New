@@ -2,6 +2,7 @@ import { Button, Link, Typography } from "@mui/material";
 import { signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import "./nav.css";
+import router from "next/router";
 
 // const student = true;
 // type NavBarProps = {
@@ -16,13 +17,7 @@ export default function NavBar() {
     const parts = pathname.split("/").filter((part) => part !== "");
     return parts[parts.length - 1] || "";
   }
-  function redirect() {
-    const delay = 3000;
 
-    setTimeout(() => {
-      window.location.href = "/";
-    }, delay);
-  }
   useEffect(() => {
     setActiveTab(getActiveTabFromURL());
   }, []);
@@ -85,12 +80,12 @@ export default function NavBar() {
         </div>
         <div>
           <li
-            onClick={() => {
-              signOut();
-              redirect();
+            onClick={async () => {
+              await signOut();
+              router.push("/");
             }}
           >
-            <Link href="">
+            <Link href="/">
               <Typography variant="h5" gutterBottom>
                 Logout
               </Typography>
