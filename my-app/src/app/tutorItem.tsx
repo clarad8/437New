@@ -4,15 +4,14 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { Typography } from "@mui/material";
 
-//separates each tutor into its container
 interface Tutor {
   id: string;
   name: string;
-  class: string[];
+  tutoringClasses?: string[]; // Make tutoringClasses optional
   zoom: string;
 }
 
-const TutorItem: React.FC<Tutor> = ({ id, name, class: classNumber, zoom }) => {
+const TutorItem: React.FC<Tutor> = ({ id, name, tutoringClasses, zoom }) => {
   const handleButtonClick = () => {
     console.log(`Tutor ${id} clicked!`);
   };
@@ -22,9 +21,15 @@ const TutorItem: React.FC<Tutor> = ({ id, name, class: classNumber, zoom }) => {
       <Typography variant="h5" gutterBottom>
         {name}
       </Typography>
-      <Typography variant="body1" gutterBottom>
-        Class Name: {classNumber.join(", ")}
-      </Typography>
+      {tutoringClasses && tutoringClasses.length > 0 ? (
+        <Typography variant="body1" gutterBottom>
+          Class Name: {tutoringClasses.join(", ")}
+        </Typography>
+      ) : (
+        <Typography variant="body1" gutterBottom>
+          No classes available
+        </Typography>
+      )}
     </Link>
   );
 };

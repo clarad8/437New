@@ -20,7 +20,7 @@ import React from "react";
 interface Tutor {
   id: string;
   name: string;
-  class: string[];
+  tutoringClasses: string[];
   zoom: string;
 }
 
@@ -65,7 +65,7 @@ export default function Home() {
         setTutors(allTutors);
       } else {
         const filteredTutors = allTutors.filter(
-          (tutor) => tutor.class.includes(selectedClass)
+          (tutor) => tutor.tutoringClasses.includes(selectedClass)
         );
         setTutors(filteredTutors);
       }
@@ -117,24 +117,7 @@ export default function Home() {
           ))}
         </Select>
       </FormControl>
-      {/*
-      <div className="dropdown">
-        <select
-          value={selectedClass}
-          onChange={(e) => setSelectedClass(e.target.value)}
-        >
-          <option value="">Select a class</option>
-          <option value="Show All Tutors">Show All Tutors</option>
-
-          {classes.map((classItem) => (
-            <option key={classItem.id} value={classItem.name}>
-              {classItem.name}
-            </option>
-          ))}
-        </select>
-        {/* <button onClick={loadTutorsForCourse}>Load Tutors for Course</button> 
-      </div>
-*/}
+      
       <Typography variant="h5" gutterBottom>
         Tutors:
       </Typography>

@@ -5,7 +5,7 @@ import { db } from '../../index';
 interface Tutor {
   id: string;
   name: string;
-  class: string[];
+  tutoringClasses: string[];
   zoom: string;
 }
 
@@ -24,7 +24,7 @@ const getTutors = async () => {
       tutorsData.push({
         id: doc.id,
         name: tutor.name,
-        class: tutor.class as string[],
+        tutoringClasses: tutor.tutoringClasses as string[],
         zoom: tutor.zoom, // Assuming you store the image URL in the 'imageURL' field
       });
     });
