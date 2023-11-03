@@ -4,15 +4,22 @@ import NavBar from "../components/nav";
 import { useRouter } from "next/router";
 import {
   Alert,
+  AlertColor,
+  AlertTitle,
+  Breadcrumbs,
   Button,
   FormControl,
   FormControlLabel,
   FormLabel,
+  Link,
   Radio,
   RadioGroup,
+  Snackbar,
   TextField,
   Typography,
 } from "@mui/material";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+
 import getClassNames from "../src/app/classes";
 import { db } from "../index";
 import {
@@ -51,6 +58,10 @@ export default function Profile() {
   const [isOnline, setIsOnline] = useState(false);
   const auth = getAuth();
   const user = auth.currentUser;
+  const [isSnackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] =
+    useState<AlertColor>("success");
 
   // if(user) {
   //     const displayName = user.displayName;
@@ -85,12 +96,18 @@ export default function Profile() {
       if (user != null) {
         const userDocRef = doc(firestore, "users", user.uid);
         await setDoc(userDocRef, { grade: grade }, { merge: true });
+        setSnackbarMessage("Changes saved successfully!");
+        setSnackbarSeverity("success");
+        setSnackbarOpen(true);
         console.log("Grade updated successfully in the database!");
       } else {
         console.log("user is null!");
       }
     } catch (error) {
       console.error("Error updating grade:", error);
+      setSnackbarMessage("Error saving changes. Please try again.");
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
     }
   };
 
@@ -174,63 +191,78 @@ export default function Profile() {
     <div>
       <NavBar></NavBar>
       <br></br>
+
+      <Breadcrumbs
+        separator={<NavigateNextIcon fontSize="small" />}
+        aria-label="breadcrumb"
+      >
+        <Link underline="hover" href="/">
+          Home
+        </Link>
+        <Typography color="text.primary">Profile</Typography>
+      </Breadcrumbs>
       <Typography variant="h4" gutterBottom>
         Profile
       </Typography>
+      <Snackbar
+        open={isSnackbarOpen}
+        autoHideDuration={4000}
+        onClose={() => setSnackbarOpen(false)}
+      >
+        <Alert
+          severity={snackbarSeverity}
+          onClose={() => setSnackbarOpen(false)}
+        >
+          <AlertTitle>
+            {snackbarSeverity === "success" ? "Success" : "Error"}
+          </AlertTitle>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
+      <Typography variant="h6" gutterBottom>
+        Tutor Status: (please only select "online" if you are currently
+        available to tutor)
+      </Typography>
+      <FormControl>
+        <RadioGroup
+          aria-labelledby="demo-row-radio-buttons-group-label"
+          defaultValue="offline"
+          name="radio-buttons-group"
+        >
+          <FormControlLabel
+            value="online"
+            checked={isOnline}
+            onChange={() => setIsOnline(true)}
+            control={<Radio />}
+            label="Online"
+          />
+          <FormControlLabel
+            value="offline"
+            checked={!isOnline}
+            onChange={() => setIsOnline(false)}
+            control={<Radio />}
+            label="Offline"
+          />
+        </RadioGroup>
+      </FormControl>
 
-      
-        <Typography variant="h6" gutterBottom>
-          Tutor Status: (please only select "online" if you are currently available
-          to tutor)
-        </Typography>
-        <FormControl>
-          <RadioGroup
-            aria-labelledby="demo-row-radio-buttons-group-label"
-            defaultValue="offline"
-            name="radio-buttons-group"
-          >
-            <FormControlLabel
-              value="online"
-              checked={isOnline}
-              onChange={() => setIsOnline(true)}
-              control={<Radio />}
-              label="Online"
-            />
-            <FormControlLabel
-              value="offline"
-              checked={!isOnline}
-              onChange={() => setIsOnline(false)}
-              control={<Radio />}
-              label="Offline"
-            />
-          </RadioGroup>
-        </FormControl>
-      
-      
-        <Typography variant="body1" gutterBottom>
-          Your Status: {isOnline ? "Online" : "Offline"}
-        </Typography>
-        
-        <Typography variant="body2">
-        {/* <p></p> */}
-        </Typography>
-        
-      
+      <Typography variant="body1" gutterBottom>
+        Your Status: {isOnline ? "Online" : "Offline"}
+      </Typography>
+
+      <Typography variant="body2">{/* <p></p> */}</Typography>
+
       <Typography style={{ display: "inline" }} variant="body1" gutterBottom>
         Name: <span>{name}</span>
       </Typography>
 
-      <Typography variant="body2">
-        {/* <p></p> */}
-        </Typography>
+      <Typography variant="body2">{/* <p></p> */}</Typography>
 
       <Typography style={{ display: "inline" }} variant="body1" gutterBottom>
         Email: <span>{email}</span>
       </Typography>
 
-      <Typography variant="body2">
-        {/* <p></p> */}
-      </Typography>
+      <Typography variant="body2">{/* <p></p> */}</Typography>
 
       {/* user can't edit their name and email through the edit buttion */}
 
@@ -259,9 +291,7 @@ export default function Profile() {
             variant="outlined"
           />
 
-        <Typography variant="body2">
-          {/* <p></p> */}
-        </Typography>
+          <Typography variant="body2">{/* <p></p> */}</Typography>
           {/*
           <Typography variant="body1" gutterBottom>
             Classes You&apos;ve Taken:
@@ -311,9 +341,7 @@ export default function Profile() {
               </label>
             </div>
                 ))}*/}
-          <Typography variant="body2">
-            {/* <p></p> */}
-          </Typography>
+          <Typography variant="body2">{/* <p></p> */}</Typography>
           <Button
             variant="contained"
             color="primary"
@@ -343,23 +371,17 @@ export default function Profile() {
             Grade:
           </Typography>
           <span>{grade}</span>
-          <Typography variant="body2">
-            {/* <p></p> */}
-          </Typography>
+          <Typography variant="body2">{/* <p></p> */}</Typography>
           <Typography
             style={{ display: "inline" }}
             variant="body1"
             gutterBottom
           >
-
-        {/* Classes You've Taken and Classes You're Tutoring should only show up if user is a tutor that has registered in database */}
-            
+            {/* Classes You've Taken and Classes You're Tutoring should only show up if user is a tutor that has registered in database */}
             Classes You&apos;ve Taken:
           </Typography>
           <span>{takenClasses.join(", ")}</span>
-          <Typography variant="body2">
-            {/* <p></p> */}
-          </Typography>
+          <Typography variant="body2">{/* <p></p> */}</Typography>
           <Typography
             style={{ display: "inline" }}
             variant="body1"
@@ -368,17 +390,15 @@ export default function Profile() {
             Classes You&apos;re Tutoring:
           </Typography>
           <span>{tutoredClasses.join(", ")}</span>
-          <Typography variant="body2">
-            {/* <p></p> */}
-          </Typography>
+          <Typography variant="body2">{/* <p></p> */}</Typography>
 
           <Button variant="contained" color="primary" onClick={handleEdit}>
             Edit
           </Button>
+          {/*
           <Button variant="contained" color="primary" onClick={handleGoBack}>
             Back
-          </Button>
-          
+    </Button>*/}
         </>
       )}
     </div>

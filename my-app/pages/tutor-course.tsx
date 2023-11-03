@@ -2,25 +2,27 @@
 import React, { useEffect, useState } from "react";
 import {
   Alert,
+  Breadcrumbs,
   Button,
   FormControl,
   InputLabel,
+  Link,
   MenuItem,
   Select,
   Typography,
 } from "@mui/material";
 import { useRouter } from "next/router";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+
 import NavBar from "./../components/nav";
 import getClassNames from "../src/app/classes";
-import { auth, db } from '../index'; // Import your Firebase Firestore instance
+import { auth, db } from "../index"; // Import your Firebase Firestore instance
 import { addDoc, collection, doc, getDoc, setDoc } from "firebase/firestore";
-
 
 interface classes {
   id: string;
   name: string;
 }
-
 
 export default function TutorCourse() {
   const router = useRouter();
@@ -30,15 +32,15 @@ export default function TutorCourse() {
   const [addedCourse, setAddedCourse] = useState(false);
   const [alert, setAlert] = useState(false);
 
-
-  const [selectedTutoringCourses, setSelectedTutoringCourses] = useState<string[]>([]);
+  const [selectedTutoringCourses, setSelectedTutoringCourses] = useState<
+    string[]
+  >([]);
   const [addedTutoringCourses, setAddedTutoringCourses] = useState(false);
   const [tutoringCoursesAlert, setTutoringCoursesAlert] = useState(false);
 
   const handleGoBack = () => {
     router.push("/");
   };
-
 
   useEffect(() => {
     const fetchClassData = async () => {
@@ -68,7 +70,7 @@ export default function TutorCourse() {
             classScores: classScores,
           };
           // Add data to the "users" collection in Firebase Firestore
-          const userDocRef = doc(db, 'users', userId);
+          const userDocRef = doc(db, "users", userId);
           await setDoc(userDocRef, userData, { merge: true });
           setAddedCourse(true);
           setTimeout(() => {
@@ -76,7 +78,7 @@ export default function TutorCourse() {
           }, 3000);
         }
       } catch (error) {
-        console.error('Error adding taken classes:', error);
+        console.error("Error adding taken classes:", error);
       }
     } else {
       setAlert(true);
@@ -100,9 +102,8 @@ export default function TutorCourse() {
             tutoringClasses: selectedTutoringCourses,
           };
 
-
           // Add data to the "tutors" collection in Firebase Firestore
-          const tutorDocRef = doc(db, 'tutors', userId); // Use the user's UID as the document ID
+          const tutorDocRef = doc(db, "tutors", userId); // Use the user's UID as the document ID
           await setDoc(tutorDocRef, tutorData, { merge: true });
 
           setAddedTutoringCourses(true);
@@ -111,25 +112,38 @@ export default function TutorCourse() {
           }, 3000);
         }
       } catch (error) {
-        console.error('Error adding tutoring classes:', error);
+        console.error("Error adding tutoring classes:", error);
       }
     } else {
       setTutoringCoursesAlert(true);
     }
   };
 
-
   return (
     <div>
       <NavBar></NavBar>
-      {/* ... */}
+      <br></br>
+      <Breadcrumbs
+        separator={<NavigateNextIcon fontSize="small" />}
+        aria-label="breadcrumb"
+      >
+        <Link underline="hover" href="/">
+          Home
+        </Link>
+        <Typography color="text.primary">Tutor Course</Typography>
+      </Breadcrumbs>
+      <br></br>
       <Typography variant="h5" gutterBottom>
         Select Classes You've Taken(multiple selections allowed):
       </Typography>
 
-      {alert ? <Alert severity="error">Please select at least one class!</Alert> : null}
+      {alert ? (
+        <Alert severity="error">Please select at least one class!</Alert>
+      ) : null}
       {addedCourse ? (
-        <Alert severity="success">Requests submitted for selected classes.</Alert>
+        <Alert severity="success">
+          Requests submitted for selected classes.
+        </Alert>
       ) : null}
       <FormControl sx={{ m: 1, minWidth: 180 }} size="small">
         <InputLabel id="demo-multiple-select-label">Select classes</InputLabel>
@@ -148,7 +162,6 @@ export default function TutorCourse() {
           ))}
         </Select>
       </FormControl>
-
 
       {selectedClasses.map((selectedClass, index) => (
         <div key={selectedClass}>
@@ -194,9 +207,13 @@ export default function TutorCourse() {
         approve your eligibility to tutor for the course before you can start.{" "}
       </Typography>
 
-      {tutoringCoursesAlert ? <Alert severity="error">Please select at least one class!</Alert> : null}
+      {tutoringCoursesAlert ? (
+        <Alert severity="error">Please select at least one class!</Alert>
+      ) : null}
       {addedTutoringCourses ? (
-        <Alert severity="success">Requests submitted for selected tutoring classes.</Alert>
+        <Alert severity="success">
+          Requests submitted for selected tutoring classes.
+        </Alert>
       ) : null}
       <FormControl sx={{ m: 1, minWidth: 180 }} size="small">
         <InputLabel id="demo-multiple-select-label">Select classes</InputLabel>
@@ -206,7 +223,9 @@ export default function TutorCourse() {
           multiple
           value={selectedTutoringCourses}
           label="Select classes"
-          onChange={(e) => setSelectedTutoringCourses(e.target.value as string[])}
+          onChange={(e) =>
+            setSelectedTutoringCourses(e.target.value as string[])
+          }
         >
           {classesData.map((classItem) => (
             <MenuItem key={classItem.id} value={classItem.name}>
@@ -222,14 +241,3 @@ export default function TutorCourse() {
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
