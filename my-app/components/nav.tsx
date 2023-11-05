@@ -128,27 +128,21 @@ export default function NavBar() {
         onClose={handleCloseMenu}
         sx={{ mt: "45px" }}
       >
-        <MenuItem
-          onClick={async () => {
-            router.push("/profile");
-          }}
-        >
-          <Typography textAlign="center">Profile</Typography>
-        </MenuItem>
-        <MenuItem
-          onClick={async () => {
-            router.push("/");
-          }}
-        >
-          <Typography textAlign="center">Find a Tutor</Typography>
-        </MenuItem>
-        <MenuItem
-          onClick={async () => {
-            router.push("/tutor-course");
-          }}
-        >
-          <Typography textAlign="center">Tutor Course</Typography>
-        </MenuItem>
+        <a href="/profile">
+          <MenuItem>
+            <Typography textAlign="center">Profile</Typography>
+          </MenuItem>
+        </a>
+        <a href="/">
+          <MenuItem>
+            <Typography textAlign="center">Find a Tutor</Typography>
+          </MenuItem>
+        </a>
+        <a href="/tutor-course">
+          <MenuItem>
+            <Typography textAlign="center">Tutor Course</Typography>
+          </MenuItem>
+        </a>
         <MenuItem
           onClick={async () => {
             await signOut();
