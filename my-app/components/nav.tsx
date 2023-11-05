@@ -128,21 +128,21 @@ export default function NavBar() {
         onClose={handleCloseMenu}
         sx={{ mt: "45px" }}
       >
-        <a href="/profile">
+        <Link href="/profile">
           <MenuItem>
             <Typography textAlign="center">Profile</Typography>
           </MenuItem>
-        </a>
-        <a href="/">
+        </Link>
+        <Link href="/">
           <MenuItem>
             <Typography textAlign="center">Find a Tutor</Typography>
           </MenuItem>
-        </a>
-        <a href="/tutor-course">
+        </Link>
+        <Link href="/tutor-course">
           <MenuItem>
             <Typography textAlign="center">Tutor Course</Typography>
           </MenuItem>
-        </a>
+        </Link>
         <MenuItem
           onClick={async () => {
             await signOut();

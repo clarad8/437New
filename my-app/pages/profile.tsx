@@ -283,13 +283,37 @@ export default function Profile() {
           <Typography variant="body1" gutterBottom>
             Grade:
           </Typography>
-          <TextField
-            type="text"
-            value={grade}
-            onChange={(e) => setGrade(e.target.value)}
-            id="outlined-basic"
-            variant="outlined"
-          />
+          <FormControl>
+            <RadioGroup
+              aria-labelledby="demo-row-radio-buttons-group-label"
+              name="radio-buttons-group"
+            >
+              <FormControlLabel
+                value="freshman"
+                onChange={() => setGrade("Freshman")}
+                control={<Radio />}
+                label="Freshman"
+              />
+              <FormControlLabel
+                value="sophomore"
+                onChange={() => setGrade("Sophomore")}
+                control={<Radio />}
+                label="Sophomore"
+              />
+              <FormControlLabel
+                value="junior"
+                onChange={() => setGrade("Junior")}
+                control={<Radio />}
+                label="Junior"
+              />
+              <FormControlLabel
+                value="senior"
+                onChange={() => setGrade("Senior")}
+                control={<Radio />}
+                label="Senior"
+              />
+            </RadioGroup>
+          </FormControl>
 
           <Typography variant="body2">{/* <p></p> */}</Typography>
           {/*
