@@ -9,7 +9,6 @@ import {
 } from "firebase/auth";
 import { auth } from "../../index";
 import { signIn, signOut, useSession } from "next-auth/react";
-// import { db } from "/Users/claradu/Desktop/1/437New/my-app/index";
 import { doc, getDoc, setDoc, getFirestore } from "firebase/firestore";
 import router, { useRouter } from "next/router";
 import Page from "./page";
