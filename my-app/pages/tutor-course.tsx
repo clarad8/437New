@@ -17,7 +17,7 @@ import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import NavBar from "./../components/nav";
 import getClassNames from "../src/app/classes";
 import { auth, db } from "../index"; // Import your Firebase Firestore instance
-import { addDoc, collection, doc, getDoc, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 
 interface classes {
   id: string;
@@ -59,19 +59,39 @@ export default function TutorCourse() {
       try {
         const user = auth.currentUser;
         if (user) {
-          // Get the user's UID (unique identifier) and name
           const userId = user.uid;
           const userName = user.displayName;
           const userEmail = user.email;
-          // Prepare data to be added to the "users" collection
-          const userData = {
-            name: userName,
-            takenClasses: selectedClasses,
-            classScores: classScores,
-          };
-          // Add data to the "users" collection in Firebase Firestore
+  
           const userDocRef = doc(db, "users", userId);
-          await setDoc(userDocRef, userData, { merge: true });
+          const userDoc = await getDoc(userDocRef);
+  
+          if (userDoc.exists()) {
+            // If the document exists, get the existing taken classes and class scores
+            const existingTakenClasses = userDoc.data().takenClasses || [];
+            const existingClassScores = userDoc.data().classScores || {};
+  
+            // Merge the existing taken classes with the new selected classes
+            const updatedTakenClasses = [...existingTakenClasses, ...selectedClasses];
+  
+            // Merge the existing class scores with the new class scores
+            const updatedClassScores = { ...existingClassScores, ...classScores };
+  
+            // Update the 'takenClasses' and 'classScores' fields in the document
+            await updateDoc(userDocRef, {
+              takenClasses: updatedTakenClasses,
+              classScores: updatedClassScores,
+            });
+          } else {
+            // If the document does not exist, create a new document for the user
+            const userData = {
+              name: userName,
+              takenClasses: selectedClasses,
+              classScores: classScores,
+            };
+            await setDoc(userDocRef, userData);
+          }
+  
           setAddedCourse(true);
           setTimeout(() => {
             setAddedCourse(false);
@@ -86,38 +106,51 @@ export default function TutorCourse() {
   };
 
   const addTutoringCourses = async () => {
-    if (selectedTutoringCourses.length > 0) {
-      try {
-        const user = auth.currentUser;
-        if (user) {
-          // Get the user's UID, name, and email
-          const userId = user.uid;
-          const userName = user.displayName;
-          const userEmail = user.email;
-          // Prepare data to be added to the "tutors" collection
-          const tutorData = {
-            id: userId, // Use the user's UID as the ID
-            name: userName,
-            email: userEmail,
-            tutoringClasses: selectedTutoringCourses,
-          };
+  if (selectedTutoringCourses.length > 0) {
+    try {
+      const user = auth.currentUser;
+      if (user) {
+        // Get the user's UID, name, and email
+        const userId = user.uid;
+        const userName = user.displayName;
+        const userEmail = user.email;
 
-          // Add data to the "tutors" collection in Firebase Firestore
-          const tutorDocRef = doc(db, "tutors", userId); // Use the user's UID as the document ID
-          await setDoc(tutorDocRef, tutorData, { merge: true });
+        // Get the existing tutoring classes from the "tutors" collection
+        const tutorDocRef = doc(db, "tutors", userId);
+        const tutorDoc = await getDoc(tutorDocRef);
 
-          setAddedTutoringCourses(true);
-          setTimeout(() => {
-            setAddedTutoringCourses(false);
-          }, 3000);
+        let existingTutoringClasses = [];
+        if (tutorDoc.exists()) {
+          existingTutoringClasses = tutorDoc.data().tutoringClasses || [];
         }
-      } catch (error) {
-        console.error("Error adding tutoring classes:", error);
+
+        // Merge the existing tutoring classes with the new selected tutoring classes
+        const updatedTutoringClasses = [...existingTutoringClasses, ...selectedTutoringCourses];
+
+        // Prepare data to be added/updated in the "tutors" collection
+        const tutorData = {
+          id: userId, // Use the user's UID as the ID
+          name: userName,
+          email: userEmail,
+          tutoringClasses: updatedTutoringClasses,
+        };
+
+        // Add data to the "tutors" collection in Firebase Firestore
+        await setDoc(tutorDocRef, tutorData, { merge: true });
+
+        setAddedTutoringCourses(true);
+        setTimeout(() => {
+          setAddedTutoringCourses(false);
+        }, 3000);
       }
-    } else {
-      setTutoringCoursesAlert(true);
+    } catch (error) {
+      console.error("Error adding tutoring classes:", error);
     }
-  };
+  } else {
+    setTutoringCoursesAlert(true);
+  }
+};
+
 
   return (
     <div>
