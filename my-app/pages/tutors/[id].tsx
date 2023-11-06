@@ -10,6 +10,7 @@ interface Tutor {
   name: string;
   tutoringClasses: string[];
   zoom: string;
+  profileImage: string | null;
 }
 
 const TutorProfile = () => {
@@ -17,6 +18,7 @@ const TutorProfile = () => {
   const { id } = router.query; // Get the tutor's ID from the URL parameter
 
   const [tutor, setTutor] = useState<Tutor | null>(null);
+  const [profileImage, setProfileImage] = useState<string | null>(null); // State to store profile image URL
 
   useEffect(() => {
     if (id) {
@@ -27,6 +29,7 @@ const TutorProfile = () => {
           const tutorData = tutorsData.find((t) => t.id === id);
           if (tutorData) {
             setTutor(tutorData);
+            setProfileImage(tutorData.profileImage);
           } else {
             throw new Error("Tutor not found");
           }
@@ -50,6 +53,7 @@ const TutorProfile = () => {
       <Typography variant="h3" gutterBottom>
         Tutor Profile
       </Typography>
+      {profileImage && <img src={profileImage} alt="Profile" style={{ width: "150px", height: "150px", borderRadius: "50%" }} />}
       <Typography variant="h4" gutterBottom>
         {tutor.name}
       </Typography>
@@ -58,7 +62,7 @@ const TutorProfile = () => {
       </Typography>
 
       <Typography variant="body1" gutterBottom>
-        Below is the tutor's zoom meeting room! Please join whenever you are ready. 
+        Below is the tutor's zoom meeting room! Please join whenever you are ready.
       </Typography>
 
       {/* make zoom link clickable */}

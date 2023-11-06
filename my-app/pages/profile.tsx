@@ -165,58 +165,62 @@ export default function Profile() {
     }
   };
 
-
   const handleImageUpload = async (files: FileList | null, uid: string) => {
-    setIsLoading(true); // Set loading state to true when starting the upload process
-
+    setIsLoading(true);
+  
     if (files && files.length > 0) {
       const file = files[0];
       const reader = new FileReader();
-
+  
       reader.onloadend = async () => {
         if (typeof reader.result === "string") {
-          // Check if the user already has an "image" field in Cloud Firestore
           const userDocRef = doc(db, "users", uid);
-          const docSnap = await getDoc(userDocRef);
-
-          if (docSnap.exists()) {
-            const userData = docSnap.data();
-            if (userData && userData.image) {
-              // If the user already has an image, update the existing "image" field
-              await updateDoc(userDocRef, {
+          const tutorDocRef = doc(db, "tutors", uid); // Reference to the tutor document
+  
+          try {
+            const userDocSnap = await getDoc(userDocRef);
+            const tutorDocSnap = await getDoc(tutorDocRef); // Check if the tutor document exists
+  
+            if (userDocSnap.exists()) {
+              const userData = userDocSnap.data();
+  
+              // Update 'image' field in 'users' database
+              await setDoc(userDocRef, {
+                ...userData,
                 image: reader.result,
               });
+  
+              setIsLoading(false);
+              setProfileImage(reader.result);
+  
+              if (tutorDocSnap.exists()) {
+                // If the user also exists as a tutor, update 'image' field in 'tutors' database
+                const tutorData = tutorDocSnap.data();
+                await setDoc(tutorDocRef, {
+                  ...tutorData,
+                  image: reader.result,
+                });
+              }
+  
               console.log("Image updated successfully in Cloud Firestore!");
             } else {
-              // If the user does not have an image, store the image data in the "image" field
-              await setDoc(userDocRef, {
-                image: reader.result,
-              });
-              console.log("Image stored successfully in Cloud Firestore!");
+              console.error("User not found in 'users' database.");
+              setIsLoading(false);
             }
-          } else {
-            // If the user document does not exist, create a new one with the "image" field
-            await setDoc(userDocRef, {
-              image: reader.result,
-            });
-            console.log("Image stored successfully in Cloud Firestore!");
+          } catch (error) {
+            console.error("Error updating image:", error);
+            setIsLoading(false);
           }
-
-          // Set the profile image in your component state
-          setProfileImage(reader.result);
-          setIsLoading(false);
         }
       };
-
+  
       reader.readAsDataURL(file);
     } else {
-      // If no files are selected, set the profile image to null (or any default image)
       setProfileImage(null);
-      setIsLoading(false); // Set loading state to false if no files are selected
-
+      setIsLoading(false);
     }
   };
-
+  
 
   const circleButtonStyle: React.CSSProperties = {
     width: "150px",
