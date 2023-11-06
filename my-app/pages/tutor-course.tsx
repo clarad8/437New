@@ -62,21 +62,21 @@ export default function TutorCourse() {
           const userId = user.uid;
           const userName = user.displayName;
           const userEmail = user.email;
-  
+
           const userDocRef = doc(db, "users", userId);
           const userDoc = await getDoc(userDocRef);
-  
+
           if (userDoc.exists()) {
             // If the document exists, get the existing taken classes and class scores
             const existingTakenClasses = userDoc.data().takenClasses || [];
             const existingClassScores = userDoc.data().classScores || {};
-  
+
             // Merge the existing taken classes with the new selected classes
             const updatedTakenClasses = [...existingTakenClasses, ...selectedClasses];
-  
+
             // Merge the existing class scores with the new class scores
             const updatedClassScores = { ...existingClassScores, ...classScores };
-  
+
             // Update the 'takenClasses' and 'classScores' fields in the document
             await updateDoc(userDocRef, {
               takenClasses: updatedTakenClasses,
@@ -91,7 +91,7 @@ export default function TutorCourse() {
             };
             await setDoc(userDocRef, userData);
           }
-  
+
           setAddedCourse(true);
           setTimeout(() => {
             setAddedCourse(false);
@@ -106,50 +106,55 @@ export default function TutorCourse() {
   };
 
   const addTutoringCourses = async () => {
-  if (selectedTutoringCourses.length > 0) {
-    try {
-      const user = auth.currentUser;
-      if (user) {
-        // Get the user's UID, name, and email
-        const userId = user.uid;
-        const userName = user.displayName;
-        const userEmail = user.email;
+    if (selectedTutoringCourses.length > 0) {
+      try {
+        const user = auth.currentUser;
+        if (user) {
+          // Get the user's UID, name, and email
+          const userId = user.uid;
+          const userName = user.displayName;
+          const userEmail = user.email;
 
-        // Get the existing tutoring classes from the "tutors" collection
-        const tutorDocRef = doc(db, "tutors", userId);
-        const tutorDoc = await getDoc(tutorDocRef);
+          // Get the existing tutoring classes from the "tutors" collection
+          const tutorDocRef = doc(db, "tutors", userId);
+          const tutorDoc = await getDoc(tutorDocRef);
 
-        let existingTutoringClasses = [];
-        if (tutorDoc.exists()) {
-          existingTutoringClasses = tutorDoc.data().tutoringClasses || [];
+          const userDocRef = doc(db, "users", userId);
+          const userDocSnap = await getDoc(userDocRef);
+          const userImage = userDocSnap.data()?.image;
+
+          let existingTutoringClasses = [];
+          if (tutorDoc.exists()) {
+            existingTutoringClasses = tutorDoc.data().tutoringClasses || [];
+          }
+
+          // Merge the existing tutoring classes with the new selected tutoring classes
+          const updatedTutoringClasses = [...existingTutoringClasses, ...selectedTutoringCourses];
+
+          // Prepare data to be added/updated in the "tutors" collection
+          const tutorData = {
+            id: userId, // Use the user's UID as the ID
+            name: userName,
+            email: userEmail,
+            image: userImage, // Add the user's image data to the tutorData
+            tutoringClasses: updatedTutoringClasses,
+          };
+
+          // Add data to the "tutors" collection in Firebase Firestore
+          await setDoc(tutorDocRef, tutorData, { merge: true });
+
+          setAddedTutoringCourses(true);
+          setTimeout(() => {
+            setAddedTutoringCourses(false);
+          }, 3000);
         }
-
-        // Merge the existing tutoring classes with the new selected tutoring classes
-        const updatedTutoringClasses = [...existingTutoringClasses, ...selectedTutoringCourses];
-
-        // Prepare data to be added/updated in the "tutors" collection
-        const tutorData = {
-          id: userId, // Use the user's UID as the ID
-          name: userName,
-          email: userEmail,
-          tutoringClasses: updatedTutoringClasses,
-        };
-
-        // Add data to the "tutors" collection in Firebase Firestore
-        await setDoc(tutorDocRef, tutorData, { merge: true });
-
-        setAddedTutoringCourses(true);
-        setTimeout(() => {
-          setAddedTutoringCourses(false);
-        }, 3000);
+      } catch (error) {
+        console.error("Error adding tutoring classes:", error);
       }
-    } catch (error) {
-      console.error("Error adding tutoring classes:", error);
+    } else {
+      setTutoringCoursesAlert(true);
     }
-  } else {
-    setTutoringCoursesAlert(true);
-  }
-};
+  };
 
 
   return (

@@ -21,7 +21,7 @@ import {
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 
 import getClassNames from "../src/app/classes";
-import { db } from "../index";
+import { db, auth } from "../index";
 import {
   collection,
   getDoc,
@@ -30,9 +30,12 @@ import {
   getFirestore,
   setDoc,
   DocumentSnapshot,
+  updateDoc,
 } from "firebase/firestore";
 import React from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+
 
 /*interface ProfileProps {
   passUserInfo: {
@@ -47,6 +50,12 @@ interface classes {
 export default function Profile() {
   const router = useRouter();
   //console.log(passUserInfo);
+  const [profileImage, setProfileImage] = useState<string | null>(null);
+  const storage = getStorage();
+  const [uid, setUid] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+
+
   const [name, setName] = useState(" ");
   const [grade, setGrade] = useState(" ");
   const [email, setEmail] = useState(" ");
@@ -63,22 +72,67 @@ export default function Profile() {
   const [snackbarSeverity, setSnackbarSeverity] =
     useState<AlertColor>("success");
 
-  // if(user) {
-  //     const displayName = user.displayName;
-  //     const uid = user.uid;
-  //     const email = user.email;
-  //     if(displayName != null)
-  //     {
-  //       setName(displayName);
-  //     }
-  //     if(email != null)
-  //     {
-  //       setEmail(email);
-  //     }
-  // }
-  // else {
-  //   //user is not signed in
-  // }
+  useEffect(() => {
+    const fetchClasses = async () => {
+      try {
+        const classNamesData = await getClassNames();
+        console.log("Fetched class names:", classNamesData);
+        setClasses(classNamesData);
+      } catch (error: any) {
+        console.error("Error fetching classes data:", error.message);
+      }
+    };
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const displayName = user.displayName;
+        const uid = user.uid;
+        const email = user.email;
+        const firestore = getFirestore();
+        setUid(user.uid);
+        // getDocs returns a QuerySnapshot which is a collection of DocumentSnapshot. getDoc returns the specific document.
+
+        const userDocRef = doc(firestore, "users", user.uid);
+        const docSnap = await getDoc(userDocRef);
+
+        if (docSnap.exists()) {
+          const userData = docSnap.data();
+          if (userData) {
+            const { name, email, grade, image } = userData;
+
+            if (grade) {
+              setGrade(grade);
+            }
+
+            if (email) {
+              setEmail(email);
+            }
+
+            if (name) {
+              setName(name);
+            }
+            if (image) {
+              setProfileImage(image);
+            }
+            else {
+              setProfileImage(null);
+            }
+            setIsLoading(false);
+
+          }
+        }
+
+        console.log(uid);
+        console.log(email);
+        console.log(name);
+      } else {
+        //user is not signed in
+        router.push("/");
+      }
+    });
+
+    fetchClasses();
+  }, []);
 
   const handleGoBack = () => {
     router.push("/"); //go back to home page
@@ -111,76 +165,71 @@ export default function Profile() {
     }
   };
 
-  useEffect(() => {
-    const fetchClasses = async () => {
-      try {
-        const classNamesData = await getClassNames();
-        console.log("Fetched class names:", classNamesData);
-        setClasses(classNamesData);
-      } catch (error: any) {
-        console.error("Error fetching classes data:", error.message);
-      }
-    };
 
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const displayName = user.displayName;
-        const uid = user.uid;
-        const email = user.email;
-        const firestore = getFirestore();
+  const handleImageUpload = async (files: FileList | null, uid: string) => {
+    setIsLoading(true); // Set loading state to true when starting the upload process
 
-        // getDocs returns a QuerySnapshot which is a collection of DocumentSnapshot. getDoc returns the specific document.
+    if (files && files.length > 0) {
+      const file = files[0];
+      const reader = new FileReader();
 
-        const userDocRef = doc(firestore, "users", user.uid);
-        const docSnap = await getDoc(userDocRef);
+      reader.onloadend = async () => {
+        if (typeof reader.result === "string") {
+          // Check if the user already has an "image" field in Cloud Firestore
+          const userDocRef = doc(db, "users", uid);
+          const docSnap = await getDoc(userDocRef);
 
-        if (docSnap.exists()) {
-          const userData = docSnap.data();
-          if (userData) {
-            const { name, email, grade } = userData;
-
-            if (grade) {
-              setGrade(grade);
+          if (docSnap.exists()) {
+            const userData = docSnap.data();
+            if (userData && userData.image) {
+              // If the user already has an image, update the existing "image" field
+              await updateDoc(userDocRef, {
+                image: reader.result,
+              });
+              console.log("Image updated successfully in Cloud Firestore!");
+            } else {
+              // If the user does not have an image, store the image data in the "image" field
+              await setDoc(userDocRef, {
+                image: reader.result,
+              });
+              console.log("Image stored successfully in Cloud Firestore!");
             }
-
-            if (email) {
-              setEmail(email);
-            }
-
-            if (name) {
-              setName(name);
-            }
+          } else {
+            // If the user document does not exist, create a new one with the "image" field
+            await setDoc(userDocRef, {
+              image: reader.result,
+            });
+            console.log("Image stored successfully in Cloud Firestore!");
           }
+
+          // Set the profile image in your component state
+          setProfileImage(reader.result);
+          setIsLoading(false);
         }
+      };
 
-        console.log(uid);
-        console.log(email);
-        console.log(name);
-      } else {
-        //user is not signed in
-        router.push("/");
-      }
-    });
-    // const fetchUserData = async () => {
-    //   try {
-    //     console.log(user);
-    //     if(user) {
-    //       const {displayName, email} = user;
-    //       setName(displayName || "");
-    //       setEmail(email || "");
-    //     }
-    //     else{
-    //       //user is not signed in
-    //     }
-    //   }
-    //   catch(error:any) {
-    //     console.error("Error fetching user data: ", error.message);
-    //   }
-    // }
+      reader.readAsDataURL(file);
+    } else {
+      // If no files are selected, set the profile image to null (or any default image)
+      setProfileImage(null);
+      setIsLoading(false); // Set loading state to false if no files are selected
 
-    fetchClasses();
-    // fetchUserData();
-  }, []);
+    }
+  };
+
+
+  const circleButtonStyle: React.CSSProperties = {
+    width: "150px",
+    height: "150px",
+    borderRadius: "50%",
+    backgroundColor: "gray",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    cursor: "pointer",
+    textAlign: "center", // Center text horizontally
+  };
+
 
   //  NEED TO SAVE INFO INTO DATABASE!!!!!
   //  right now this code only shows the new info that user has put in on the webpage for a moment
@@ -219,6 +268,55 @@ export default function Profile() {
           {snackbarMessage}
         </Alert>
       </Snackbar>
+
+      {profileImage ? (
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+          {/* Display the uploaded image here */}
+          {profileImage && (
+            <img
+              src={profileImage}
+              alt="Profile"
+              style={{
+                borderRadius: "50%",
+                width: "150px",
+                height: "150px",
+                marginTop: "10px", // Adjust the margin-top to align the image
+              }}
+            />
+          )}
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              const input = document.getElementById('profile-image-input');
+              if (input) {
+                input.click();
+              }
+            }}
+          >
+            Change Profile Picture
+          </Button>
+        </div>
+      ) : (
+        <label style={circleButtonStyle}>
+          <span>Upload a profile picture!</span>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => handleImageUpload(e.target.files, uid)}
+            style={{ display: "none" }}
+          />
+        </label>
+      )}
+
+      <input
+        type="file"
+        accept="image/*"
+        id="profile-image-input"
+        onChange={(e) => handleImageUpload(e.target.files, uid)}
+        style={{ display: 'none' }}
+      />
+
       <Typography variant="h6" gutterBottom>
         Tutor Status: (please only select "online" if you are currently
         available to tutor)
