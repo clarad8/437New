@@ -28,6 +28,10 @@ const TutorProfile = () => {
           // Find the tutor with the matching ID
           const tutorData = tutorsData.find((t) => t.id === id);
           if (tutorData) {
+            if (!tutorData.zoom) {
+              // Generate a random Zoom link (you can replace this logic with your preferred way of generating a Zoom link)
+              tutorData.zoom = `https://zoom.us/j/${Math.floor(Math.random() * 1000000000)}`;
+            }
             setTutor(tutorData);
             setProfileImage(tutorData.profileImage);
           } else {
