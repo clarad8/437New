@@ -53,6 +53,38 @@ const TutorProfile = () => {
   const [comment, setComment] = useState(""); // State to store user's comment
   const [comments, setComments] = useState<Comment[]>([]); // State to store comments and ratings
   const [alert, setAlert] = useState(false);
+  const [alert1, setAlert1] = useState(false);
+
+  const [contactInfo, setContactInfo] = useState(""); // State to store user's contact information
+  const [question, setQuestion] = useState(""); // State to store user's question
+
+
+  const handleQuestionChange = (event: { target: { value: SetStateAction<string>; }; }) => {
+    setQuestion(event.target.value);
+  };
+
+
+  const handleContactInfoChange = (event: { target: { value: SetStateAction<string>; }; }) => {
+    setContactInfo(event.target.value);
+  };
+
+
+  const handleAskQuestion = async () => {
+    if (question.trim() !== '') {
+      try {
+        // Handle the user's question (for example, send it to your backend API)
+        console.log("User's question:", question);
+        // Optionally, you can reset the question state after submission
+        setQuestion('');
+        setContactInfo('');
+        setAlert1(true);
+      } catch (error) {
+        console.error("Error submitting question:", error);
+      }
+    } else {
+      console.error("Invalid question");
+    }
+  };
 
   const handleRatingChange = (newRating: SetStateAction<number>) => {
     // Handle user's rating change here (you can send it to your backend API)
@@ -213,6 +245,66 @@ const TutorProfile = () => {
           {tutor.zoom}
         </a>
       </Typography>
+
+      <div style={{ marginTop: "20px" }}>
+        <form>
+          <div style={{ marginTop: "20px" }}>
+            <Typography variant="body1" gutterBottom>
+              Enter your contact information:
+            </Typography>
+            <TextField
+              id="contactInfo"
+              multiline
+              value={contactInfo}
+              onChange={handleContactInfoChange}
+              sx={{ width: "60%" }}
+              placeholder="Enter your email or phone number"
+              InputProps={{
+                style: { resize: "vertical" },
+              }}
+            />
+          </div>
+
+          <div style={{ marginTop: "20px" }}>
+            <Typography variant="body1" gutterBottom>
+              Enter your question:
+            </Typography>
+            <TextField
+              id="question"
+              multiline
+              value={question}
+              onChange={handleQuestionChange}
+              sx={{ width: "60%" }}
+              placeholder="Type your question here"
+              InputProps={{
+                style: { resize: "vertical" },
+              }}
+            />
+          </div>
+
+
+          <div>
+            <Button
+              variant="contained"
+              color="primary"
+              style={{ marginTop: "10px" }}
+              onClick={handleAskQuestion} // Call handleAskQuestion function on button click
+            >
+              Submit Question
+            </Button>
+            {alert1 && (
+              <Box my={2}>
+                <Alert severity="success" onClose={() => setAlert(false)}>
+                  Question submitted successfully!
+                </Alert>
+              </Box>
+            )}
+          </div>
+        </form>
+      </div>
+
+
+
 
       <div style={{ marginTop: "20px" }}>
         <Typography variant="body1" gutterBottom>
