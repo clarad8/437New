@@ -13,6 +13,8 @@ const Notification: React.FC = () => {
   const user = auth.currentUser;
   const [isTutor, setIsTutor] = useState(false);
   const [tutorId, setTutorId] = useState("");
+  const [isVisible, setIsVisible] = useState(true); // State variable to track visibility
+
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -54,7 +56,7 @@ const Notification: React.FC = () => {
 
           setNotifications(tutorNotifications);
 
-      
+
         } catch (error) {
           console.error("Error fetching notifications: ", error);
         }
@@ -90,7 +92,7 @@ const Notification: React.FC = () => {
   //     }
   //   });
   //     // await deleteDoc(doc(db, "tutors", id));
-  
+
   //     // Update the notifications state to remove the resolved notification
   //     // setNotifications(notifications.filter((notification) => notification.id !== id));
   //   } catch (error) {
@@ -98,8 +100,13 @@ const Notification: React.FC = () => {
   //   }
   // };
 
+  // Function to hide the notification box
+  const handleClose = () => {
+    setIsVisible(false);
+  };
+
   // if user is not a tutor, don't show the notification box at all
-  if(!isTutor) {
+  if (!isTutor || !isVisible) {
     return null;
   }
 
@@ -115,7 +122,7 @@ const Notification: React.FC = () => {
         borderRadius: "5px",
       }}
     >
-      
+
       {/* <Typography variant="h5" gutterBottom>
         Notifications:
       </Typography>
@@ -132,11 +139,17 @@ const Notification: React.FC = () => {
         ))}
       </List> */}
 
+      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "8px" }}>
+        <Button variant="outlined" onClick={handleClose}>
+          <ClearIcon />
+        </Button>
+      </div>
+      
       <Typography variant="h5" gutterBottom>
         Notifications:
       </Typography>
 
-    <List style={{ listStyleType: "none", padding: 0 }}>
+      <List style={{ listStyleType: "none", padding: 0 }}>
         {notifications.map((notification, index) => (
           <ListItem key={index} style={{ marginBottom: "8px" }}>
             {notification.question && notification.contact && (
