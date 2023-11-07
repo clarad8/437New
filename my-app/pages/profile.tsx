@@ -383,9 +383,12 @@ export default function Profile() {
       {/* Hide the tutor status if the user is not a tutor */}
 
       {isTutor && (
-        <><Typography variant="h6" gutterBottom>
-          Tutor Status: (please only select "online" if you are currently
-          available to tutor)
+        <><Typography variant="h6" gutterBottom fontWeight="bold">
+          Tutor Status: 
+        </Typography>
+        <Typography variant="body1" gutterBottom>
+          Please only select "online" if you are currently
+          available to tutor.
         </Typography>
           <FormControlLabel
             value="online"
@@ -416,14 +419,20 @@ export default function Profile() {
 
       <Box my={3} />
 
+      <Typography style={{ display: "inline" }} variant="body1" gutterBottom fontWeight="bold">
+        Name: <span>  </span>
+      </Typography>
       <Typography style={{ display: "inline" }} variant="body1" gutterBottom>
-        Name: <span>{name}</span>
+         <span>{name}</span>
       </Typography>
 
       <Box my={1} />
 
-      <Typography style={{ display: "inline" }} variant="body1" gutterBottom>
-        Email: <span>{email}</span>
+      <Typography style={{ display: "inline" }} variant="body1" gutterBottom fontWeight="bold">
+        Email:  <span>  </span>
+      </Typography>
+      <Typography style={{ display: "inline" }} variant="body1" gutterBottom >
+         <span>{email}</span>
       </Typography>
 
       <Box my={1} />
@@ -445,7 +454,7 @@ export default function Profile() {
             variant="outlined"
       />*/}
 
-          <Typography variant="body1" gutterBottom>
+          <Typography variant="body1" gutterBottom fontWeight="bold">
             Year:
           </Typography>
           <FormControl>
