@@ -53,6 +53,22 @@ const TutorProfile = () => {
   const [comment, setComment] = useState(""); // State to store user's comment
   const [comments, setComments] = useState<Comment[]>([]); // State to store comments and ratings
   const [alert, setAlert] = useState(false);
+  const [alert1, setAlert1] = useState(false);
+
+  const [contactInfo, setContactInfo] = useState(""); // State to store user's contact information
+  const [question, setQuestion] = useState(""); // State to store user's question
+
+  const handleQuestionChange = (event: {
+    target: { value: SetStateAction<string> };
+  }) => {
+    setQuestion(event.target.value);
+  };
+
+  const handleContactInfoChange = (event: {
+    target: { value: SetStateAction<string> };
+  }) => {
+    setContactInfo(event.target.value);
+  };
 
   const handleRatingChange = (newRating: SetStateAction<number>) => {
     // Handle user's rating change here (you can send it to your backend API)
@@ -64,7 +80,50 @@ const TutorProfile = () => {
   }) => {
     setComment(event.target.value);
   };
+  const submitQuestion = async (
+    id: string,
+    contact: string,
+    question: string
+  ) => {
+    try {
+      const user = auth.currentUser;
 
+      if (user) {
+        const userId = user.uid;
+
+        // Get the tutor document reference
+        const tutorDocRef = doc(db, "tutors", id);
+
+        // Get the existing data from the tutor document
+        const tutorDoc = await getDoc(tutorDocRef);
+
+        if (tutorDoc.exists()) {
+          // Extract existing ratings and comments
+          const existingContact: string[] = tutorDoc.data().contact || [];
+          const existingQuestion: string[] = tutorDoc.data().question || [];
+
+          // Update ratings and comments arrays with new data
+          const updatedContact = [...existingContact, contact];
+          const updatedQuestion = [...existingQuestion, question];
+
+          // Prepare data to be updated in the "tutors" collection
+          const tutorData = {
+            contact: updatedContact,
+            question: updatedQuestion,
+          };
+
+          // Update data in the "tutors" collection in Firebase Firestore
+          await updateDoc(tutorDocRef, tutorData);
+
+          console.log("Contact and question submitted successfully!");
+        } else {
+          console.error("Tutor not found in the database.");
+        }
+      }
+    } catch (error) {
+      console.error("Error submitting contact and question:", error);
+    }
+  };
   const submitRatingAndComment = async (
     id: string,
     rating: number,
@@ -129,6 +188,26 @@ const TutorProfile = () => {
     }
   };
 
+  const handleSubmitQuestion = async () => {
+    console.log(contactInfo);
+    if (contactInfo.trim() !== "" && question.trim() !== "") {
+      try {
+        if (tutor) {
+          const { id } = tutor; // Extract tutor ID from the tutor object
+          await submitQuestion(id, contactInfo, question);
+          // Optionally, you can reset the rating and comment states after submission
+          console.log("User's question:", question);
+          setQuestion("");
+          setContactInfo("");
+          setAlert1(true);
+        }
+      } catch (error) {
+        console.error("Error submitting question:", error);
+      }
+    } else {
+      console.error("Invalid");
+    }
+  };
   useEffect(() => {
     if (id) {
       // Fetch tutor data based on the ID using the getTutors function
@@ -213,6 +292,62 @@ const TutorProfile = () => {
           {tutor.zoom}
         </a>
       </Typography>
+
+      <div style={{ marginTop: "20px" }}>
+        <form>
+          <div style={{ marginTop: "20px" }}>
+            <Typography variant="body1" gutterBottom>
+              Enter your contact information:
+            </Typography>
+            <TextField
+              id="contactInfo"
+              multiline
+              value={contactInfo}
+              onChange={handleContactInfoChange}
+              sx={{ width: "60%" }}
+              placeholder="Enter your email or phone number"
+              InputProps={{
+                style: { resize: "vertical" },
+              }}
+            />
+          </div>
+
+          <div style={{ marginTop: "20px" }}>
+            <Typography variant="body1" gutterBottom>
+              Enter your question:
+            </Typography>
+            <TextField
+              id="question"
+              multiline
+              value={question}
+              onChange={handleQuestionChange}
+              sx={{ width: "60%" }}
+              placeholder="Type your question here"
+              InputProps={{
+                style: { resize: "vertical" },
+              }}
+            />
+          </div>
+
+          <div>
+            <Button
+              variant="contained"
+              color="primary"
+              style={{ marginTop: "10px" }}
+              onClick={handleSubmitQuestion} // Call handleAskQuestion function on button click
+            >
+              Submit Question
+            </Button>
+            {alert1 && (
+              <Box my={2}>
+                <Alert severity="success" onClose={() => setAlert(false)}>
+                  Question submitted successfully!
+                </Alert>
+              </Box>
+            )}
+          </div>
+        </form>
+      </div>
 
       <div style={{ marginTop: "20px" }}>
         <Typography variant="body1" gutterBottom>

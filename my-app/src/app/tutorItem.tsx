@@ -95,60 +95,58 @@ const TutorItem: React.FC<Tutor> = ({
       : "None";
 
   return (
-    <Link href={`/tutors/${id}`}>
+    <div
+      className="tutor-box"
+      style={{ width: "200px", height: "200px", cursor: "pointer" }}
+    >
+      <Link href={`/tutors/${id}`}>
+        <div className="tutor-content">
+          <Typography variant="h5" gutterBottom>
+            {name}
+          </Typography>
+
+          {tutoringClasses && tutoringClasses.length > 0 ? (
+            <Typography variant="body1" gutterBottom>
+              Class Name: {tutoringClasses.join(", ")}
+            </Typography>
+          ) : (
+            <Typography variant="body1" gutterBottom>
+              No classes available
+            </Typography>
+          )}
+          {online ? (
+            <Typography variant="body1" gutterBottom>
+              Online
+            </Typography>
+          ) : (
+            <Typography variant="body1" gutterBottom>
+              Offline
+            </Typography>
+          )}
+          <Typography variant="body1" gutterBottom>
+            Average Rating: {averageRating}
+          </Typography>
+        </div>
+      </Link>
       <div
-        className="tutor-box"
-        style={{ width: "200px", height: "200px", cursor: "pointer" }}
+        onClick={(e) => {
+          e.stopPropagation(); // Prevent the event from propagating
+          // Handle click logic for the entire tutor box here
+        }}
       >
-        <Typography variant="h5" gutterBottom>
-          {name}
-        </Typography>
-
-        {tutoringClasses && tutoringClasses.length > 0 ? (
-          <Typography variant="body1" gutterBottom>
-            Class Name: {tutoringClasses.join(", ")}
-          </Typography>
-        ) : (
-          <Typography variant="body1" gutterBottom>
-            No classes available
-          </Typography>
-        )}
-        {online ? (
-          <Typography variant="body1" gutterBottom>
-            Online
-          </Typography>
-        ) : (
-          <Typography variant="body1" gutterBottom>
-            Offline
-          </Typography>
-        )}
-        <Typography variant="body1" gutterBottom>
-          Average Rating: {averageRating}
-        </Typography>
-
         <IconButton
           color={isLiked ? "primary" : "default"}
-          onClick={handleLikeClick}
+          style={{ cursor: "pointer" }}
+          onClick={(e) => {
+            e.stopPropagation(); // Prevent the event from propagating
+            // Handle "like" logic for the icon button here
+            handleLikeClick();
+          }}
         >
           <FavoriteIcon />
         </IconButton>
-        <style jsx>{`
-          .tutor-box {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 200px; /* Adjust the width for desktop */
-            margin: 10px; /* Add spacing between boxes */
-          }
-
-          @media (max-width: 768px) {
-            .tutor-box {
-              width: 100%; /* Full width on smaller screens */
-            }
-          }
-        `}</style>
       </div>
-    </Link>
+    </div>
   );
 };
 

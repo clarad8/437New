@@ -6,6 +6,7 @@ import TutorItem from "./tutorItem";
 import getClassNames from "./classes";
 import Link from "next/link";
 import {
+  Alert,
   Box,
   Button,
   FormControl,
@@ -20,8 +21,9 @@ import NavBar from "../../components/nav";
 // import SessionProvider from "./SessionProvider";
 import Profile from "../../pages/profile";
 import React from "react";
-import FavoriteTutors from "./favoriteTutors";
-
+import Notification from "./notification";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { db } from "../../index";
 interface Tutor {
   id: string;
   name: string;
@@ -43,6 +45,10 @@ export default function Home() {
   const [selectedClass, setSelectedClass] = useState<string>(""); // State to hold selected class
   const [username, setUserName] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [favoriteTutors, setFavoriteTutors] = useState<string[]>([]);
+
   const fetchTutors = async () => {
     const tutorsData = await getTutors();
     setAllTutors(tutorsData);
@@ -65,6 +71,28 @@ export default function Home() {
     fetchClasses();
   }, []);
   useEffect(() => {
+    const fetchFavoriteTutors = async () => {
+      const q = query(collection(db, "users"), where("favorite", "!=", []));
+
+      try {
+        const querySnapshot = await getDocs(q);
+        const favoriteTutorsList: string[] = [];
+
+        querySnapshot.forEach((doc) => {
+          const userData = doc.data();
+          const favoriteTutors = userData.favorite || [];
+          favoriteTutorsList.push(...favoriteTutors);
+        });
+        setFavoriteTutors(favoriteTutorsList);
+      } catch (error) {
+        console.error("Error fetching favorite tutors: ", error);
+      }
+    };
+
+    fetchFavoriteTutors();
+  }, []); // Run the effect once after the initial render
+
+  useEffect(() => {
     if (searchQuery) {
       const filteredTutors = allTutors.filter((tutor) =>
         tutor.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -75,6 +103,23 @@ export default function Home() {
       setTutors(allTutors);
     }
   }, [searchQuery, allTutors]);
+
+  // useEffect(() => {
+  //   // Filter tutors based on the selected class when it changes
+
+  //   if (selectedClass) {
+  //     if (selectedClass === "Show All Tutors") {
+  //       setTutors(allTutors);
+  //     }
+  //     else {
+  //       const filteredTutors = allTutors.filter((tutor) =>
+  //       tutor.tutoringClasses && tutor.tutoringClasses.includes(selectedClass)
+  //     );
+  //       setTutors(filteredTutors);
+  //     }
+  //   }
+  // }, [selectedClass, allTutors]);
+
   useEffect(() => {
     // Filter tutors based on the selected class when it changes
 
@@ -82,9 +127,21 @@ export default function Home() {
       if (selectedClass === "Show All Tutors") {
         setTutors(allTutors);
       } else {
-        const filteredTutors = allTutors.filter((tutor) =>
-          tutor.tutoringClasses.includes(selectedClass)
+        
+        const filteredTutors = allTutors.filter(
+          (tutor) =>
+            tutor.tutoringClasses &&
+            tutor.tutoringClasses.includes(selectedClass)
         );
+        // no tutor is available for the class
+        if (filteredTutors.length === 0) {
+          console.log("no tutors!");
+          setAlertMessage(`No tutors available yet for ${selectedClass}`);
+          setShowAlert(true);
+        }
+        else {
+          setShowAlert(false);
+        }
         setTutors(filteredTutors);
       }
     }
@@ -94,6 +151,7 @@ export default function Home() {
     setTutors(allTutors);
   };
 
+  // filter means active or inactive
   const setFilter = (status: string) => {
     if (status === "active") {
       const activeTutors = allTutors.filter((tutor) => tutor.online === true);
@@ -103,6 +161,11 @@ export default function Home() {
         (tutor) => tutor.online === false
       );
       setTutors(inactiveTutors);
+    } else if (status === "favorite") {
+      const favoriteTutorsList = allTutors.filter((tutor) =>
+        favoriteTutors.includes(tutor.name)
+      );
+      setTutors(favoriteTutorsList);
     } else {
       // Reset to all tutors if no specific status is provided
       setTutors(allTutors);
@@ -121,15 +184,24 @@ export default function Home() {
         Find a CS Tutor
       </Typography>
       <Typography variant="body1" gutterBottom>
-        Whether you're struggling with a particular subject or looking to
+        Whether you're struggling with a particular class or looking to
         enhance your understanding of a class, our platform is here to connect
         you with experienced tutors who can help you succeed.
       </Typography>
       <Typography variant="body1" gutterBottom>
-        Explore our diverse range of tutors, filter by subjects or classes, and
-        find the perfect match to support your learning journey.
+        Explore our diverse range of tutors. Filter by classes or find tutors that are active right now to 
+        find the perfect tutor match to support your learning journey.
       </Typography>
       <br></br>
+
+      {/* alert for when there are no tutors for the course */}
+
+      {showAlert && (
+        <Alert severity="warning" onClose={() => setShowAlert(false)}>
+          {alertMessage}
+        </Alert>
+      )}
+
       <Typography variant="h5" gutterBottom>
         Select Class:
       </Typography>
@@ -192,7 +264,13 @@ export default function Home() {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => setFilter("active")}
+          onClick={() => {
+            setFilter("active");
+            setSelectedClass("");
+            setShowAlert(false);
+            setAlertMessage("");
+            setSearchQuery("");
+          }}
           style={{ margin: "0 10px" }}
         >
           Active Tutors
@@ -200,10 +278,30 @@ export default function Home() {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => setFilter("inactive")}
+          onClick={() => {
+            setFilter("inactive");
+            setSelectedClass("");
+            setShowAlert(false);
+            setAlertMessage("");
+            setSearchQuery("");
+          }}
           style={{ margin: "0 10px" }}
         >
           Inactive Tutors
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            setFilter("favorite");
+            setSelectedClass("");
+            setShowAlert(false);
+            setAlertMessage("");
+            setSearchQuery("");
+          }}
+          style={{ margin: "0 10px" }}
+        >
+          Favorite Tutors
         </Button>
       </div>
       <br></br>
@@ -216,28 +314,30 @@ export default function Home() {
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
       />
+      <Box my={2} />
+
+      <Button
+        variant="contained"
+        color="secondary"
+        onClick={() => {
+          setSelectedClass("");
+          setFilter("");
+          setSearchQuery("");
+          setShowAlert(false);
+          setAlertMessage("");
+        }}
+        style={{ margin: "0 10px" }}
+      >
+        Clear All Filters
+      </Button>
+
       <Box my={3} />
 
       <Typography variant="h5" gutterBottom>
         Tutors:
       </Typography>
 
-      <div
-        style={{
-          position: "fixed",
-          top: "30px", // Adjust top position as needed
-          right: "30px", // Adjust right position as needed
-          backgroundColor: "lightblue",
-          padding: "10px",
-          border: "1px solid #ccc",
-          borderRadius: "5px",
-        }}
-      >
-        <Typography variant="h5" gutterBottom>
-          Favorite Tutors:
-        </Typography>
-        <FavoriteTutors />
-      </div>
+      <Notification />
 
       <div className="tutor-container">
         {tutors.map((tutor) => (
