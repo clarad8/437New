@@ -127,6 +127,7 @@ export default function Home() {
       if (selectedClass === "Show All Tutors") {
         setTutors(allTutors);
       } else {
+        
         const filteredTutors = allTutors.filter(
           (tutor) =>
             tutor.tutoringClasses &&
@@ -137,6 +138,9 @@ export default function Home() {
           console.log("no tutors!");
           setAlertMessage(`No tutors available yet for ${selectedClass}`);
           setShowAlert(true);
+        }
+        else {
+          setShowAlert(false);
         }
         setTutors(filteredTutors);
       }
@@ -180,13 +184,13 @@ export default function Home() {
         Find a CS Tutor
       </Typography>
       <Typography variant="body1" gutterBottom>
-        Whether you're struggling with a particular subject or looking to
+        Whether you're struggling with a particular class or looking to
         enhance your understanding of a class, our platform is here to connect
         you with experienced tutors who can help you succeed.
       </Typography>
       <Typography variant="body1" gutterBottom>
-        Explore our diverse range of tutors, filter by subjects or classes, and
-        find the perfect match to support your learning journey.
+        Explore our diverse range of tutors. Filter by classes or find tutors that are active right now to 
+        find the perfect tutor match to support your learning journey.
       </Typography>
       <br></br>
 

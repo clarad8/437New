@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs, updateDoc, doc } from "firebase/firestore";
 import { db } from "../../index"; // Import your Firestore database configuration
-import { List, ListItem, Typography } from "@mui/material";
+import { Button, List, ListItem, Typography } from "@mui/material";
+import ClearIcon from '@mui/icons-material/Clear';
 import { getAuth } from "firebase/auth";
 
 const Notification: React.FC = () => {
@@ -10,6 +11,8 @@ const Notification: React.FC = () => {
   >([]);
   const auth = getAuth();
   const user = auth.currentUser;
+  const [isTutor, setIsTutor] = useState(false);
+  const [tutorId, setTutorId] = useState("");
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -22,6 +25,16 @@ const Notification: React.FC = () => {
 
         try {
           const querySnapshot = await getDocs(q);
+
+          // don't show the notification box if the user is not a tutor
+          if (querySnapshot.empty) {
+            console.log("User is not a tutor.");
+            setIsTutor(false);
+          } else {
+            console.log("User is a tutor.");
+            setIsTutor(true);
+            setTutorId(user.uid);
+          }
 
           // Initialize an array to store the notifications
           const tutorNotifications: { question: string; contact: string }[] =
@@ -40,6 +53,8 @@ const Notification: React.FC = () => {
           });
 
           setNotifications(tutorNotifications);
+
+      
         } catch (error) {
           console.error("Error fetching notifications: ", error);
         }
@@ -48,6 +63,45 @@ const Notification: React.FC = () => {
 
     fetchNotifications();
   }, [user?.displayName]);
+
+  // button to resolve/delete the question for tutors
+  // const handleResolve = async (contact: string, question: string) => {
+  //   try {
+  //     // Remove the notification from the database
+  //     const q = query(
+  //       collection(db, "tutors"),
+  //       where("id", "==", tutorId)
+  //       );
+
+  //       const querySnapshot = await getDocs(q);
+
+  //     querySnapshot.forEach((doc) => {
+  //     const tutorData = doc.data();
+  //     const tutorContact = tutorData.contact;
+  //     const tutorQuestion = tutorData.question;
+
+  //     if (tutorContact === contact && tutorQuestion === question) {
+  //       const docRef = doc(db, "tutors", doc.id);
+  //       const updatedContacts = tutorContact.filter((c) => c !== contact);
+  //       updateDoc(doc, { contact: updatedContacts });
+  //       const updatedQuestions = tutorQuestion.filter((q) => q !== question);
+  //       updateDoc(doc, { questions: updatedQuestions });
+
+  //     }
+  //   });
+  //     // await deleteDoc(doc(db, "tutors", id));
+  
+  //     // Update the notifications state to remove the resolved notification
+  //     // setNotifications(notifications.filter((notification) => notification.id !== id));
+  //   } catch (error) {
+  //     console.error("Error resolving notification:", error);
+  //   }
+  // };
+
+  // if user is not a tutor, don't show the notification box at all
+  if(!isTutor) {
+    return null;
+  }
 
   return (
     <div
@@ -61,15 +115,43 @@ const Notification: React.FC = () => {
         borderRadius: "5px",
       }}
     >
-      <Typography variant="h5" gutterBottom>
+      
+      {/* <Typography variant="h5" gutterBottom>
         Notifications:
       </Typography>
       <List style={{ listStyleType: "none", padding: 0 }}>
         {notifications.map((notification, index) => (
           <ListItem key={index} style={{ marginBottom: "8px" }}>
-            <Typography variant="body2">
-              Contact: {notification.contact} Question: {notification.question}
-            </Typography>
+            
+            {!notification.question || !notification.contact ? null : (
+              <Typography variant="body2">
+                Contact: {notification.contact} Question: {notification.question}
+              </Typography>  
+            )}
+          </ListItem>
+        ))}
+      </List> */}
+
+      <Typography variant="h5" gutterBottom>
+        Notifications:
+      </Typography>
+
+    <List style={{ listStyleType: "none", padding: 0 }}>
+        {notifications.map((notification, index) => (
+          <ListItem key={index} style={{ marginBottom: "8px" }}>
+            {notification.question && notification.contact && (
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <Typography variant="body2">
+                  Contact: {notification.contact} Question: {notification.question}
+                </Typography>
+                {/* <Button
+                  variant="contained"
+                  onClick={() => handleResolve(notification.id)}
+                  endIcon={<ClearIcon />}
+                >
+                </Button> */}
+              </div>
+            )}
           </ListItem>
         ))}
       </List>
