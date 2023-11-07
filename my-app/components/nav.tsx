@@ -104,7 +104,7 @@ export default function NavBar() {
                 sx={{ my: 2, color: "white", display: "block" }}
                 onClick={async () => {
                   await signOut();
-                  router.push("/");
+                  // router.push("/");
                 }}
               >
                 Logout
