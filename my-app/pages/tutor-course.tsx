@@ -151,20 +151,6 @@ export default function TutorCourse() {
           const validClasses: string[] = [];
           const invalidClasses: string[] = [];
 
-          // for (const [course, score] of Object.entries(classScores)) {
-          //     if(selectedTutoringClasses.includes(course)) {
-          //       console.log(score);
-          //       if (score === "90+") {
-                  
-          //         validClasses.push(course);
-          //       }
-          //       else {
-          //         console.log("problem1");
-          //         invalidClasses.push(course);
-          //       }
-          //     }
-          // }
-
           for(const course of selectedTutoringClasses) {
             if(takenClasses.includes(course)) {
               const score = classScores[course];
@@ -216,6 +202,7 @@ export default function TutorCourse() {
     }
   };
 
+  // clears courses and resets all arrays
   const clearSelections = () => {
     setSelectedClasses([]);
     setSelectedTutoringClasses([]);

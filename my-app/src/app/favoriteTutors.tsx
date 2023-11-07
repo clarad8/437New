@@ -29,15 +29,6 @@ const FavoriteTutors: React.FC = () => {
     fetchFavoriteTutors();
   }, []); // Run the effect once after the initial render
 
-  // return (
-  //   <ul style={{ listStyleType: "none", padding: 0 }}>
-  //     {favoriteTutors.map((tutor, index) => (
-  //       <li key={index} style={{ marginBottom: "8px" }}>
-  //         {tutor}
-  //       </li>
-  //     ))}
-  //   </ul>
-  // );
   return (
     <List style={{ listStyleType: "none", padding: 0 }}>
       {favoriteTutors.map((tutor, index) => (

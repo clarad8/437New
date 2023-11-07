@@ -64,29 +64,24 @@ export default function Home() {
     fetchClasses();
   }, []);
 
-  // useEffect(() => {
-  //   // Filter tutors based on the selected class when it changes
-  //   if (selectedClass) {
-  //     if (selectedClass === "Show All Tutors") {
-  //       setTutors(allTutors);
-  //     } else {
-  //       const filteredTutors = allTutors.filter(
-  //         (tutor) => tutor.tutoringClasses.includes(selectedClass)
-  //       );
-  //       setTutors(filteredTutors);
-  //     }
-  //   }
-  // }, [selectedClass, allTutors]);
+  useEffect(() => {
+    // Filter tutors based on the selected class when it changes
+    if (selectedClass) {
+      if (selectedClass === "Show All Tutors") {
+        setTutors(allTutors);
+      } else {
+        const filteredTutors = allTutors.filter(
+          (tutor) => tutor.tutoringClasses.includes(selectedClass)
+        );
+        setTutors(filteredTutors);
+      }
+    }
+  }, [selectedClass, allTutors]);
 
-  
-  
 
   const resetPage = () => {
     setTutors(allTutors);
   };
-  // function setFilter(arg0: string) {
-  //   throw new Error("Function not implemented.");
-  // }
 
   const setFilter = (status: string) => {
     if (status === "active") {
@@ -193,7 +188,6 @@ export default function Home() {
         {tutors.map((tutor) => (
           <TutorItem key={tutor.id} {...tutor} />
         ))}
-        {/*<Profile passUserInfo={session?.data?.user?.name}></Profile>*/}
       </div>
     </>
   );

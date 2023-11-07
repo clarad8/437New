@@ -37,12 +37,6 @@ import React from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
-
-/*interface ProfileProps {
-  passUserInfo: {
-    name: any;
-  };
-}*/
 interface classes {
   id: string;
   name: string;
@@ -587,11 +581,6 @@ export default function Profile() {
 
               </Typography>
               
-     
-        
-            
-          
-
           <Box my={2} />
           <Button variant="contained" color="primary" onClick={handleEdit}>
             Edit
