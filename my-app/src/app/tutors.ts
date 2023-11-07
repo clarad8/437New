@@ -7,6 +7,7 @@ interface Tutor {
   name: string;
   tutoringClasses: string[];
   zoom: string;
+  online: boolean;
   profileImage: string | null;
 }
 
@@ -26,8 +27,9 @@ const getTutors = async () => {
         id: doc.id,
         name: tutor.name,
         tutoringClasses: tutor.tutoringClasses as string[],
-        zoom: tutor.zoom, // Assuming you store the image URL in the 'imageURL' field
+        zoom: tutor.zoom,
         profileImage: tutor.image,
+        online: tutor.online
       });
     });
     return tutorsData;

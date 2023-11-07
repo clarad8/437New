@@ -13,9 +13,10 @@ interface Tutor {
   name: string;
   tutoringClasses?: string[]; // Make tutoringClasses optional
   zoom: string;
+  online: boolean;
 }
 
-const TutorItem: React.FC<Tutor> = ({ id, name, tutoringClasses, zoom }) => {
+const TutorItem: React.FC<Tutor> = ({ id, name, tutoringClasses, zoom, online }) => {
   const [userId, setUserId] = useState(""); // State to store the current user's ID
   const [isLiked, setIsLiked] = useState(() => {
     const likedTutorsJSON = localStorage.getItem('likedTutors');
@@ -87,6 +88,15 @@ const TutorItem: React.FC<Tutor> = ({ id, name, tutoringClasses, zoom }) => {
         <Typography variant="body1" gutterBottom>
           No classes available
         </Typography>
+      )}
+      {online ? (
+        <Typography variant="body1" gutterBottom>
+        Online      
+      </Typography>
+      ): (
+        <Typography variant="body1" gutterBottom>
+        Offline      
+      </Typography>
       )}
       <IconButton color={isLiked ? "primary" : "default"} onClick={handleLikeClick}>
         <FavoriteIcon />

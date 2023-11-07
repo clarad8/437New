@@ -26,6 +26,8 @@ interface Tutor {
   name: string;
   tutoringClasses: string[];
   zoom: string;
+  online:boolean;
+
 }
 
 interface classes {
@@ -62,27 +64,42 @@ export default function Home() {
     fetchClasses();
   }, []);
 
-  useEffect(() => {
-    // Filter tutors based on the selected class when it changes
-    if (selectedClass) {
-      if (selectedClass === "Show All Tutors") {
-        setTutors(allTutors);
-      } else {
-        const filteredTutors = allTutors.filter(
-          (tutor) => tutor.tutoringClasses.includes(selectedClass)
-        );
-        setTutors(filteredTutors);
-      }
-    }
-  }, [selectedClass, allTutors]);
+  // useEffect(() => {
+  //   // Filter tutors based on the selected class when it changes
+  //   if (selectedClass) {
+  //     if (selectedClass === "Show All Tutors") {
+  //       setTutors(allTutors);
+  //     } else {
+  //       const filteredTutors = allTutors.filter(
+  //         (tutor) => tutor.tutoringClasses.includes(selectedClass)
+  //       );
+  //       setTutors(filteredTutors);
+  //     }
+  //   }
+  // }, [selectedClass, allTutors]);
+
+  
   
 
   const resetPage = () => {
     setTutors(allTutors);
   };
-  function setFilter(arg0: string) {
-    throw new Error("Function not implemented.");
-  }
+  // function setFilter(arg0: string) {
+  //   throw new Error("Function not implemented.");
+  // }
+
+  const setFilter = (status: string) => {
+    if (status === "active") {
+      const activeTutors = allTutors.filter((tutor) => tutor.online === true);
+      setTutors(activeTutors);
+    } else if (status === "inactive") {
+      const inactiveTutors = allTutors.filter((tutor) => tutor.online === false);
+      setTutors(inactiveTutors);
+    } else {
+      // Reset to all tutors if no specific status is provided
+      setTutors(allTutors);
+    }
+  };
 
   
   return (
@@ -166,7 +183,9 @@ export default function Home() {
         borderRadius: "5px",
       }}
     >
-      <h3>Favorite Tutors</h3>
+      <Typography variant="h5" gutterBottom>
+        Favorite Tutors:
+      </Typography>
       <FavoriteTutors />
     </div>
 

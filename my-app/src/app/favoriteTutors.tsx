@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../../index"; // Import your Firestore database configuration
+import { List, ListItem, Typography } from '@mui/material';
 
 const FavoriteTutors: React.FC = () => {
   const [favoriteTutors, setFavoriteTutors] = useState<string[]>([]);
@@ -28,12 +29,23 @@ const FavoriteTutors: React.FC = () => {
     fetchFavoriteTutors();
   }, []); // Run the effect once after the initial render
 
+  // return (
+  //   <ul style={{ listStyleType: "none", padding: 0 }}>
+  //     {favoriteTutors.map((tutor, index) => (
+  //       <li key={index} style={{ marginBottom: "8px" }}>
+  //         {tutor}
+  //       </li>
+  //     ))}
+  //   </ul>
+  // );
   return (
-    <ul style={{ listStyleType: "none", padding: 0 }}>
+    <List style={{ listStyleType: "none", padding: 0 }}>
       {favoriteTutors.map((tutor, index) => (
-        <li key={index} style={{ marginBottom: "8px" }}>{tutor}</li>
+        <ListItem key={index} style={{ marginBottom: "8px" }}>
+          <Typography variant="body2">{tutor}</Typography>
+        </ListItem>
       ))}
-    </ul>
+    </List>
   );
 };
 
