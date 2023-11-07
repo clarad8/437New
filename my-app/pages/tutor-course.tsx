@@ -29,18 +29,14 @@ export default function TutorCourse() {
   const [classesData, setClassesData] = useState<classes[]>([]);
   const [selectedClasses, setSelectedClasses] = useState<string[]>([]);
   const [classScores, setClassScores] = useState<{ [key: string]: string }>({});
-  const [addedCourse, setAddedCourse] = useState(false);
+  const [addedClass, setAddedClass] = useState(false);
   const [alert, setAlert] = useState(false);
 
-  const [selectedTutoringCourses, setSelectedTutoringCourses] = useState<
+  const [selectedTutoringClasses, setSelectedTutoringClasses] = useState<
     string[]
   >([]);
-  const [addedTutoringCourses, setAddedTutoringCourses] = useState(false);
+  const [addedTutoringClasses, setAddedTutoringClasses] = useState(false);
   const [tutoringCoursesAlert, setTutoringCoursesAlert] = useState(false);
-
-  const handleGoBack = () => {
-    router.push("/");
-  };
 
   useEffect(() => {
     const fetchClassData = async () => {
@@ -63,38 +59,53 @@ export default function TutorCourse() {
           const userName = user.displayName;
           const userEmail = user.email;
 
-          const userDocRef = doc(db, "users", userId);
-          const userDoc = await getDoc(userDocRef);
+          // Get the existing tutoring classes from the "tutors" collection
+          let tutorDocRef = doc(db, "tutors", userId);
+          let tutorDoc = await getDoc(tutorDocRef);
 
-          if (userDoc.exists()) {
-            // If the document exists, get the existing taken classes and class scores
-            const existingTakenClasses = userDoc.data().takenClasses || [];
-            const existingClassScores = userDoc.data().classScores || {};
+          
 
+          // if tutor doesn't exist, we add the user to tutor database
+          if(!tutorDoc.exists()) {
+              const tutorData = {
+                id: userId, // Use the user's UID as the ID
+                name: userName,
+                email: userEmail
+              };
+              await setDoc(tutorDocRef, tutorData);
+          }
+
+          // reload tutor info
+          tutorDocRef = doc(db, "tutors", userId);
+          tutorDoc = await getDoc(tutorDocRef);
+
+          let existingTakenClasses = [];
+          let existingClassScores = [];
+
+          // now it should exist
+          if (tutorDoc.exists()) {
+            existingTakenClasses = tutorDoc.data().takenClasses || [];
+            existingClassScores = tutorDoc.data().classScores || {};
+          }
             // Merge the existing taken classes with the new selected classes
             const updatedTakenClasses = [...existingTakenClasses, ...selectedClasses];
 
             // Merge the existing class scores with the new class scores
             const updatedClassScores = { ...existingClassScores, ...classScores };
 
-            // Update the 'takenClasses' and 'classScores' fields in the document
-            await updateDoc(userDocRef, {
-              takenClasses: updatedTakenClasses,
-              classScores: updatedClassScores,
-            });
-          } else {
-            // If the document does not exist, create a new document for the user
-            const userData = {
-              name: userName,
-              takenClasses: selectedClasses,
-              classScores: classScores,
-            };
-            await setDoc(userDocRef, userData);
-          }
 
-          setAddedCourse(true);
+          // Prepare data to be updated in the "tutors" collection
+          const tutorData = {
+            takenClasses: updatedTakenClasses,
+            classScores: classScores
+          };
+
+          // update data to the "tutors" collection in Firebase Firestore
+          await updateDoc(tutorDocRef, tutorData);
+
+          setAddedClass(true);
           setTimeout(() => {
-            setAddedCourse(false);
+            setAddedClass(false);
           }, 3000);
         }
       } catch (error) {
@@ -106,7 +117,7 @@ export default function TutorCourse() {
   };
 
   const addTutoringCourses = async () => {
-    if (selectedTutoringCourses.length > 0) {
+    if (selectedTutoringClasses.length > 0) {
       try {
         const user = auth.currentUser;
         if (user) {
@@ -119,33 +130,28 @@ export default function TutorCourse() {
           const tutorDocRef = doc(db, "tutors", userId);
           const tutorDoc = await getDoc(tutorDocRef);
 
-          const userDocRef = doc(db, "users", userId);
-          const userDocSnap = await getDoc(userDocRef);
-          const userImage = userDocSnap.data()?.image;
-
           let existingTutoringClasses = [];
           if (tutorDoc.exists()) {
             existingTutoringClasses = tutorDoc.data().tutoringClasses || [];
           }
 
           // Merge the existing tutoring classes with the new selected tutoring classes
-          const updatedTutoringClasses = [...existingTutoringClasses, ...selectedTutoringCourses];
+          const updatedTutoringClasses = [...existingTutoringClasses, ...selectedTutoringClasses];
 
           // Prepare data to be added/updated in the "tutors" collection
           const tutorData = {
             id: userId, // Use the user's UID as the ID
             name: userName,
             email: userEmail,
-            image: userImage, // Add the user's image data to the tutorData
             tutoringClasses: updatedTutoringClasses,
           };
 
           // Add data to the "tutors" collection in Firebase Firestore
           await setDoc(tutorDocRef, tutorData, { merge: true });
 
-          setAddedTutoringCourses(true);
+          setAddedTutoringClasses(true);
           setTimeout(() => {
-            setAddedTutoringCourses(false);
+            setAddedTutoringClasses(false);
           }, 3000);
         }
       } catch (error) {
@@ -172,13 +178,13 @@ export default function TutorCourse() {
       </Breadcrumbs>
       <br></br>
       <Typography variant="h5" gutterBottom>
-        Select Classes You've Taken(multiple selections allowed):
+        Select Classes You've Taken (multiple selections allowed):
       </Typography>
 
       {alert ? (
         <Alert severity="error">Please select at least one class!</Alert>
       ) : null}
-      {addedCourse ? (
+      {addedClass ? (
         <Alert severity="success">
           Requests submitted for selected classes.
         </Alert>
@@ -232,7 +238,7 @@ export default function TutorCourse() {
       </Button>
 
       <Typography variant="h5" gutterBottom>
-        Select Classes You Want to Tutor(multiple selections allowed):
+        Select Classes You Want to Tutor (multiple selections allowed):
       </Typography>
 
       <Typography variant="body1" gutterBottom>
@@ -240,15 +246,10 @@ export default function TutorCourse() {
         select the class you would like to tutor for.{" "}
       </Typography>
 
-      <Typography variant="body1" gutterBottom>
-        Please note: There will be a 1-week period of time for us to verify and
-        approve your eligibility to tutor for the course before you can start.{" "}
-      </Typography>
-
       {tutoringCoursesAlert ? (
         <Alert severity="error">Please select at least one class!</Alert>
       ) : null}
-      {addedTutoringCourses ? (
+      {addedTutoringClasses ? (
         <Alert severity="success">
           Requests submitted for selected tutoring classes.
         </Alert>
@@ -259,10 +260,10 @@ export default function TutorCourse() {
           labelId="demo-multiple-select-label"
           id="demo-multiple-select"
           multiple
-          value={selectedTutoringCourses}
+          value={selectedTutoringClasses}
           label="Select classes"
           onChange={(e) =>
-            setSelectedTutoringCourses(e.target.value as string[])
+            setSelectedTutoringClasses(e.target.value as string[])
           }
         >
           {classesData.map((classItem) => (

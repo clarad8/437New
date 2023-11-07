@@ -6,6 +6,7 @@ import {
   Alert,
   AlertColor,
   AlertTitle,
+  Box,
   Breadcrumbs,
   Button,
   FormControl,
@@ -67,6 +68,7 @@ export default function Profile() {
   const [isOnline, setIsOnline] = useState(false);
   const auth = getAuth();
   const user = auth.currentUser;
+  const [isTutor, setIsTutor] = useState(false); // Variable to store whether the user is a tutor
   const [isSnackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] =
@@ -94,6 +96,8 @@ export default function Profile() {
 
         const userDocRef = doc(firestore, "users", user.uid);
         const docSnap = await getDoc(userDocRef);
+
+      
 
         if (docSnap.exists()) {
           const userData = docSnap.data();
@@ -125,6 +129,44 @@ export default function Profile() {
         console.log(uid);
         console.log(email);
         console.log(name);
+
+        // checks if current user is a tutor (in the tutors database)
+
+        const tutorDocRef = doc(firestore, "tutors", uid); 
+        const tutorDocSnap = await getDoc(tutorDocRef);
+        if (tutorDocSnap.exists()) {
+            // If the tutor document exists, set isTutor to true
+            setIsTutor(true);
+
+            const tutorData = tutorDocSnap.data();
+            if(tutorData) {
+              const { tutoringClasses, takenClasses } = tutorData;
+              
+              
+              // if tutor filled out form in tutor a course page, their tutoring classes and taken classes
+              // should appear on profile page.
+
+              if(tutoringClasses) {
+                setTutoredClasses(tutoringClasses);
+              }
+              if(takenClasses) {
+                setTakenClasses(takenClasses);
+              }
+            }
+            console.log("the current user is a tutor!");
+        }
+        else {
+
+          // if user is not a tutor, we set taken classes and tutored classes to default "None".
+          
+          setIsTutor(false);
+          const none: string[] = ["None"];
+          setTakenClasses(none);
+          setTutoredClasses(none);
+          console.log("the current user is NOT a tutor!");
+        }
+        
+
       } else {
         //user is not signed in
         router.push("/");
@@ -133,10 +175,6 @@ export default function Profile() {
 
     fetchClasses();
   }, []);
-
-  const handleGoBack = () => {
-    router.push("/"); //go back to home page
-  };
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -234,12 +272,6 @@ export default function Profile() {
     textAlign: "center", // Center text horizontally
   };
 
-
-  //  NEED TO SAVE INFO INTO DATABASE!!!!!
-  //  right now this code only shows the new info that user has put in on the webpage for a moment
-  //  at some point we need to save the info so that the info will show again when user comes back to profile page or logs in again
-  //  i made a new collection called users which currently has the fields name and grade
-
   return (
     <div>
       <NavBar></NavBar>
@@ -254,6 +286,9 @@ export default function Profile() {
         </Link>
         <Typography color="text.primary">Profile</Typography>
       </Breadcrumbs>
+
+       <Box my={2} />
+
       <Typography variant="h4" gutterBottom>
         Profile
       </Typography>
@@ -321,50 +356,51 @@ export default function Profile() {
         style={{ display: 'none' }}
       />
 
-      <Typography variant="h6" gutterBottom>
-        Tutor Status: (please only select "online" if you are currently
-        available to tutor)
-      </Typography>
-      <FormControl>
-        <RadioGroup
-          aria-labelledby="demo-row-radio-buttons-group-label"
-          defaultValue="offline"
-          name="radio-buttons-group"
-        >
-          <FormControlLabel
-            value="online"
-            checked={isOnline}
-            onChange={() => setIsOnline(true)}
-            control={<Radio />}
-            label="Online"
-          />
-          <FormControlLabel
-            value="offline"
-            checked={!isOnline}
-            onChange={() => setIsOnline(false)}
-            control={<Radio />}
-            label="Offline"
-          />
-        </RadioGroup>
-      </FormControl>
+      {/* Hide the tutor status if the user is not a tutor */}
 
-      <Typography variant="body1" gutterBottom>
-        Your Status: {isOnline ? "Online" : "Offline"}
-      </Typography>
+      {isTutor && (
+            <><Typography variant="h6" gutterBottom>
+          Tutor Status: (please only select "online" if you are currently
+          available to tutor)
+        </Typography><FormControl>
+            <RadioGroup
+              aria-labelledby="demo-row-radio-buttons-group-label"
+              defaultValue="offline"
+              name="radio-buttons-group"
+            >
+              <FormControlLabel
+                value="online"
+                checked={isOnline}
+                onChange={() => setIsOnline(true)}
+                control={<Radio />}
+                label="Online" />
+              <FormControlLabel
+                value="offline"
+                checked={!isOnline}
+                onChange={() => setIsOnline(false)}
+                control={<Radio />}
+                label="Offline" />
+            </RadioGroup>
+          </FormControl><Typography variant="body1" gutterBottom>
+            Your Status: {isOnline ? "Online" : "Offline"}
+          </Typography></>
+      )}
+        
 
-      <Typography variant="body2">{/* <p></p> */}</Typography>
+      <Box my={3} /> 
 
       <Typography style={{ display: "inline" }} variant="body1" gutterBottom>
         Name: <span>{name}</span>
       </Typography>
 
-      <Typography variant="body2">{/* <p></p> */}</Typography>
+      <Box my={1} /> 
 
       <Typography style={{ display: "inline" }} variant="body1" gutterBottom>
         Email: <span>{email}</span>
       </Typography>
 
-      <Typography variant="body2">{/* <p></p> */}</Typography>
+      <Box my={1} /> 
+
 
       {/* user can't edit their name and email through the edit buttion */}
 
@@ -383,7 +419,7 @@ export default function Profile() {
       />*/}
 
           <Typography variant="body1" gutterBottom>
-            Grade:
+            Year: 
           </Typography>
           <FormControl>
             <RadioGroup
@@ -417,7 +453,6 @@ export default function Profile() {
             </RadioGroup>
           </FormControl>
 
-          <Typography variant="body2">{/* <p></p> */}</Typography>
           {/*
           <Typography variant="body1" gutterBottom>
             Classes You&apos;ve Taken:
@@ -467,7 +502,8 @@ export default function Profile() {
               </label>
             </div>
                 ))}*/}
-          <Typography variant="body2">{/* <p></p> */}</Typography>
+
+          <Box my={1} />      
           <Button
             variant="contained"
             color="primary"
@@ -478,53 +514,43 @@ export default function Profile() {
         </>
       ) : (
         <>
-          {/*
+          
           <Typography
             style={{ display: "inline" }}
             variant="body1"
             gutterBottom
           >
-            Name:
+            Year: 
+          <span>{" "+grade}</span>
           </Typography>
-
-          <span>{name}</span>
-      <p></p>*/}
+          <Box my={1} />
+          
           <Typography
             style={{ display: "inline" }}
             variant="body1"
             gutterBottom
           >
-            Grade:
-          </Typography>
-          <span>{grade}</span>
-          <Typography variant="body2">{/* <p></p> */}</Typography>
-          <Typography
-            style={{ display: "inline" }}
-            variant="body1"
-            gutterBottom
-          >
-            {/* Classes You've Taken and Classes You're Tutoring should only show up if user is a tutor that has registered in database */}
             Classes You&apos;ve Taken:
+            <span>{" "+takenClasses.join(", ")}</span>
+
           </Typography>
-          <span>{takenClasses.join(", ")}</span>
-          <Typography variant="body2">{/* <p></p> */}</Typography>
+
+           <Box my={1} />
           <Typography
             style={{ display: "inline" }}
             variant="body1"
             gutterBottom
           >
-            Classes You&apos;re Tutoring:
-          </Typography>
-          <span>{tutoredClasses.join(", ")}</span>
-          <Typography variant="body2">{/* <p></p> */}</Typography>
+          Classes You&apos;re Tutoring:
+          <span>{" "+tutoredClasses.join(", ")}</span>
 
+          </Typography>
+
+          <Box my={2} />
           <Button variant="contained" color="primary" onClick={handleEdit}>
             Edit
           </Button>
-          {/*
-          <Button variant="contained" color="primary" onClick={handleGoBack}>
-            Back
-    </Button>*/}
+         
         </>
       )}
     </div>
