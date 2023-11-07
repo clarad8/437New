@@ -273,7 +273,7 @@ export default function Home() {
           }}
           style={{ margin: "0 10px" }}
         >
-          Active Tutors
+          Online Tutors
         </Button>
         <Button
           variant="contained"
@@ -287,7 +287,7 @@ export default function Home() {
           }}
           style={{ margin: "0 10px" }}
         >
-          Inactive Tutors
+          Offline Tutors
         </Button>
         <Button
           variant="contained"
