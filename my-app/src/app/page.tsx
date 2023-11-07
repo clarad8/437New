@@ -21,7 +21,7 @@ import NavBar from "../../components/nav";
 // import SessionProvider from "./SessionProvider";
 import Profile from "../../pages/profile";
 import React from "react";
-import FavoriteTutors from "./favoriteTutors";
+import Notification from "./notification";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../../index";
 interface Tutor {
@@ -332,23 +332,8 @@ export default function Home() {
       <Typography variant="h5" gutterBottom>
         Tutors:
       </Typography>
-      {/*
-      <div
-        style={{
-          position: "fixed",
-          top: "30px", // Adjust top position as needed
-          right: "30px", // Adjust right position as needed
-          backgroundColor: "lightblue",
-          padding: "10px",
-          border: "1px solid #ccc",
-          borderRadius: "5px",
-        }}
-      >
-        <Typography variant="h5" gutterBottom>
-          Favorite Tutors:
-        </Typography>
-      <FavoriteTutors />
-      </div>*/}
+
+      <Notification />
 
       <div className="tutor-container">
         {tutors.map((tutor) => (

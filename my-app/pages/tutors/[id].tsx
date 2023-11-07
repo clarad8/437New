@@ -58,32 +58,16 @@ const TutorProfile = () => {
   const [contactInfo, setContactInfo] = useState(""); // State to store user's contact information
   const [question, setQuestion] = useState(""); // State to store user's question
 
-
-  const handleQuestionChange = (event: { target: { value: SetStateAction<string>; }; }) => {
+  const handleQuestionChange = (event: {
+    target: { value: SetStateAction<string> };
+  }) => {
     setQuestion(event.target.value);
   };
 
-
-  const handleContactInfoChange = (event: { target: { value: SetStateAction<string>; }; }) => {
+  const handleContactInfoChange = (event: {
+    target: { value: SetStateAction<string> };
+  }) => {
     setContactInfo(event.target.value);
-  };
-
-
-  const handleAskQuestion = async () => {
-    if (question.trim() !== '') {
-      try {
-        // Handle the user's question (for example, send it to your backend API)
-        console.log("User's question:", question);
-        // Optionally, you can reset the question state after submission
-        setQuestion('');
-        setContactInfo('');
-        setAlert1(true);
-      } catch (error) {
-        console.error("Error submitting question:", error);
-      }
-    } else {
-      console.error("Invalid question");
-    }
   };
 
   const handleRatingChange = (newRating: SetStateAction<number>) => {
@@ -96,7 +80,50 @@ const TutorProfile = () => {
   }) => {
     setComment(event.target.value);
   };
+  const submitQuestion = async (
+    id: string,
+    contact: string,
+    question: string
+  ) => {
+    try {
+      const user = auth.currentUser;
 
+      if (user) {
+        const userId = user.uid;
+
+        // Get the tutor document reference
+        const tutorDocRef = doc(db, "tutors", id);
+
+        // Get the existing data from the tutor document
+        const tutorDoc = await getDoc(tutorDocRef);
+
+        if (tutorDoc.exists()) {
+          // Extract existing ratings and comments
+          const existingContact: string[] = tutorDoc.data().contact || [];
+          const existingQuestion: string[] = tutorDoc.data().question || [];
+
+          // Update ratings and comments arrays with new data
+          const updatedContact = [...existingContact, contact];
+          const updatedQuestion = [...existingQuestion, question];
+
+          // Prepare data to be updated in the "tutors" collection
+          const tutorData = {
+            contact: updatedContact,
+            question: updatedQuestion,
+          };
+
+          // Update data in the "tutors" collection in Firebase Firestore
+          await updateDoc(tutorDocRef, tutorData);
+
+          console.log("Contact and question submitted successfully!");
+        } else {
+          console.error("Tutor not found in the database.");
+        }
+      }
+    } catch (error) {
+      console.error("Error submitting contact and question:", error);
+    }
+  };
   const submitRatingAndComment = async (
     id: string,
     rating: number,
@@ -161,6 +188,26 @@ const TutorProfile = () => {
     }
   };
 
+  const handleSubmitQuestion = async () => {
+    console.log(contactInfo);
+    if (contactInfo.trim() !== "" && question.trim() !== "") {
+      try {
+        if (tutor) {
+          const { id } = tutor; // Extract tutor ID from the tutor object
+          await submitQuestion(id, contactInfo, question);
+          // Optionally, you can reset the rating and comment states after submission
+          console.log("User's question:", question);
+          setQuestion("");
+          setContactInfo("");
+          setAlert1(true);
+        }
+      } catch (error) {
+        console.error("Error submitting question:", error);
+      }
+    } else {
+      console.error("Invalid");
+    }
+  };
   useEffect(() => {
     if (id) {
       // Fetch tutor data based on the ID using the getTutors function
@@ -282,13 +329,12 @@ const TutorProfile = () => {
             />
           </div>
 
-
           <div>
             <Button
               variant="contained"
               color="primary"
               style={{ marginTop: "10px" }}
-              onClick={handleAskQuestion} // Call handleAskQuestion function on button click
+              onClick={handleSubmitQuestion} // Call handleAskQuestion function on button click
             >
               Submit Question
             </Button>
@@ -302,9 +348,6 @@ const TutorProfile = () => {
           </div>
         </form>
       </div>
-
-
-
 
       <div style={{ marginTop: "20px" }}>
         <Typography variant="body1" gutterBottom>
