@@ -339,13 +339,8 @@ export default function TutorCourse() {
 
       {invalidClasses.length > 0 && validClasses.length == 0 && (
         <Alert severity="warning">
-          The following courses were not added: {invalidClasses.join(", ")}
-        </Alert>
-      )}
-
-      {invalidClasses.length > 0 && validClasses.length > 0 && (
-        <Alert severity="warning">
-          The following courses were not added: {invalidClasses.join(", ")}
+          Not qualified to tutor the following course(s):{" "}
+          {invalidClasses.join(", ")}
         </Alert>
       )}
 
