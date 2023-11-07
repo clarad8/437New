@@ -6,6 +6,7 @@ import TutorItem from "./tutorItem";
 import getClassNames from "./classes";
 import Link from "next/link";
 import {
+  Alert,
   Box,
   Button,
   FormControl,
@@ -43,6 +44,10 @@ export default function Home() {
   const [selectedClass, setSelectedClass] = useState<string>(""); // State to hold selected class
   const [username, setUserName] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+
+
   const fetchTutors = async () => {
     const tutorsData = await getTutors();
     setAllTutors(tutorsData);
@@ -64,6 +69,7 @@ export default function Home() {
     fetchTutors();
     fetchClasses();
   }, []);
+
   useEffect(() => {
     if (searchQuery) {
       const filteredTutors = allTutors.filter((tutor) =>
@@ -75,25 +81,51 @@ export default function Home() {
       setTutors(allTutors);
     }
   }, [searchQuery, allTutors]);
+
+  // useEffect(() => {
+  //   // Filter tutors based on the selected class when it changes
+
+  //   if (selectedClass) {
+  //     if (selectedClass === "Show All Tutors") {
+  //       setTutors(allTutors);
+  //     } 
+  //     else {
+  //       const filteredTutors = allTutors.filter((tutor) =>
+  //       tutor.tutoringClasses && tutor.tutoringClasses.includes(selectedClass)
+  //     );
+  //       setTutors(filteredTutors);
+  //     }
+  //   }
+  // }, [selectedClass, allTutors]);
+
   useEffect(() => {
     // Filter tutors based on the selected class when it changes
 
     if (selectedClass) {
       if (selectedClass === "Show All Tutors") {
         setTutors(allTutors);
-      } else {
+      } 
+      else {
         const filteredTutors = allTutors.filter((tutor) =>
-          tutor.tutoringClasses.includes(selectedClass)
+        tutor.tutoringClasses && tutor.tutoringClasses.includes(selectedClass)
         );
+        // no tutor is available for the class
+        if(filteredTutors.length === 0) {
+          console.log("no tutors!");
+          setAlertMessage(`No tutors available yet for ${selectedClass}`);
+          setShowAlert(true);
+        }
         setTutors(filteredTutors);
       }
     }
   }, [selectedClass, allTutors]);
 
+
   const resetPage = () => {
     setTutors(allTutors);
   };
 
+  // filter means active or inactive
   const setFilter = (status: string) => {
     if (status === "active") {
       const activeTutors = allTutors.filter((tutor) => tutor.online === true);
@@ -130,6 +162,15 @@ export default function Home() {
         find the perfect match to support your learning journey.
       </Typography>
       <br></br>
+      
+      {/* alert for when there are no tutors for the course */}
+
+      {showAlert && (
+      <Alert severity="warning" onClose={() => setShowAlert(false)}>
+        {alertMessage}
+      </Alert>
+      )}
+
       <Typography variant="h5" gutterBottom>
         Select Class:
       </Typography>
@@ -143,6 +184,7 @@ export default function Home() {
             setSelectedClass(""); // Or any other appropriate action
           }
         }}
+        
         options={[
           { label: "Show All Tutors", value: "Show All Tutors" },
           ...classes.map((classItem) => ({
@@ -150,6 +192,7 @@ export default function Home() {
             value: classItem.name,
           })),
         ]}
+      
         isSearchable={true}
         isClearable={true}
         placeholder="Select a class"
@@ -192,7 +235,14 @@ export default function Home() {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => setFilter("active")}
+          onClick={() => 
+            {
+              setFilter("active"); 
+              setSelectedClass("");
+              setShowAlert(false);
+              setAlertMessage("");
+              setSearchQuery("");
+            }}
           style={{ margin: "0 10px" }}
         >
           Active Tutors
@@ -200,7 +250,14 @@ export default function Home() {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => setFilter("inactive")}
+          onClick={() => 
+            {
+              setFilter("inactive"); 
+              setSelectedClass("");
+              setShowAlert(false);
+              setAlertMessage("");
+              setSearchQuery("");
+            }}
           style={{ margin: "0 10px" }}
         >
           Inactive Tutors
@@ -216,7 +273,25 @@ export default function Home() {
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
       />
+      <Box my={2} />
+
+      <Button
+      variant="contained"
+      color="secondary"
+      onClick={() => {
+        setSelectedClass("");
+        setFilter("");
+        setSearchQuery("");
+        setShowAlert(false);
+        setAlertMessage("");
+      }}
+      style={{ margin: "0 10px" }}
+      >
+      Clear All Filters
+      </Button>
+
       <Box my={3} />
+
 
       <Typography variant="h5" gutterBottom>
         Tutors:
