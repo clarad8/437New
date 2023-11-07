@@ -547,8 +547,12 @@ export default function Profile() {
             gutterBottom
           >
             Year:
-            <span>{" " + grade}</span>
+            <span>{" " + grade}   </span>
           </Typography>
+          {/* <Box my={2} /> */}
+          <Button variant="contained" color="primary" onClick={handleEdit}>
+            Edit Year
+          </Button>
           <Box my={1} />
 
           <Typography
@@ -581,10 +585,6 @@ export default function Profile() {
 
               </Typography>
               
-          <Box my={2} />
-          <Button variant="contained" color="primary" onClick={handleEdit}>
-            Edit
-          </Button>
 
         </>
       )}
