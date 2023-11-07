@@ -60,6 +60,7 @@ export default function Profile() {
   const [name, setName] = useState(" ");
   const [grade, setGrade] = useState(" ");
   const [email, setEmail] = useState(" ");
+  const [favorite, setFavorite] = useState<string[]>([]);
   const [takenClasses, setTakenClasses] = useState<string[]>([]);
   const [tutoredClasses, setTutoredClasses] = useState<string[]>([]);
   const [isEditing, setIsEditing] = useState(false);
@@ -102,7 +103,7 @@ export default function Profile() {
         if (docSnap.exists()) {
           const userData = docSnap.data();
           if (userData) {
-            const { name, email, grade, image } = userData;
+            const { name, email, grade, image, favorite } = userData;
 
             if (grade) {
               setGrade(grade);
@@ -114,6 +115,10 @@ export default function Profile() {
 
             if (name) {
               setName(name);
+            }
+
+            if (favorite) {
+              setFavorite(favorite);
             }
             if (image) {
               setProfileImage(image);
@@ -572,6 +577,20 @@ export default function Profile() {
             <span>{" " + tutoredClasses.join(", ")}</span>
 
           </Typography>
+
+          <Box my={1} />
+
+ 
+              <Typography variant="body1" style={{ display: "inline" }} gutterBottom>
+              Your Favorite Tutors:
+              <span>{" " + favorite.join(", ")}</span>
+
+              </Typography>
+              
+     
+        
+            
+          
 
           <Box my={2} />
           <Button variant="contained" color="primary" onClick={handleEdit}>

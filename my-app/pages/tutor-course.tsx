@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import {
   Alert,
+  Box,
   Breadcrumbs,
   Button,
   FormControl,
@@ -31,7 +32,8 @@ export default function TutorCourse() {
   const [classScores, setClassScores] = useState<{ [key: string]: string }>({});
   const [addedClass, setAddedClass] = useState(false);
   const [alert, setAlert] = useState(false);
-
+  const [invalidClasses, setInvalidClasses] = useState<string[]>([]);
+  const [validClasses, setValidClasses] = useState<string[]>([]);
   const [selectedTutoringClasses, setSelectedTutoringClasses] = useState<
     string[]
   >([]);
@@ -97,7 +99,7 @@ export default function TutorCourse() {
           // Prepare data to be updated in the "tutors" collection
           const tutorData = {
             takenClasses: updatedTakenClasses,
-            classScores: classScores
+            classScores: updatedClassScores
           };
 
           // update data to the "tutors" collection in Firebase Firestore
@@ -116,7 +118,7 @@ export default function TutorCourse() {
     }
   };
 
-  const addTutoringCourses = async () => {
+  const addTutoringClasses = async () => {
     if (selectedTutoringClasses.length > 0) {
       try {
         const user = auth.currentUser;
@@ -131,23 +133,75 @@ export default function TutorCourse() {
           const tutorDoc = await getDoc(tutorDocRef);
 
           let existingTutoringClasses = [];
+          let takenClasses: string | string[] = [];
+          // let classScores = {};
+          let classScores: { [key: string]: string } = {};
           if (tutorDoc.exists()) {
             existingTutoringClasses = tutorDoc.data().tutoringClasses || [];
+            takenClasses = tutorDoc.data().takenClasses || [];
+            classScores = tutorDoc.data().classScores || {};
           }
 
+
+          // if(takenClasses.length == 0)
+          // {
+
+          // }
+          
+          const validClasses: string[] = [];
+          const invalidClasses: string[] = [];
+
+          // for (const [course, score] of Object.entries(classScores)) {
+          //     if(selectedTutoringClasses.includes(course)) {
+          //       console.log(score);
+          //       if (score === "90+") {
+                  
+          //         validClasses.push(course);
+          //       }
+          //       else {
+          //         console.log("problem1");
+          //         invalidClasses.push(course);
+          //       }
+          //     }
+          // }
+
+          for(const course of selectedTutoringClasses) {
+            if(takenClasses.includes(course)) {
+              const score = classScores[course];
+              if (score === "90+") {
+                validClasses.push(course);
+              } else {
+                invalidClasses.push(course);
+              }
+            }
+            else {
+              invalidClasses.push(course);
+            }
+          }
+         
+
+          // console.log(invalidClasses);
+          // console.log(validClasses);
+
+
+          
+          setInvalidClasses(invalidClasses);
+          setValidClasses(validClasses);
+
+          // console.log(validClasses);
+          // console.log(invalidClasses);
+
+         
           // Merge the existing tutoring classes with the new selected tutoring classes
-          const updatedTutoringClasses = [...existingTutoringClasses, ...selectedTutoringClasses];
+          const updatedTutoringClasses = [...existingTutoringClasses, ...validClasses];
 
           // Prepare data to be added/updated in the "tutors" collection
           const tutorData = {
-            id: userId, // Use the user's UID as the ID
-            name: userName,
-            email: userEmail,
             tutoringClasses: updatedTutoringClasses,
           };
 
           // Add data to the "tutors" collection in Firebase Firestore
-          await setDoc(tutorDocRef, tutorData, { merge: true });
+          await updateDoc(tutorDocRef, tutorData);
 
           setAddedTutoringClasses(true);
           setTimeout(() => {
@@ -160,6 +214,15 @@ export default function TutorCourse() {
     } else {
       setTutoringCoursesAlert(true);
     }
+  };
+
+  const clearSelections = () => {
+    setSelectedClasses([]);
+    setSelectedTutoringClasses([]);
+    setClassScores({});
+    setTutoringCoursesAlert(false);
+    setInvalidClasses([]);
+    setValidClasses([]);
   };
 
 
@@ -181,14 +244,19 @@ export default function TutorCourse() {
         Select Classes You've Taken (multiple selections allowed):
       </Typography>
 
+      <Box my={1} />
+
       {alert ? (
         <Alert severity="error">Please select at least one class!</Alert>
       ) : null}
+      
       {addedClass ? (
         <Alert severity="success">
           Requests submitted for selected classes.
         </Alert>
       ) : null}
+      
+      
       <FormControl sx={{ m: 1, minWidth: 180 }} size="small">
         <InputLabel id="demo-multiple-select-label">Select classes</InputLabel>
         <Select
@@ -206,12 +274,13 @@ export default function TutorCourse() {
           ))}
         </Select>
       </FormControl>
-
+      
       {selectedClasses.map((selectedClass, index) => (
         <div key={selectedClass}>
           <Typography variant="h6" gutterBottom>
             {selectedClass}
           </Typography>
+
           <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
             <InputLabel id={`score-label-${index}`}>Select score</InputLabel>
             <Select
@@ -233,9 +302,15 @@ export default function TutorCourse() {
         </div>
       ))}
 
+
       <Button variant="contained" onClick={addTakenClasses}>
         Submit
       </Button>
+      <Button variant="contained" onClick={clearSelections}>
+      Clear
+    </Button>
+      
+      <Box my={2} />
 
       <Typography variant="h5" gutterBottom>
         Select Classes You Want to Tutor (multiple selections allowed):
@@ -246,14 +321,43 @@ export default function TutorCourse() {
         select the class you would like to tutor for.{" "}
       </Typography>
 
+      <Box my={1} />
+
       {tutoringCoursesAlert ? (
         <Alert severity="error">Please select at least one class!</Alert>
       ) : null}
-      {addedTutoringClasses ? (
-        <Alert severity="success">
-          Requests submitted for selected tutoring classes.
+     
+
+      {/* all courses except the ones shown in alert were added to database */}
+      
+      {invalidClasses.length > 0 && validClasses.length == 0 &&(
+        <Alert severity="warning">
+      The following courses were not added: {invalidClasses.join(", ")}
         </Alert>
-      ) : null}
+
+      )}
+
+    {invalidClasses.length > 0 && validClasses.length > 0 &&(
+       <Alert severity="warning">
+       The following courses were not added: {invalidClasses.join(", ")}
+         </Alert>
+
+      )}
+
+    {invalidClasses.length > 0 && validClasses.length > 0 &&(
+
+      <Alert severity="success">
+       Requests submitted for: {validClasses.join(", ")}
+       </Alert>
+    )}
+
+      {/* if there are no invalid tutoring classes, all of them should have been added */}
+      {invalidClasses.length == 0 && validClasses.length > 0 &&(
+        <Alert severity="success">
+        Requests submitted for all selected classes.
+        </Alert>
+      )}
+
       <FormControl sx={{ m: 1, minWidth: 180 }} size="small">
         <InputLabel id="demo-multiple-select-label">Select classes</InputLabel>
         <Select
@@ -274,9 +378,13 @@ export default function TutorCourse() {
         </Select>
       </FormControl>
 
-      <Button variant="contained" onClick={addTutoringCourses}>
+      <Button variant="contained" onClick={addTutoringClasses}>
         Submit
       </Button>
+
+      <Button variant="contained" onClick={clearSelections}>
+      Clear
+    </Button>
     </div>
   );
 }

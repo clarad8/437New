@@ -6,6 +6,7 @@ import TutorItem from "./tutorItem";
 import getClassNames from "./classes";
 import Link from "next/link";
 import{
+  Box,
   Button,
   FormControl,
   InputLabel,
@@ -127,6 +128,8 @@ export default function Home() {
         </Select>
       </FormControl>
 
+      <Box my={1} />
+
       <div>
         <Button
           variant="contained"
@@ -146,6 +149,8 @@ export default function Home() {
         </Button>
       </div>
       
+      <Box my={3} />
+
       <Typography variant="h5" gutterBottom>
         Tutors:
       </Typography>
