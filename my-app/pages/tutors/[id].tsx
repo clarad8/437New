@@ -4,6 +4,7 @@ import { SetStateAction, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import getTutors from "../../src/app/tutors";
 import {
+  Alert,
   Box,
   Breadcrumbs,
   Button,
@@ -51,6 +52,7 @@ const TutorProfile = () => {
   const [rating, setRating] = useState(0); // State to store user's rating
   const [comment, setComment] = useState(""); // State to store user's comment
   const [comments, setComments] = useState<Comment[]>([]); // State to store comments and ratings
+  const [alert, setAlert] = useState(false);
 
   const handleRatingChange = (newRating: SetStateAction<number>) => {
     // Handle user's rating change here (you can send it to your backend API)
@@ -117,6 +119,7 @@ const TutorProfile = () => {
           setRating(0);
           setComment("");
           console.log("Rating and comment submitted successfully!");
+          setAlert(true);
         }
       } catch (error) {
         console.error("Error submitting rating and comment:", error);
@@ -251,6 +254,13 @@ const TutorProfile = () => {
           Submit Comment
         </Button>
       </div>
+      {alert && (
+        <Box my={2}>
+          <Alert severity="success" onClose={() => setAlert(false)}>
+            Comment submitted successfully!
+          </Alert>
+        </Box>
+      )}
 
       <Button variant="contained" onClick={handleGoBack}>
         Go Back

@@ -20,6 +20,7 @@ interface Tutor {
   tutoringClasses?: string[]; // Make tutoringClasses optional
   zoom: string;
   online: boolean;
+  ratings?: number[]; // Add ratings field to the Tutor interface
 }
 
 const TutorItem: React.FC<Tutor> = ({
@@ -28,6 +29,7 @@ const TutorItem: React.FC<Tutor> = ({
   tutoringClasses,
   zoom,
   online,
+  ratings,
 }) => {
   const [userId, setUserId] = useState(""); // State to store the current user's ID
   const [isLiked, setIsLiked] = useState(() => {
@@ -85,6 +87,13 @@ const TutorItem: React.FC<Tutor> = ({
     }
   };
 
+  const averageRating =
+    ratings && ratings.length > 0
+      ? (
+          ratings.reduce((acc, rating) => acc + rating, 0) / ratings.length
+        ).toFixed(1)
+      : "None";
+
   return (
     <Link href={`/tutors/${id}`}>
       <div
@@ -113,6 +122,10 @@ const TutorItem: React.FC<Tutor> = ({
             Offline
           </Typography>
         )}
+        <Typography variant="body1" gutterBottom>
+          Average Rating: {averageRating}
+        </Typography>
+
         <IconButton
           color={isLiked ? "primary" : "default"}
           onClick={handleLikeClick}
