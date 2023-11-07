@@ -17,6 +17,8 @@ import NavBar from "../../components/nav";
 // import SessionProvider from "./SessionProvider";
 import Profile from "../../pages/profile";
 import React from "react";
+import FavoriteTutors from "./favoriteTutors";
+
 
 interface Tutor {
   id: string;
@@ -72,6 +74,7 @@ export default function Home() {
       }
     }
   }, [selectedClass, allTutors]);
+  
 
   const resetPage = () => {
     setTutors(allTutors);
@@ -80,6 +83,7 @@ export default function Home() {
     throw new Error("Function not implemented.");
   }
 
+  
   return (
     <>
       <NavBar></NavBar>
@@ -145,6 +149,21 @@ export default function Home() {
       <Typography variant="h5" gutterBottom>
         Tutors:
       </Typography>
+
+      <div
+      style={{
+        position: "fixed",
+        top: "30px", // Adjust top position as needed
+        right: "30px", // Adjust right position as needed
+        backgroundColor: "lightblue",
+        padding: "10px",
+        border: "1px solid #ccc",
+        borderRadius: "5px",
+      }}
+    >
+      <h3>Favorite Tutors</h3>
+      <FavoriteTutors />
+    </div>
 
       <div className="tutor-container">
         {tutors.map((tutor) => (

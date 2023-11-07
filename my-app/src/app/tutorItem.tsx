@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./tutorItem.css";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { Typography } from "@mui/material";
+import { Typography, IconButton } from "@mui/material";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import { onAuthStateChanged } from "firebase/auth";
+import { arrayRemove, arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
+import { auth, db } from "../../index";
 
 interface Tutor {
   id: string;
@@ -12,15 +16,69 @@ interface Tutor {
 }
 
 const TutorItem: React.FC<Tutor> = ({ id, name, tutoringClasses, zoom }) => {
-  const handleButtonClick = () => {
-    console.log(`Tutor ${id} clicked!`);
+  const [userId, setUserId] = useState(""); // State to store the current user's ID
+  const [isLiked, setIsLiked] = useState(() => {
+    const likedTutorsJSON = localStorage.getItem('likedTutors');
+    const likedTutors = likedTutorsJSON ? JSON.parse(likedTutorsJSON) : {};
+    return likedTutors[name] || false;
+  });
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserId(user.uid);
+      }
+    });
+
+    // Clean up the subscription on component unmount
+    return () => unsubscribe();
+  }, []); // Empty dependency array ensures this effect runs once after the initial render
+
+  const handleLikeClick = async () => {
+    setIsLiked(!isLiked);
+
+    // Get the current liked tutors from localStorage or initialize an empty object
+    const likedTutorsJSON = localStorage.getItem('likedTutors');
+    const likedTutors = likedTutorsJSON ? JSON.parse(likedTutorsJSON) : {};
+
+    // Toggle the liked status for the current tutor
+    likedTutors[name] = !isLiked;
+
+    // Save the updated likedTutors object to localStorage
+    localStorage.setItem('likedTutors', JSON.stringify(likedTutors));
+
+    if (userId) {
+      const userDocRef = doc(db, "users", userId);
+      const docSnap = await getDoc(userDocRef);
+
+      if (docSnap.exists()) {
+        const userData = docSnap.data();
+        if (userData) {
+          const { favorite } = userData;
+
+          if (favorite && favorite.includes(name)) {
+            // If the tutor's name is already in 'favorite' array, remove it
+            await updateDoc(userDocRef, {
+              favorite: arrayRemove(name),
+            });
+          } else {
+            // If the tutor's name is not in 'favorite' array, add it
+            await updateDoc(userDocRef, {
+              favorite: arrayUnion(name),
+            });
+          }
+        }
+      }
+    }
   };
 
   return (
-    <Link href={`/tutors/${id}`} className="tutor-box">
-      <Typography variant="h5" gutterBottom>
-        {name}
-      </Typography>
+    <div className="tutor-box">
+      <Link href={`/tutors/${id}`}>
+        <Typography variant="h5" gutterBottom>
+          {name}
+        </Typography>
+      </Link>
       {tutoringClasses && tutoringClasses.length > 0 ? (
         <Typography variant="body1" gutterBottom>
           Class Name: {tutoringClasses.join(", ")}
@@ -30,7 +88,10 @@ const TutorItem: React.FC<Tutor> = ({ id, name, tutoringClasses, zoom }) => {
           No classes available
         </Typography>
       )}
-    </Link>
+      <IconButton color={isLiked ? "primary" : "default"} onClick={handleLikeClick}>
+        <FavoriteIcon />
+      </IconButton>
+    </div>
   );
 };
 

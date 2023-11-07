@@ -15,7 +15,7 @@
     "@mui/lab": "^5.0.0-alpha.152",
     "@mui/material": "^5.14.17",
     "encoding": "^0.1.13",
-    "firebase": "^10.4.0",
+    "firebase": "^10.5.2",
     "googleapis": "^128.0.0",
     "next-auth": "^4.23.2",
     "node-fetch": "^3.3.2",
