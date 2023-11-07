@@ -9,6 +9,8 @@ interface Tutor {
   zoom: string;
   online: boolean;
   profileImage: string | null;
+  ratings: number[];
+  comments: string[];
 }
 
 const tutorsData: Tutor[] = [];
@@ -29,7 +31,9 @@ const getTutors = async () => {
         tutoringClasses: tutor.tutoringClasses as string[],
         zoom: tutor.zoom,
         profileImage: tutor.image,
-        online: tutor.online
+        online: tutor.online,
+        ratings: tutor.ratings,
+        comments: tutor.comments
       });
     });
     return tutorsData;

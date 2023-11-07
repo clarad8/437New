@@ -23,12 +23,14 @@
     "react-dom": "latest",
     "react-router": "^6.17.0",
     "react-router-dom": "^6.17.0",
+    "react-stars": "^2.2.5",
     "webpack": "^5.89.0"
   },
   "devDependencies": {
     "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
+    "@types/react-stars": "^2.2.4",
     "autoprefixer": "latest",
     "eslint": "latest",
     "eslint-config-next": "latest",
