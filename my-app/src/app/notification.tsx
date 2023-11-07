@@ -2,40 +2,52 @@ import React, { useEffect, useState } from "react";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../../index"; // Import your Firestore database configuration
 import { List, ListItem, Typography } from "@mui/material";
+import { getAuth } from "firebase/auth";
 
 const Notification: React.FC = () => {
-  const [questions, setQuestions] = useState<string[]>([]);
-  const [userName, setUserName] = useState(""); // You need to get the user's name from your user data
+  const [notifications, setNotifications] = useState<
+    { question: string; contact: string }[]
+  >([]);
+  const auth = getAuth();
+  const user = auth.currentUser;
 
   useEffect(() => {
-    const fetchQuestions = async () => {
-      // Query the tutor collection where the tutor's name matches the user's name
-      const q = query(collection(db, "tutors"), where("name", "==", userName));
+    const fetchNotifications = async () => {
+      if (user?.displayName) {
+        // Query the tutor collection where the tutor's name matches the user's name
+        const q = query(
+          collection(db, "tutors"),
+          where("name", "==", user.displayName)
+        );
 
-      try {
-        const querySnapshot = await getDocs(q);
+        try {
+          const querySnapshot = await getDocs(q);
 
-        // Initialize an array to store the questions
-        const tutorQuestions: string[] = [];
+          // Initialize an array to store the notifications
+          const tutorNotifications: { question: string; contact: string }[] =
+            [];
 
-        querySnapshot.forEach((doc) => {
-          const tutorData = doc.data();
-          // Assuming "question" is a field in your tutor document
-          const tutorQuestion = tutorData.question;
-          // You can also retrieve "contact" in a similar way
+          querySnapshot.forEach((doc) => {
+            const tutorData = doc.data();
+            const tutorQuestion = tutorData.question;
+            const tutorContact = tutorData.contact;
 
-          // Add the question to the array
-          tutorQuestions.push(tutorQuestion);
-        });
+            // Add the notification to the array
+            tutorNotifications.push({
+              question: tutorQuestion,
+              contact: tutorContact,
+            });
+          });
 
-        setQuestions(tutorQuestions);
-      } catch (error) {
-        console.error("Error fetching questions: ", error);
+          setNotifications(tutorNotifications);
+        } catch (error) {
+          console.error("Error fetching notifications: ", error);
+        }
       }
     };
 
-    fetchQuestions();
-  }, [userName]); // Ensure this effect runs when the user's name changes
+    fetchNotifications();
+  }, [user?.displayName]);
 
   return (
     <div
@@ -53,9 +65,11 @@ const Notification: React.FC = () => {
         Notifications:
       </Typography>
       <List style={{ listStyleType: "none", padding: 0 }}>
-        {questions.map((question, index) => (
+        {notifications.map((notification, index) => (
           <ListItem key={index} style={{ marginBottom: "8px" }}>
-            <Typography variant="body2">{question}</Typography>
+            <Typography variant="body2">
+              Contact: {notification.contact} Question: {notification.question}
+            </Typography>
           </ListItem>
         ))}
       </List>
