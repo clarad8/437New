@@ -22,7 +22,8 @@ import NavBar from "../../components/nav";
 import Profile from "../../pages/profile";
 import React from "react";
 import FavoriteTutors from "./favoriteTutors";
-
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { db } from "../../index";
 interface Tutor {
   id: string;
   name: string;
@@ -45,8 +46,8 @@ export default function Home() {
   const [username, setUserName] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState("");
   const [showAlert, setShowAlert] = useState(false);
-  const [alertMessage, setAlertMessage] = useState('');
-
+  const [alertMessage, setAlertMessage] = useState("");
+  const [favoriteTutors, setFavoriteTutors] = useState<string[]>([]);
 
   const fetchTutors = async () => {
     const tutorsData = await getTutors();
@@ -69,6 +70,27 @@ export default function Home() {
     fetchTutors();
     fetchClasses();
   }, []);
+  useEffect(() => {
+    const fetchFavoriteTutors = async () => {
+      const q = query(collection(db, "users"), where("favorite", "!=", []));
+
+      try {
+        const querySnapshot = await getDocs(q);
+        const favoriteTutorsList: string[] = [];
+
+        querySnapshot.forEach((doc) => {
+          const userData = doc.data();
+          const favoriteTutors = userData.favorite || [];
+          favoriteTutorsList.push(...favoriteTutors);
+        });
+        setFavoriteTutors(favoriteTutorsList);
+      } catch (error) {
+        console.error("Error fetching favorite tutors: ", error);
+      }
+    };
+
+    fetchFavoriteTutors();
+  }, []); // Run the effect once after the initial render
 
   useEffect(() => {
     if (searchQuery) {
@@ -88,7 +110,7 @@ export default function Home() {
   //   if (selectedClass) {
   //     if (selectedClass === "Show All Tutors") {
   //       setTutors(allTutors);
-  //     } 
+  //     }
   //     else {
   //       const filteredTutors = allTutors.filter((tutor) =>
   //       tutor.tutoringClasses && tutor.tutoringClasses.includes(selectedClass)
@@ -104,13 +126,14 @@ export default function Home() {
     if (selectedClass) {
       if (selectedClass === "Show All Tutors") {
         setTutors(allTutors);
-      } 
-      else {
-        const filteredTutors = allTutors.filter((tutor) =>
-        tutor.tutoringClasses && tutor.tutoringClasses.includes(selectedClass)
+      } else {
+        const filteredTutors = allTutors.filter(
+          (tutor) =>
+            tutor.tutoringClasses &&
+            tutor.tutoringClasses.includes(selectedClass)
         );
         // no tutor is available for the class
-        if(filteredTutors.length === 0) {
+        if (filteredTutors.length === 0) {
           console.log("no tutors!");
           setAlertMessage(`No tutors available yet for ${selectedClass}`);
           setShowAlert(true);
@@ -119,7 +142,6 @@ export default function Home() {
       }
     }
   }, [selectedClass, allTutors]);
-
 
   const resetPage = () => {
     setTutors(allTutors);
@@ -135,6 +157,11 @@ export default function Home() {
         (tutor) => tutor.online === false
       );
       setTutors(inactiveTutors);
+    } else if (status === "favorite") {
+      const favoriteTutorsList = allTutors.filter((tutor) =>
+        favoriteTutors.includes(tutor.name)
+      );
+      setTutors(favoriteTutorsList);
     } else {
       // Reset to all tutors if no specific status is provided
       setTutors(allTutors);
@@ -162,13 +189,13 @@ export default function Home() {
         find the perfect match to support your learning journey.
       </Typography>
       <br></br>
-      
+
       {/* alert for when there are no tutors for the course */}
 
       {showAlert && (
-      <Alert severity="warning" onClose={() => setShowAlert(false)}>
-        {alertMessage}
-      </Alert>
+        <Alert severity="warning" onClose={() => setShowAlert(false)}>
+          {alertMessage}
+        </Alert>
       )}
 
       <Typography variant="h5" gutterBottom>
@@ -184,7 +211,6 @@ export default function Home() {
             setSelectedClass(""); // Or any other appropriate action
           }
         }}
-        
         options={[
           { label: "Show All Tutors", value: "Show All Tutors" },
           ...classes.map((classItem) => ({
@@ -192,7 +218,6 @@ export default function Home() {
             value: classItem.name,
           })),
         ]}
-      
         isSearchable={true}
         isClearable={true}
         placeholder="Select a class"
@@ -235,14 +260,13 @@ export default function Home() {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => 
-            {
-              setFilter("active"); 
-              setSelectedClass("");
-              setShowAlert(false);
-              setAlertMessage("");
-              setSearchQuery("");
-            }}
+          onClick={() => {
+            setFilter("active");
+            setSelectedClass("");
+            setShowAlert(false);
+            setAlertMessage("");
+            setSearchQuery("");
+          }}
           style={{ margin: "0 10px" }}
         >
           Active Tutors
@@ -250,17 +274,30 @@ export default function Home() {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => 
-            {
-              setFilter("inactive"); 
-              setSelectedClass("");
-              setShowAlert(false);
-              setAlertMessage("");
-              setSearchQuery("");
-            }}
+          onClick={() => {
+            setFilter("inactive");
+            setSelectedClass("");
+            setShowAlert(false);
+            setAlertMessage("");
+            setSearchQuery("");
+          }}
           style={{ margin: "0 10px" }}
         >
           Inactive Tutors
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            setFilter("favorite");
+            setSelectedClass("");
+            setShowAlert(false);
+            setAlertMessage("");
+            setSearchQuery("");
+          }}
+          style={{ margin: "0 10px" }}
+        >
+          Favorite Tutors
         </Button>
       </div>
       <br></br>
@@ -276,27 +313,26 @@ export default function Home() {
       <Box my={2} />
 
       <Button
-      variant="contained"
-      color="secondary"
-      onClick={() => {
-        setSelectedClass("");
-        setFilter("");
-        setSearchQuery("");
-        setShowAlert(false);
-        setAlertMessage("");
-      }}
-      style={{ margin: "0 10px" }}
+        variant="contained"
+        color="secondary"
+        onClick={() => {
+          setSelectedClass("");
+          setFilter("");
+          setSearchQuery("");
+          setShowAlert(false);
+          setAlertMessage("");
+        }}
+        style={{ margin: "0 10px" }}
       >
-      Clear All Filters
+        Clear All Filters
       </Button>
 
       <Box my={3} />
 
-
       <Typography variant="h5" gutterBottom>
         Tutors:
       </Typography>
-
+      {/*
       <div
         style={{
           position: "fixed",
@@ -311,8 +347,8 @@ export default function Home() {
         <Typography variant="h5" gutterBottom>
           Favorite Tutors:
         </Typography>
-        <FavoriteTutors />
-      </div>
+      <FavoriteTutors />
+      </div>*/}
 
       <div className="tutor-container">
         {tutors.map((tutor) => (
