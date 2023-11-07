@@ -9,16 +9,24 @@ import {
   InputLabel,
   Link,
   MenuItem,
-  Select,
   Typography,
 } from "@mui/material";
+import Select from "react-select";
+
 import { useRouter } from "next/router";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 
 import NavBar from "./../components/nav";
 import getClassNames from "../src/app/classes";
 import { auth, db } from "../index"; // Import your Firebase Firestore instance
-import { addDoc, collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 
 interface classes {
   id: string;
@@ -65,16 +73,14 @@ export default function TutorCourse() {
           let tutorDocRef = doc(db, "tutors", userId);
           let tutorDoc = await getDoc(tutorDocRef);
 
-          
-
           // if tutor doesn't exist, we add the user to tutor database
-          if(!tutorDoc.exists()) {
-              const tutorData = {
-                id: userId, // Use the user's UID as the ID
-                name: userName,
-                email: userEmail
-              };
-              await setDoc(tutorDocRef, tutorData);
+          if (!tutorDoc.exists()) {
+            const tutorData = {
+              id: userId, // Use the user's UID as the ID
+              name: userName,
+              email: userEmail,
+            };
+            await setDoc(tutorDocRef, tutorData);
           }
 
           // reload tutor info
@@ -89,17 +95,19 @@ export default function TutorCourse() {
             existingTakenClasses = tutorDoc.data().takenClasses || [];
             existingClassScores = tutorDoc.data().classScores || {};
           }
-            // Merge the existing taken classes with the new selected classes
-            const updatedTakenClasses = [...existingTakenClasses, ...selectedClasses];
+          // Merge the existing taken classes with the new selected classes
+          const updatedTakenClasses = [
+            ...existingTakenClasses,
+            ...selectedClasses,
+          ];
 
-            // Merge the existing class scores with the new class scores
-            const updatedClassScores = { ...existingClassScores, ...classScores };
-
+          // Merge the existing class scores with the new class scores
+          const updatedClassScores = { ...existingClassScores, ...classScores };
 
           // Prepare data to be updated in the "tutors" collection
           const tutorData = {
             takenClasses: updatedTakenClasses,
-            classScores: updatedClassScores
+            classScores: updatedClassScores,
           };
 
           // update data to the "tutors" collection in Firebase Firestore
@@ -142,44 +150,41 @@ export default function TutorCourse() {
             classScores = tutorDoc.data().classScores || {};
           }
 
-
           // if(takenClasses.length == 0)
           // {
 
           // }
-          
+
           const validClasses: string[] = [];
           const invalidClasses: string[] = [];
 
-          for(const course of selectedTutoringClasses) {
-            if(takenClasses.includes(course)) {
+          for (const course of selectedTutoringClasses) {
+            if (takenClasses.includes(course)) {
               const score = classScores[course];
               if (score === "90+") {
                 validClasses.push(course);
               } else {
                 invalidClasses.push(course);
               }
-            }
-            else {
+            } else {
               invalidClasses.push(course);
             }
           }
-         
 
           // console.log(invalidClasses);
           // console.log(validClasses);
 
-
-          
           setInvalidClasses(invalidClasses);
           setValidClasses(validClasses);
 
           // console.log(validClasses);
           // console.log(invalidClasses);
 
-         
           // Merge the existing tutoring classes with the new selected tutoring classes
-          const updatedTutoringClasses = [...existingTutoringClasses, ...validClasses];
+          const updatedTutoringClasses = [
+            ...existingTutoringClasses,
+            ...validClasses,
+          ];
 
           // Prepare data to be added/updated in the "tutors" collection
           const tutorData = {
@@ -212,7 +217,6 @@ export default function TutorCourse() {
     setValidClasses([]);
   };
 
-
   return (
     <div>
       <NavBar></NavBar>
@@ -228,7 +232,7 @@ export default function TutorCourse() {
       </Breadcrumbs>
       <br></br>
       <Typography variant="h5" gutterBottom>
-        Select Classes You've Taken (multiple selections allowed):
+        Select CS Classes You've Taken (multiple selections allowed):
       </Typography>
 
       <Box my={1} />
@@ -236,71 +240,88 @@ export default function TutorCourse() {
       {alert ? (
         <Alert severity="error">Please select at least one class!</Alert>
       ) : null}
-      
+
       {addedClass ? (
         <Alert severity="success">
           Requests submitted for selected classes.
         </Alert>
       ) : null}
-      
-      
-      <FormControl sx={{ m: 1, minWidth: 180 }} size="small">
-        <InputLabel id="demo-multiple-select-label">Select classes</InputLabel>
-        <Select
-          labelId="demo-multiple-select-label"
-          id="demo-multiple-select"
-          multiple
-          value={selectedClasses}
-          label="Select classes"
-          onChange={(e) => setSelectedClasses(e.target.value as string[])}
-        >
-          {classesData.map((classItem) => (
-            <MenuItem key={classItem.id} value={classItem.name}>
-              {classItem.name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-      
+
+      <Select
+        isMulti
+        value={selectedClasses.map((selectedClass) => ({
+          label: selectedClass,
+          value: selectedClass,
+        }))}
+        onChange={(selectedOptions: any) => {
+          if (selectedOptions) {
+            setSelectedClasses(
+              (selectedOptions as { label: string; value: string }[]).map(
+                (option) => option.value
+              )
+            );
+          } else {
+            // Handle the case where nothing is selected
+            setSelectedClasses([]);
+          }
+        }}
+        options={classesData.map((classItem) => ({
+          label: classItem.name,
+          value: classItem.name,
+        }))}
+        isSearchable={true}
+        isClearable={true}
+        placeholder="Select classes"
+      />
+
       {selectedClasses.map((selectedClass, index) => (
         <div key={selectedClass}>
           <Typography variant="h6" gutterBottom>
             {selectedClass}
           </Typography>
 
-          <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-            <InputLabel id={`score-label-${index}`}>Select score</InputLabel>
-            <Select
-              labelId={`score-label-${index}`}
-              id={`score-select-${index}`}
-              value={classScores[selectedClass] || ""}
-              label="Select score"
-              onChange={(e) =>
+          <Select
+            value={{
+              label: classScores[selectedClass] || "Select score",
+              value: classScores[selectedClass] || "",
+            }}
+            onChange={(selectedOption: any) => {
+              if (selectedOption) {
                 setClassScores((prevScores) => ({
                   ...prevScores,
-                  [selectedClass]: e.target.value as string,
-                }))
+                  [selectedClass]: selectedOption.value,
+                }));
+              } else {
+                // Handle the case where nothing is selected
+                setClassScores((prevScores) => ({
+                  ...prevScores,
+                  [selectedClass]: "",
+                }));
               }
-            >
-              <MenuItem value="90-">90-</MenuItem>
-              <MenuItem value="90+">90+</MenuItem>
-            </Select>
-          </FormControl>
+            }}
+            options={[
+              { label: "Select score", value: "" },
+              { label: "90-", value: "90-" },
+              { label: "90+", value: "90+" },
+            ]}
+            isSearchable={true}
+            isClearable={true}
+            placeholder="Select score"
+          />
         </div>
       ))}
-
 
       <Button variant="contained" onClick={addTakenClasses}>
         Submit
       </Button>
       <Button variant="contained" onClick={clearSelections}>
-      Clear
-    </Button>
-      
+        Clear
+      </Button>
+
       <Box my={2} />
 
       <Typography variant="h5" gutterBottom>
-        Select Classes You Want to Tutor (multiple selections allowed):
+        Select CS Classes You Want to Tutor (multiple selections allowed):
       </Typography>
 
       <Typography variant="body1" gutterBottom>
@@ -313,65 +334,68 @@ export default function TutorCourse() {
       {tutoringCoursesAlert ? (
         <Alert severity="error">Please select at least one class!</Alert>
       ) : null}
-     
 
       {/* all courses except the ones shown in alert were added to database */}
-      
-      {invalidClasses.length > 0 && validClasses.length == 0 &&(
+
+      {invalidClasses.length > 0 && validClasses.length == 0 && (
         <Alert severity="warning">
-      The following courses were not added: {invalidClasses.join(", ")}
+          The following courses were not added: {invalidClasses.join(", ")}
         </Alert>
-
       )}
 
-    {invalidClasses.length > 0 && validClasses.length > 0 &&(
-       <Alert severity="warning">
-       The following courses were not added: {invalidClasses.join(", ")}
-         </Alert>
-
+      {invalidClasses.length > 0 && validClasses.length > 0 && (
+        <Alert severity="warning">
+          The following courses were not added: {invalidClasses.join(", ")}
+        </Alert>
       )}
 
-    {invalidClasses.length > 0 && validClasses.length > 0 &&(
-
-      <Alert severity="success">
-       Requests submitted for: {validClasses.join(", ")}
-       </Alert>
-    )}
+      {invalidClasses.length > 0 && validClasses.length > 0 && (
+        <Alert severity="success">
+          Requests submitted for: {validClasses.join(", ")}
+        </Alert>
+      )}
 
       {/* if there are no invalid tutoring classes, all of them should have been added */}
-      {invalidClasses.length == 0 && validClasses.length > 0 &&(
+      {invalidClasses.length == 0 && validClasses.length > 0 && (
         <Alert severity="success">
-        Requests submitted for all selected classes.
+          Requests submitted for all selected classes.
         </Alert>
       )}
 
-      <FormControl sx={{ m: 1, minWidth: 180 }} size="small">
-        <InputLabel id="demo-multiple-select-label">Select classes</InputLabel>
-        <Select
-          labelId="demo-multiple-select-label"
-          id="demo-multiple-select"
-          multiple
-          value={selectedTutoringClasses}
-          label="Select classes"
-          onChange={(e) =>
-            setSelectedTutoringClasses(e.target.value as string[])
+      <Select
+        isMulti
+        value={selectedTutoringClasses.map((selectedClass) => ({
+          label: selectedClass,
+          value: selectedClass,
+        }))}
+        onChange={(selectedOptions: any) => {
+          if (selectedOptions) {
+            setSelectedTutoringClasses(
+              (selectedOptions as { label: string; value: string }[]).map(
+                (option) => option.value
+              )
+            );
+          } else {
+            // Handle the case where nothing is selected
+            setSelectedTutoringClasses([]);
           }
-        >
-          {classesData.map((classItem) => (
-            <MenuItem key={classItem.id} value={classItem.name}>
-              {classItem.name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+        }}
+        options={classesData.map((classItem) => ({
+          label: classItem.name,
+          value: classItem.name,
+        }))}
+        isSearchable={true}
+        isClearable={true}
+        placeholder="Select classes"
+      />
 
       <Button variant="contained" onClick={addTutoringClasses}>
         Submit
       </Button>
 
       <Button variant="contained" onClick={clearSelections}>
-      Clear
-    </Button>
+        Clear
+      </Button>
     </div>
   );
 }

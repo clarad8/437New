@@ -70,7 +70,7 @@ export default function NavBar() {
                 textDecoration: "none",
               }}
             >
-              Find a Tutor
+              Find a CS Tutor
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>

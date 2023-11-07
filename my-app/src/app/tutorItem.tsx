@@ -5,7 +5,13 @@ import Link from "next/link";
 import { Typography, IconButton } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { onAuthStateChanged } from "firebase/auth";
-import { arrayRemove, arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
+import {
+  arrayRemove,
+  arrayUnion,
+  doc,
+  getDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { auth, db } from "../../index";
 
 interface Tutor {
@@ -16,10 +22,16 @@ interface Tutor {
   online: boolean;
 }
 
-const TutorItem: React.FC<Tutor> = ({ id, name, tutoringClasses, zoom, online }) => {
+const TutorItem: React.FC<Tutor> = ({
+  id,
+  name,
+  tutoringClasses,
+  zoom,
+  online,
+}) => {
   const [userId, setUserId] = useState(""); // State to store the current user's ID
   const [isLiked, setIsLiked] = useState(() => {
-    const likedTutorsJSON = localStorage.getItem('likedTutors');
+    const likedTutorsJSON = localStorage.getItem("likedTutors");
     const likedTutors = likedTutorsJSON ? JSON.parse(likedTutorsJSON) : {};
     return likedTutors[name] || false;
   });
@@ -39,14 +51,14 @@ const TutorItem: React.FC<Tutor> = ({ id, name, tutoringClasses, zoom, online })
     setIsLiked(!isLiked);
 
     // Get the current liked tutors from localStorage or initialize an empty object
-    const likedTutorsJSON = localStorage.getItem('likedTutors');
+    const likedTutorsJSON = localStorage.getItem("likedTutors");
     const likedTutors = likedTutorsJSON ? JSON.parse(likedTutorsJSON) : {};
 
     // Toggle the liked status for the current tutor
     likedTutors[name] = !isLiked;
 
     // Save the updated likedTutors object to localStorage
-    localStorage.setItem('likedTutors', JSON.stringify(likedTutors));
+    localStorage.setItem("likedTutors", JSON.stringify(likedTutors));
 
     if (userId) {
       const userDocRef = doc(db, "users", userId);
@@ -74,34 +86,56 @@ const TutorItem: React.FC<Tutor> = ({ id, name, tutoringClasses, zoom, online })
   };
 
   return (
-    <div className="tutor-box">
-      <Link href={`/tutors/${id}`}>
+    <Link href={`/tutors/${id}`}>
+      <div
+        className="tutor-box"
+        style={{ width: "200px", height: "200px", cursor: "pointer" }}
+      >
         <Typography variant="h5" gutterBottom>
           {name}
         </Typography>
-      </Link>
-      {tutoringClasses && tutoringClasses.length > 0 ? (
-        <Typography variant="body1" gutterBottom>
-          Class Name: {tutoringClasses.join(", ")}
-        </Typography>
-      ) : (
-        <Typography variant="body1" gutterBottom>
-          No classes available
-        </Typography>
-      )}
-      {online ? (
-        <Typography variant="body1" gutterBottom>
-        Online      
-      </Typography>
-      ): (
-        <Typography variant="body1" gutterBottom>
-        Offline      
-      </Typography>
-      )}
-      <IconButton color={isLiked ? "primary" : "default"} onClick={handleLikeClick}>
-        <FavoriteIcon />
-      </IconButton>
-    </div>
+
+        {tutoringClasses && tutoringClasses.length > 0 ? (
+          <Typography variant="body1" gutterBottom>
+            Class Name: {tutoringClasses.join(", ")}
+          </Typography>
+        ) : (
+          <Typography variant="body1" gutterBottom>
+            No classes available
+          </Typography>
+        )}
+        {online ? (
+          <Typography variant="body1" gutterBottom>
+            Online
+          </Typography>
+        ) : (
+          <Typography variant="body1" gutterBottom>
+            Offline
+          </Typography>
+        )}
+        <IconButton
+          color={isLiked ? "primary" : "default"}
+          onClick={handleLikeClick}
+        >
+          <FavoriteIcon />
+        </IconButton>
+        <style jsx>{`
+          .tutor-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 200px; /* Adjust the width for desktop */
+            margin: 10px; /* Add spacing between boxes */
+          }
+
+          @media (max-width: 768px) {
+            .tutor-box {
+              width: 100%; /* Full width on smaller screens */
+            }
+          }
+        `}</style>
+      </div>
+    </Link>
   );
 };
 

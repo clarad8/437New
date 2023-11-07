@@ -23,6 +23,7 @@
     "react-dom": "latest",
     "react-router": "^6.17.0",
     "react-router-dom": "^6.17.0",
+    "react-select": "^5.8.0",
     "react-stars": "^2.2.5",
     "webpack": "^5.89.0"
   },

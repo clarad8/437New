@@ -3,10 +3,27 @@
 import { SetStateAction, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import getTutors from "../../src/app/tutors";
-import { Box, Button, Typography } from "@mui/material";
-import React from 'react';
-import ReactStars from 'react-stars'
-import { getFirestore, doc, updateDoc, arrayUnion, getDoc } from "firebase/firestore";
+import {
+  Box,
+  Breadcrumbs,
+  Button,
+  Link,
+  TextField,
+  Typography,
+} from "@mui/material";
+import React from "react";
+import ReactStars from "react-stars";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+
+import NavBar from "./../../components/nav";
+
+import {
+  getFirestore,
+  doc,
+  updateDoc,
+  arrayUnion,
+  getDoc,
+} from "firebase/firestore";
 import { auth, db } from "../../index";
 
 interface Tutor {
@@ -35,47 +52,52 @@ const TutorProfile = () => {
   const [comment, setComment] = useState(""); // State to store user's comment
   const [comments, setComments] = useState<Comment[]>([]); // State to store comments and ratings
 
-
   const handleRatingChange = (newRating: SetStateAction<number>) => {
     // Handle user's rating change here (you can send it to your backend API)
     setRating(newRating);
   };
 
-  const handleCommentChange = (event: { target: { value: SetStateAction<string>; }; }) => {
+  const handleCommentChange = (event: {
+    target: { value: SetStateAction<string> };
+  }) => {
     setComment(event.target.value);
   };
 
-  const submitRatingAndComment = async (id: string, rating: number, comment: string) => {
+  const submitRatingAndComment = async (
+    id: string,
+    rating: number,
+    comment: string
+  ) => {
     try {
       const user = auth.currentUser;
-  
+
       if (user) {
         const userId = user.uid;
-  
+
         // Get the tutor document reference
         const tutorDocRef = doc(db, "tutors", id);
-  
+
         // Get the existing data from the tutor document
         const tutorDoc = await getDoc(tutorDocRef);
-  
+
         if (tutorDoc.exists()) {
           // Extract existing ratings and comments
           const existingRatings: number[] = tutorDoc.data().ratings || [];
           const existingComments: string[] = tutorDoc.data().comments || [];
-  
+
           // Update ratings and comments arrays with new data
           const updatedRatings = [...existingRatings, rating];
           const updatedComments = [...existingComments, comment];
-  
+
           // Prepare data to be updated in the "tutors" collection
           const tutorData = {
             ratings: updatedRatings,
             comments: updatedComments,
           };
-  
+
           // Update data in the "tutors" collection in Firebase Firestore
           await updateDoc(tutorDocRef, tutorData);
-  
+
           console.log("Rating and comment submitted successfully!");
         } else {
           console.error("Tutor not found in the database.");
@@ -86,14 +108,14 @@ const TutorProfile = () => {
     }
   };
   const handleSubmitComment = async () => {
-    if (rating > 0 && comment.trim() !== '') {
+    if (rating > 0 && comment.trim() !== "") {
       try {
         if (tutor) {
           const { id } = tutor; // Extract tutor ID from the tutor object
           await submitRatingAndComment(id, rating, comment);
           // Optionally, you can reset the rating and comment states after submission
           setRating(0);
-          setComment('');
+          setComment("");
           console.log("Rating and comment submitted successfully!");
         }
       } catch (error) {
@@ -112,20 +134,22 @@ const TutorProfile = () => {
           // Find the tutor with the matching ID
           const tutorData = tutorsData.find((t) => t.id === id);
           if (tutorData) {
-
             if (!tutorData.zoom) {
               // Generate a random Zoom link (you can replace this logic with your preferred way of generating a Zoom link)
-              tutorData.zoom = `https://zoom.us/j/${Math.floor(Math.random() * 1000000000)}`;
+              tutorData.zoom = `https://zoom.us/j/${Math.floor(
+                Math.random() * 1000000000
+              )}`;
             }
             setTutor(tutorData);
             setProfileImage(tutorData.profileImage);
 
-            const fetchedComments: Comment[] = tutorData.comments.map((comment: string, index: number) => ({
-              rating: tutorData.ratings[index],
-              comment,
-            }));
+            const fetchedComments: Comment[] = tutorData.comments.map(
+              (comment: string, index: number) => ({
+                rating: tutorData.ratings[index],
+                comment,
+              })
+            );
             setComments(fetchedComments);
-
           } else {
             throw new Error("Tutor not found");
           }
@@ -146,10 +170,27 @@ const TutorProfile = () => {
 
   return (
     <div>
+      <NavBar></NavBar>
+      <br></br>
+      <Breadcrumbs
+        separator={<NavigateNextIcon fontSize="small" />}
+        aria-label="breadcrumb"
+      >
+        <Link underline="hover" href="/">
+          Home
+        </Link>
+        <Typography color="text.primary">Tutor Profile</Typography>
+      </Breadcrumbs>
       <Typography variant="h3" gutterBottom>
         Tutor Profile
       </Typography>
-      {profileImage && <img src={profileImage} alt="Profile" style={{ width: "150px", height: "150px", borderRadius: "50%" }} />}
+      {profileImage && (
+        <img
+          src={profileImage}
+          alt="Profile"
+          style={{ width: "150px", height: "150px", borderRadius: "50%" }}
+        />
+      )}
       <Typography variant="h4" gutterBottom>
         {tutor.name}
       </Typography>
@@ -158,7 +199,8 @@ const TutorProfile = () => {
       </Typography>
 
       <Typography variant="body1" gutterBottom>
-        Below is the tutor's zoom meeting room! Please join whenever you are ready.
+        Below is the tutor's zoom meeting room! Please join whenever you are
+        ready.
       </Typography>
 
       {/* make zoom link clickable */}
@@ -187,12 +229,15 @@ const TutorProfile = () => {
         <Typography variant="body1" gutterBottom>
           Leave a comment:
         </Typography>
-        <textarea
+        <TextField
+          multiline
           rows={4}
-          cols={50}
           value={comment}
           onChange={handleCommentChange}
-          style={{ resize: "vertical" }}
+          sx={{ width: "60%" }}
+          InputProps={{
+            style: { resize: "vertical" },
+          }}
         />
       </div>
       <div>
@@ -211,8 +256,8 @@ const TutorProfile = () => {
         Go Back
       </Button>
 
-       {/* Display past comments and ratings */}
-       <div style={{ marginTop: "20px" }}>
+      {/* Display past comments and ratings */}
+      <div style={{ marginTop: "20px" }}>
         <Typography variant="h6" gutterBottom>
           Past Comments and Ratings
         </Typography>
@@ -241,7 +286,6 @@ const TutorProfile = () => {
           </Typography>
         )}
       </div>
-      
     </div>
   );
 };

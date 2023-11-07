@@ -23,7 +23,6 @@ const Login = () => {
 
   const [isErrorPopupOpen, setErrorPopupOpen] = useState(false);
 
-
   // const router = useRouter();
 
   // const handleGoogleSignIn = () => {
@@ -79,7 +78,7 @@ const Login = () => {
   //                     console.log("User verified status updated in Firestore.");
   //                     //signIn("google");
   //                   })
-                
+
   //                   .catch((error) => {
 
   //                     console.error(
@@ -87,7 +86,6 @@ const Login = () => {
   //                       error.message
   //                     );
   //                   });
-                
 
   //               console.log("Google User:", user);
   //               // router.push("/Users/claradu/Desktop/1/437New/my-app/src/app/page");
@@ -117,7 +115,7 @@ const Login = () => {
         const user = userCredential.user;
         const db = getFirestore();
         const userDocRef = doc(db, "users", user.uid);
-  
+
         // Send email verification
         sendEmailVerification(user)
           .then(() => {
@@ -126,7 +124,7 @@ const Login = () => {
             setPopupMessage(message);
             console.log("Email verification sent to:", user.email);
             setVerificationPopupOpen(true);
-  
+
             // Update the verified status in the user's document in Firestore
             setDoc(
               userDocRef,
@@ -151,7 +149,9 @@ const Login = () => {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        console.error(`Error during Google sign-up: ${errorCode} - ${errorMessage}`);
+        console.error(
+          `Error during Google sign-up: ${errorCode} - ${errorMessage}`
+        );
       });
   };
 
@@ -161,24 +161,28 @@ const Login = () => {
         const user = userCredential.user;
         const db = getFirestore();
         const userDocRef = doc(db, "users", user.uid);
-  
+
         // Check if the user exists in the database and is verified
         getDoc(userDocRef)
           .then((docSnap) => {
             if (docSnap.exists() && docSnap.data().verified) {
               // User exists and email is verified, proceed with login
               signIn("google");
-              console.log("User exists and email is verified. Logging in with Google.");
+              console.log(
+                "User exists and email is verified. Logging in with Google."
+              );
             } else if (docSnap.exists() && !docSnap.data().verified) {
               // User exists, but email is not verified, show error message
-              const errorMessage = "Please verify your email before logging in.";
+              const errorMessage =
+                "Please verify your email before logging in.";
               console.error(errorMessage);
               setPopupMessage(errorMessage);
               setErrorPopupOpen(true);
               // Handle the error message as needed, for example, display it to the user
             } else {
               // User does not exist, show the same error message
-              const errorMessage = "User not found. Please verify your email before logging in.";
+              const errorMessage =
+                "User not found. Please verify your email before logging in.";
               console.error(errorMessage);
               setPopupMessage(errorMessage);
               setErrorPopupOpen(true);
@@ -193,14 +197,16 @@ const Login = () => {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        console.error(`Error during Google login: ${errorCode} - ${errorMessage}`);
+        console.error(
+          `Error during Google login: ${errorCode} - ${errorMessage}`
+        );
       });
   };
 
   return (
     <div style={{ textAlign: "center", padding: "20px" }}>
       <Typography variant="h3" component="h1" gutterBottom>
-        Tutor Match
+        CS Tutor Match
       </Typography>
       <Box
         display="flex"
@@ -254,10 +260,7 @@ const Login = () => {
           </Button>
         </div>
       </Modal>
-      <Modal
-        open={isErrorPopupOpen}
-        onClose={() => setErrorPopupOpen(false)}
-      >
+      <Modal open={isErrorPopupOpen} onClose={() => setErrorPopupOpen(false)}>
         <div
           style={{
             position: "absolute",
