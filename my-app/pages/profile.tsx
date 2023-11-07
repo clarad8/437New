@@ -407,9 +407,10 @@ export default function Profile() {
             control={<Radio />}
             label="Offline"
           />
-          <Typography variant="body1" gutterBottom>
+          {/* <Typography variant="body1" gutterBottom>
             Your Status: {isOnline ? "Online" : "Offline"}
-          </Typography></>
+          </Typography> */}
+          </>
       )}
 
 
