@@ -97,7 +97,7 @@ export default function Profile() {
         const userDocRef = doc(firestore, "users", user.uid);
         const docSnap = await getDoc(userDocRef);
 
-      
+
 
         if (docSnap.exists()) {
           const userData = docSnap.data();
@@ -132,40 +132,40 @@ export default function Profile() {
 
         // checks if current user is a tutor (in the tutors database)
 
-        const tutorDocRef = doc(firestore, "tutors", uid); 
+        const tutorDocRef = doc(firestore, "tutors", uid);
         const tutorDocSnap = await getDoc(tutorDocRef);
         if (tutorDocSnap.exists()) {
-            // If the tutor document exists, set isTutor to true
-            setIsTutor(true);
+          // If the tutor document exists, set isTutor to true
+          setIsTutor(true);
 
-            const tutorData = tutorDocSnap.data();
-            if(tutorData) {
-              const { tutoringClasses, takenClasses } = tutorData;
-              
-              
-              // if tutor filled out form in tutor a course page, their tutoring classes and taken classes
-              // should appear on profile page.
+          const tutorData = tutorDocSnap.data();
+          if (tutorData) {
+            const { tutoringClasses, takenClasses } = tutorData;
 
-              if(tutoringClasses) {
-                setTutoredClasses(tutoringClasses);
-              }
-              if(takenClasses) {
-                setTakenClasses(takenClasses);
-              }
+
+            // if tutor filled out form in tutor a course page, their tutoring classes and taken classes
+            // should appear on profile page.
+
+            if (tutoringClasses) {
+              setTutoredClasses(tutoringClasses);
             }
-            console.log("the current user is a tutor!");
+            if (takenClasses) {
+              setTakenClasses(takenClasses);
+            }
+          }
+          console.log("the current user is a tutor!");
         }
         else {
 
           // if user is not a tutor, we set taken classes and tutored classes to default "None".
-          
+
           setIsTutor(false);
           const none: string[] = ["None"];
           setTakenClasses(none);
           setTutoredClasses(none);
           console.log("the current user is NOT a tutor!");
         }
-        
+
 
       } else {
         //user is not signed in
@@ -202,35 +202,60 @@ export default function Profile() {
       setSnackbarOpen(true);
     }
   };
+  const handleOnlineStatusChange = async (isOnline: boolean) => {
+    try {
+      const user = getAuth().currentUser; // Get the user object
+      if (user) {
+        const firestore = getFirestore();
+        const tutorDocRef = doc(firestore, "tutors", user.uid);
+        await updateDoc(tutorDocRef, {
+          online: isOnline, // Update the 'online' field based on the selected value
+        });
+
+        setSnackbarMessage(`You are now ${isOnline ? "Online" : "Offline"}.`);
+        setSnackbarSeverity("success");
+        setSnackbarOpen(true);
+        console.log(`Online status updated to ${isOnline ? "Online" : "Offline"}.`);
+      } else {
+        console.error("User is null. Unable to update online status.");
+      }
+    } catch (error) {
+      console.error("Error updating online status:", error);
+      setSnackbarMessage("Error updating online status. Please try again.");
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
+    }
+  };
+
 
   const handleImageUpload = async (files: FileList | null, uid: string) => {
     setIsLoading(true);
-  
+
     if (files && files.length > 0) {
       const file = files[0];
       const reader = new FileReader();
-  
+
       reader.onloadend = async () => {
         if (typeof reader.result === "string") {
           const userDocRef = doc(db, "users", uid);
           const tutorDocRef = doc(db, "tutors", uid); // Reference to the tutor document
-  
+
           try {
             const userDocSnap = await getDoc(userDocRef);
             const tutorDocSnap = await getDoc(tutorDocRef); // Check if the tutor document exists
-  
+
             if (userDocSnap.exists()) {
               const userData = userDocSnap.data();
-  
+
               // Update 'image' field in 'users' database
               await setDoc(userDocRef, {
                 ...userData,
                 image: reader.result,
               });
-  
+
               setIsLoading(false);
               setProfileImage(reader.result);
-  
+
               if (tutorDocSnap.exists()) {
                 // If the user also exists as a tutor, update 'image' field in 'tutors' database
                 const tutorData = tutorDocSnap.data();
@@ -239,7 +264,7 @@ export default function Profile() {
                   image: reader.result,
                 });
               }
-  
+
               console.log("Image updated successfully in Cloud Firestore!");
             } else {
               console.error("User not found in 'users' database.");
@@ -251,14 +276,14 @@ export default function Profile() {
           }
         }
       };
-  
+
       reader.readAsDataURL(file);
     } else {
       setProfileImage(null);
       setIsLoading(false);
     }
   };
-  
+
 
   const circleButtonStyle: React.CSSProperties = {
     width: "150px",
@@ -287,7 +312,7 @@ export default function Profile() {
         <Typography color="text.primary">Profile</Typography>
       </Breadcrumbs>
 
-       <Box my={2} />
+      <Box my={2} />
 
       <Typography variant="h4" gutterBottom>
         Profile
@@ -359,47 +384,49 @@ export default function Profile() {
       {/* Hide the tutor status if the user is not a tutor */}
 
       {isTutor && (
-            <><Typography variant="h6" gutterBottom>
+        <><Typography variant="h6" gutterBottom>
           Tutor Status: (please only select "online" if you are currently
           available to tutor)
-        </Typography><FormControl>
-            <RadioGroup
-              aria-labelledby="demo-row-radio-buttons-group-label"
-              defaultValue="offline"
-              name="radio-buttons-group"
-            >
-              <FormControlLabel
-                value="online"
-                checked={isOnline}
-                onChange={() => setIsOnline(true)}
-                control={<Radio />}
-                label="Online" />
-              <FormControlLabel
-                value="offline"
-                checked={!isOnline}
-                onChange={() => setIsOnline(false)}
-                control={<Radio />}
-                label="Offline" />
-            </RadioGroup>
-          </FormControl><Typography variant="body1" gutterBottom>
+        </Typography>
+          <FormControlLabel
+            value="online"
+            checked={isOnline}
+            onChange={() => {
+              setIsOnline(true);
+              handleOnlineStatusChange(true); // Call the function with true when Online is selected
+            }}
+            control={<Radio />}
+            label="Online"
+          />
+          <FormControlLabel
+            value="offline"
+            checked={!isOnline}
+            onChange={() => {
+              setIsOnline(false);
+              handleOnlineStatusChange(false); // Call the function with false when Offline is selected
+            }}
+            control={<Radio />}
+            label="Offline"
+          />
+          <Typography variant="body1" gutterBottom>
             Your Status: {isOnline ? "Online" : "Offline"}
           </Typography></>
       )}
-        
 
-      <Box my={3} /> 
+
+      <Box my={3} />
 
       <Typography style={{ display: "inline" }} variant="body1" gutterBottom>
         Name: <span>{name}</span>
       </Typography>
 
-      <Box my={1} /> 
+      <Box my={1} />
 
       <Typography style={{ display: "inline" }} variant="body1" gutterBottom>
         Email: <span>{email}</span>
       </Typography>
 
-      <Box my={1} /> 
+      <Box my={1} />
 
 
       {/* user can't edit their name and email through the edit buttion */}
@@ -419,7 +446,7 @@ export default function Profile() {
       />*/}
 
           <Typography variant="body1" gutterBottom>
-            Year: 
+            Year:
           </Typography>
           <FormControl>
             <RadioGroup
@@ -503,7 +530,7 @@ export default function Profile() {
             </div>
                 ))}*/}
 
-          <Box my={1} />      
+          <Box my={1} />
           <Button
             variant="contained"
             color="primary"
@@ -514,35 +541,35 @@ export default function Profile() {
         </>
       ) : (
         <>
-          
+
           <Typography
             style={{ display: "inline" }}
             variant="body1"
             gutterBottom
           >
-            Year: 
-          <span>{" "+grade}</span>
+            Year:
+            <span>{" " + grade}</span>
           </Typography>
           <Box my={1} />
-          
+
           <Typography
             style={{ display: "inline" }}
             variant="body1"
             gutterBottom
           >
             Classes You&apos;ve Taken:
-            <span>{" "+takenClasses.join(", ")}</span>
+            <span>{" " + takenClasses.join(", ")}</span>
 
           </Typography>
 
-           <Box my={1} />
+          <Box my={1} />
           <Typography
             style={{ display: "inline" }}
             variant="body1"
             gutterBottom
           >
-          Classes You&apos;re Tutoring:
-          <span>{" "+tutoredClasses.join(", ")}</span>
+            Classes You&apos;re Tutoring:
+            <span>{" " + tutoredClasses.join(", ")}</span>
 
           </Typography>
 
@@ -550,7 +577,7 @@ export default function Profile() {
           <Button variant="contained" color="primary" onClick={handleEdit}>
             Edit
           </Button>
-         
+
         </>
       )}
     </div>

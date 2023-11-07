@@ -5,7 +5,8 @@ import getTutors from "./tutors";
 import TutorItem from "./tutorItem";
 import getClassNames from "./classes";
 import Link from "next/link";
-import Button, {
+import{
+  Button,
   FormControl,
   InputLabel,
   MenuItem,
@@ -75,6 +76,10 @@ export default function Home() {
   const resetPage = () => {
     setTutors(allTutors);
   };
+  function setFilter(arg0: string) {
+    throw new Error("Function not implemented.");
+  }
+
   return (
     <>
       <NavBar></NavBar>
@@ -117,6 +122,25 @@ export default function Home() {
           ))}
         </Select>
       </FormControl>
+
+      <div>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => setFilter("active")}
+          style={{ margin: '0 10px' }}
+        >
+          Active Tutors
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => setFilter("inactive")}
+          style={{ margin: '0 10px' }}
+        >
+          Inactive Tutors
+        </Button>
+      </div>
       
       <Typography variant="h5" gutterBottom>
         Tutors:
