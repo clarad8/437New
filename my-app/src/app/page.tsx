@@ -133,28 +133,37 @@ export default function Home() {
   const applyFilters = (filteredTutors: Tutor[]) => {
     let resultTutors = [...filteredTutors];
 
-    selectedFilters.forEach((filter) => {
-      if (filter === "online") {
+    const onlineFilterApplied = selectedFilters.includes("online");
+    const offlineFilterApplied = selectedFilters.includes("offline");
+
+    if (onlineFilterApplied && offlineFilterApplied) {
+      // If both online and offline filters are selected, no need to filter based on online status
+    } else {
+      // Apply individual filters
+      if (onlineFilterApplied) {
         resultTutors = resultTutors.filter((tutor) => tutor.online === true);
       }
-      if (filter === "offine") {
+      if (offlineFilterApplied) {
         resultTutors = resultTutors.filter((tutor) => tutor.online === false);
       }
-      if (filter === "favorite") {
-        resultTutors = resultTutors.filter((tutor) =>
-          favoriteTutors.includes(tutor.name)
-        );
-      }
+    }
 
-      // New check to filter by selected class
-      if (filter === "class" && selectedClass !== "Show All Tutors") {
-        resultTutors = resultTutors.filter(
-          (tutor) =>
-            tutor.tutoringClasses &&
-            tutor.tutoringClasses.includes(selectedClass)
-        );
-      }
-    });
+    if (selectedFilters.includes("favorite")) {
+      resultTutors = resultTutors.filter((tutor) =>
+        favoriteTutors.includes(tutor.name)
+      );
+    }
+
+    // New check to filter by selected class
+    if (
+      selectedFilters.includes("class") &&
+      selectedClass !== "Show All Tutors"
+    ) {
+      resultTutors = resultTutors.filter(
+        (tutor) =>
+          tutor.tutoringClasses && tutor.tutoringClasses.includes(selectedClass)
+      );
+    }
 
     // If searchQuery is present, filter the resultTutors based on the search query
     if (searchQuery) {
