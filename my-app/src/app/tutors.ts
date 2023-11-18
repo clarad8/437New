@@ -23,7 +23,6 @@ const getTutors = async () => {
     // get collectiond data
     const querySnapshot = await getDocs(tutorsCollection);
     querySnapshot.forEach((doc) => {
-      console.log(querySnapshot.docs);
       const tutor = doc.data();
       tutorsData.push({
         id: doc.id,
