@@ -80,6 +80,7 @@ const TutorProfile = () => {
   }) => {
     setComment(event.target.value);
   };
+
   const submitQuestion = async (
     id: string,
     contact: string,
@@ -124,6 +125,7 @@ const TutorProfile = () => {
       console.error("Error submitting contact and question:", error);
     }
   };
+
   const submitRatingAndComment = async (
     id: string,
     rating: number,
@@ -168,6 +170,7 @@ const TutorProfile = () => {
       console.error("Error submitting rating and comment:", error);
     }
   };
+
   const handleSubmitComment = async () => {
     if (rating > 0 && comment.trim() !== "") {
       try {
@@ -178,6 +181,10 @@ const TutorProfile = () => {
           setRating(0);
           setComment("");
           console.log("Rating and comment submitted successfully!");
+
+          // Update comments state with the new comment and rating
+          const updatedComments = [...comments, { rating, comment }];
+          setComments(updatedComments);
           setAlert(true);
         }
       } catch (error) {
@@ -208,6 +215,7 @@ const TutorProfile = () => {
       console.error("Invalid");
     }
   };
+
   useEffect(() => {
     if (id) {
       // Fetch tutor data based on the ID using the getTutors function
@@ -225,6 +233,7 @@ const TutorProfile = () => {
             setTutor(tutorData);
             setProfileImage(tutorData.profileImage);
 
+            // Initialize comments and ratings state
             const fetchedComments: Comment[] = tutorData.comments.map(
               (comment: string, index: number) => ({
                 rating: tutorData.ratings[index],
