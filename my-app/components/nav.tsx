@@ -13,26 +13,35 @@ import {
 import { signOut, useSession } from "next-auth/react";
 import { SetStateAction, useEffect, useState } from "react";
 import "./nav.css";
+import Notification from "../src/app/notification";
+import NotificationsIcon from "@mui/icons-material/Notifications"; 
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import router from "next/router";
-
-// const student = true;
-// type NavBarProps = {
-//   userType:string;
-// };
 
 export default function NavBar() {
   const [activeTab, setActiveTab] = useState("");
   const userType = "student";
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [isVisible, setIsVisible] = useState(true);
+  const [isClicked, setIsClicked] = useState(false);
+
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
+
   };
   const handleCloseMenu = () => {
     setAnchorEl(null);
   };
+
+  const handleBellIconClick = () => {
+    console.log("Bell icon clicked");
+    // setIsClicked((prevIsClicked) => !prevIsClicked);
+    setIsClicked(true);
+    setIsVisible(true);
+  };
+
   function getActiveTabFromURL() {
     const pathname = window.location.pathname;
     const parts = pathname.split("/").filter((part) => part !== "");
@@ -100,6 +109,20 @@ export default function NavBar() {
                 variant="h6"
                 noWrap
                 component="a"
+                href="/discussion"
+                sx={{ my: 2, color: "white", display: "block" }}
+              >
+                Discussion
+              </Typography>
+            </Box>
+            <IconButton color="inherit" onClick={handleBellIconClick}>
+            <NotificationsIcon />
+            </IconButton>
+            <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+              <Typography
+                variant="h6"
+                noWrap
+                component="a"
                 href="/"
                 sx={{ my: 2, color: "white", display: "block" }}
                 onClick={async () => {
@@ -113,6 +136,9 @@ export default function NavBar() {
           </Toolbar>
         </Container>
       </AppBar>
+      {/* {isVisible && <Notification isClicked={isClicked} />} */}
+      {isVisible && <Notification isClicked={isClicked} setIsVisible={setIsVisible} />}
+
       <Menu
         anchorEl={anchorEl}
         anchorOrigin={{
@@ -141,6 +167,11 @@ export default function NavBar() {
         <Link href="/tutor-course">
           <MenuItem>
             <Typography textAlign="center">Tutor Course</Typography>
+          </MenuItem>
+        </Link>
+        <Link href="/discussion">
+          <MenuItem>
+            <Typography textAlign="center">Discussion</Typography>
           </MenuItem>
         </Link>
         <MenuItem
