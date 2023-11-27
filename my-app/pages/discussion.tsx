@@ -6,6 +6,7 @@ import {
   doc,
   updateDoc,
   arrayUnion,
+  getDoc,
 } from "firebase/firestore";
 import { db, auth } from "../index";
 import {
@@ -32,13 +33,15 @@ interface FirestoreDiscussion {
   timestamp: Date;
   class: string;
   type: string;
+  studentResponses?: string[];
+  tutorResponses?: string[];
 }
 
 const FirestoreDiscussionComponent = () => {
   const [firestoreDiscussions, setFirestoreDiscussions] = useState<
     FirestoreDiscussion[]
   >([]);
-  
+
   const [newDiscussion, setNewDiscussion] = useState("");
   const [selectedClass, setSelectedClass] = useState<string>("CSE330");
   const [postType, setPostType] = useState<string>("question"); // 'question', 'poll', or 'note'
@@ -88,24 +91,20 @@ const FirestoreDiscussionComponent = () => {
           posts: data.posts || [], // Assuming posts field is an array in your document
         };
       });
-  
+
       setPastPosts(newPastPosts);
 
-       // Set selected class posts to the posts of the initially selected class
-    const initialSelectedClassData = newPastPosts.find(
-      (post) => post.id === selectedClass
-    );
+      // Set selected class posts to the posts of the initially selected class
+      const initialSelectedClassData = newPastPosts.find(
+        (post) => post.id === selectedClass
+      );
 
-    setSelectedClassPosts(
-      initialSelectedClassData ? initialSelectedClassData.posts : []
-    );
-  };
+      setSelectedClassPosts(
+        initialSelectedClassData ? initialSelectedClassData.posts : []
+      );
+    };
 
-      
-      
-    
-
-  fetchFirestoreDiscussions();
+    fetchFirestoreDiscussions();
   }, [selectedClass]); // Update selectedClassPosts when selectedClass changes
 
   const handlePostClick = (post: FirestoreDiscussion) => {
@@ -118,16 +117,139 @@ const FirestoreDiscussionComponent = () => {
     setNewPostVisibility(true);
   };
 
-  const handleStudentResponseSubmit = () => {
-    // Implement your logic for handling student's response submission here
-    console.log("Student's response submitted!");
+  interface FirestoreDiscussion {
+    id: string;
+    title: string;
+    content: string;
+    userId: string;
+    timestamp: Date;
+    class: string;
+    type: string;
+    studentResponses?: string[];
+    tutorResponses?: string[];
+  }
+  
+  // ... (rest of your code)
+  
+  const handleStudentResponseSubmit = async () => {
+    if (selectedPost && selectedClass) {
+      const currentUser = auth.currentUser;
+  
+      if (currentUser) {
+        const discussionsCollection = collection(db, "discussions");
+        const classDocRef = doc(discussionsCollection, selectedClass);
+  
+        try {
+          // Get the current posts array
+          const classDoc = await getDoc(classDocRef);
+          const currentPosts = classDoc.data()?.posts || [];
+  
+          // Find the index of the selected post in the array
+          const postIndex = currentPosts.findIndex(
+            (post: { id: string }) => post.id === selectedPost.id
+          );
+  
+          if (postIndex !== -1) {
+            // Update the selected post with the student's response
+            currentPosts[postIndex] = {
+              ...currentPosts[postIndex],
+              studentResponses: [
+                ...(currentPosts[postIndex].studentResponses || []),
+                studentResponse,
+              ],
+            };
+  
+            // Update the document with the modified posts array
+            await updateDoc(classDocRef, { posts: currentPosts });
+  
+            // Reset student response input field
+            setStudentResponse("");
+  
+            setSnackbarSeverity("success");
+            setSnackbarMessage("Student's response submitted successfully!");
+            setSnackbarOpen(true);
+          } else {
+            console.error("Selected post not found in the array");
+          }
+        } catch (error) {
+          console.error("Error fetching document:", error);
+          setSnackbarSeverity("error");
+          setSnackbarMessage(
+            "Error submitting student's response. Please try again."
+          );
+          setSnackbarOpen(true);
+        }
+      } else {
+        console.error("User not authenticated");
+        setSnackbarSeverity("error");
+        setSnackbarMessage(
+          "Error submitting student's response. Please try again."
+        );
+        setSnackbarOpen(true);
+      }
+    }
   };
+  
+  const handleTutorResponseSubmit = async () => {
+    if (selectedPost && selectedClass) {
+      const currentUser = auth.currentUser;
+  
+      if (currentUser) {
+        const discussionsCollection = collection(db, "discussions");
+        const classDocRef = doc(discussionsCollection, selectedClass);
+  
+        try {
+          // Get the current posts array
+          const classDoc = await getDoc(classDocRef);
+          const currentPosts = classDoc.data()?.posts || [];
+  
+          // Find the index of the selected post in the array
+          const postIndex = currentPosts.findIndex(
+            (post: { id: string }) => post.id === selectedPost.id
+          );
+  
+          if (postIndex !== -1) {
+            // Update the selected post with the tutor's response
+            currentPosts[postIndex] = {
+              ...currentPosts[postIndex],
+              tutorResponses: [
+                ...(currentPosts[postIndex].tutorResponses || []),
+                tutorResponse,
+              ],
+            };
+  
+            // Update the document with the modified posts array
+            await updateDoc(classDocRef, { posts: currentPosts });
+  
+            // Reset tutor response input field
+            setTutorResponse("");
+  
+            setSnackbarSeverity("success");
+            setSnackbarMessage("Tutor's response submitted successfully!");
+            setSnackbarOpen(true);
+          } else {
+            console.error("Selected post not found in the array");
+          }
+        } catch (error) {
+          console.error("Error fetching document:", error);
+          setSnackbarSeverity("error");
+          setSnackbarMessage(
+            "Error submitting tutor's response. Please try again."
+          );
+          setSnackbarOpen(true);
+        }
+      } else {
+        console.error("User not authenticated");
+        setSnackbarSeverity("error");
+        setSnackbarMessage(
+          "Error submitting tutor's response. Please try again."
+        );
+        setSnackbarOpen(true);
+      }
+    }
+  };
+  
 
-  // Placeholder function for handling tutor's response submission
-  const handleTutorResponseSubmit = () => {
-    // Implement your logic for handling tutor's response submission here
-    console.log("Tutor's response submitted!");
-  };
 
   const renderPostDetails = () => {
     if (selectedPost) {
@@ -152,15 +274,29 @@ const FirestoreDiscussionComponent = () => {
             </Typography>
           </Box>
 
-          {/* Container for Student's Response */}
-          <Box
-            style={{
-              marginBottom: "20px",
-              border: "2px solid #2196f3",
-              padding: "10px",
-              borderRadius: "5px",
-            }}
-          >
+           {/* Container for Past and New Student's Response */}
+        <Box
+          style={{
+            marginBottom: "20px",
+            border: "2px solid #2196f3",
+            padding: "10px",
+            borderRadius: "5px",
+          }}
+        >
+          {/* Past Student's Response */}
+          {selectedPost.studentResponses && (
+            <div>
+              <Typography variant="h5">Past Student's Responses</Typography>
+              {selectedPost.studentResponses.map((response, index) => (
+                <Typography key={index} variant="body1">
+                  {response}
+                </Typography>
+              ))}
+            </div>
+          )}
+
+          {/* New Student's Response */}
+          <div>
             <Typography variant="h5">Student's Response</Typography>
             <TextField
               label="Enter your response"
@@ -168,9 +304,8 @@ const FirestoreDiscussionComponent = () => {
               multiline
               rows={4}
               fullWidth
-              // Add state and onChange handler to capture student's response
-              // value={studentResponse}
-              // onChange={(e) => setStudentResponse(e.target.value)}
+              value={studentResponse}
+              onChange={(e) => setStudentResponse(e.target.value)}
               style={{ marginBottom: "10px" }}
             />
             <Button
@@ -180,16 +315,32 @@ const FirestoreDiscussionComponent = () => {
             >
               Submit Student's Response
             </Button>
-          </Box>
+          </div>
+        </Box>
 
-          {/* Container for Tutor's Response */}
-          <Box
-            style={{
-              border: "2px solid #2196f3",
-              padding: "10px",
-              borderRadius: "5px",
-            }}
-          >
+        {/* Container for Past and New Tutor's Response */}
+        <Box
+          style={{
+            marginBottom: "20px",
+            border: "2px solid #2196f3",
+            padding: "10px",
+            borderRadius: "5px",
+          }}
+        >
+          {/* Past Tutor's Response */}
+          {selectedPost.tutorResponses && (
+            <div>
+              <Typography variant="h5">Past Tutor's Responses</Typography>
+              {selectedPost.tutorResponses.map((response, index) => (
+                <Typography key={index} variant="body1">
+                  {response}
+                </Typography>
+              ))}
+            </div>
+          )}
+
+          {/* New Tutor's Response */}
+          <div>
             <Typography variant="h5">Tutor's Response</Typography>
             <TextField
               label="Enter your response"
@@ -197,9 +348,8 @@ const FirestoreDiscussionComponent = () => {
               multiline
               rows={4}
               fullWidth
-              // Add state and onChange handler to capture tutor's response
-              // value={tutorResponse}
-              // onChange={(e) => setTutorResponse(e.target.value)}
+              value={tutorResponse}
+              onChange={(e) => setTutorResponse(e.target.value)}
               style={{ marginBottom: "10px" }}
             />
             <Button
@@ -209,19 +359,10 @@ const FirestoreDiscussionComponent = () => {
             >
               Submit Tutor's Response
             </Button>
-          </Box>
-
-          {/* Button to go back to posts */}
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={handleBackToPosts}
-            style={{ marginTop: "30px" }}
-          >
-            Back to post a new discussion
-          </Button>
-        </div>
-      );
+          </div>
+        </Box>
+      </div>
+    );
     }
   };
 
