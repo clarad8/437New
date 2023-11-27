@@ -38,6 +38,7 @@ const FirestoreDiscussionComponent = () => {
   const [firestoreDiscussions, setFirestoreDiscussions] = useState<
     FirestoreDiscussion[]
   >([]);
+  
   const [newDiscussion, setNewDiscussion] = useState("");
   const [selectedClass, setSelectedClass] = useState<string>("CSE330");
   const [postType, setPostType] = useState<string>("question"); // 'question', 'poll', or 'note'
@@ -45,7 +46,7 @@ const FirestoreDiscussionComponent = () => {
   const [postTitle, setPostTitle] = useState("");
 
   const [pastPosts, setPastPosts] = useState<any[]>([]); // State to store past posts
-  const [selectedClassPosts, setSelectedClassPosts] = useState<any[]>([]); // State to store posts for the selected class
+  const [selectedClassPosts, setSelectedClassPosts] = useState<any[]>([]);
   const [selectedPost, setSelectedPost] = useState<FirestoreDiscussion | null>(
     null
   );
@@ -80,19 +81,32 @@ const FirestoreDiscussionComponent = () => {
         })
       );
 
-      setPastPosts(
-        discussionsSnapshot.docs.map((doc) => {
-          const data = doc.data();
-          return {
-            id: doc.id,
-            posts: data.posts || [], // Assuming posts field is an array in your document
-          };
-        })
-      );
-    };
+      const newPastPosts = discussionsSnapshot.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          posts: data.posts || [], // Assuming posts field is an array in your document
+        };
+      });
+  
+      setPastPosts(newPastPosts);
 
-    fetchFirestoreDiscussions();
-  }, []);
+       // Set selected class posts to the posts of the initially selected class
+    const initialSelectedClassData = newPastPosts.find(
+      (post) => post.id === selectedClass
+    );
+
+    setSelectedClassPosts(
+      initialSelectedClassData ? initialSelectedClassData.posts : []
+    );
+  };
+
+      
+      
+    
+
+  fetchFirestoreDiscussions();
+  }, [selectedClass]); // Update selectedClassPosts when selectedClass changes
 
   const handlePostClick = (post: FirestoreDiscussion) => {
     setSelectedPost(post);
