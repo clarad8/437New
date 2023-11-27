@@ -373,7 +373,7 @@ const FirestoreDiscussionComponent = () => {
         <div>
           {/* Post Type Selection */}
           <Box>
-            <Typography variant="h4" style = {{marginTop: "20px"}}>Make a New Post</Typography>
+          <div style={{ fontFamily: "system-ui", fontSize: "1.75rem", color: "#6fa5ff", marginTop : "20px", fontWeight: "semi-bold", marginBottom: "10px", textDecoration: "underline"  }}>Make a New Post</div>
             <Typography variant="h6">Post Type:</Typography>
             <ButtonGroup color="primary" style={{ marginRight: 10 }}>
               <Button
@@ -540,7 +540,7 @@ const FirestoreDiscussionComponent = () => {
       <NavBar></NavBar>
       <Container>
       <br></br>
-      <Typography variant="h4" style = {{marginBottom: "20px"}}>Discussion Board</Typography>
+      <div style={{ fontFamily: "system-ui", fontSize: "3rem", fontWeight: "bold", color: "#6fa5ff", marginBottom : "10px" }}>Discussion Board</div>
 
       <Box>
         {[
@@ -582,7 +582,8 @@ const FirestoreDiscussionComponent = () => {
 
       <Grid container spacing={2}>
         <Grid item xs={2}>
-          <Typography variant="h4" style = {{marginTop: "20px"}}>Past Posts</Typography>
+        <div style={{ fontFamily: "system-ui", fontSize: "1.75rem", color: "#6fa5ff", marginTop : "20px", fontWeight: "semi-bold", marginBottom: "10px", textDecoration: "underline" }}>Past Posts</div>
+
           {/* Display past posts for the selected class */}
           {selectedClassPosts.map((p: any, idx: number) => (
             <Box

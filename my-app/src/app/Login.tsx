@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, CSSProperties } from "react";
 import { Typography, Box, Button, Modal } from "@mui/material";
 import {
   signInWithPopup,
@@ -117,38 +117,46 @@ const Login = () => {
       });
   };
 
+  const containerStyle: CSSProperties = {
+    backgroundImage: "url('https://img.freepik.com/premium-photo/blue-cardboard-background-flat-lay-top-view_164357-2984.jpg')", // Replace 'YOUR_IMAGE_URL' with your actual image URL
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    minHeight: "100vh",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  };
+
   return (
-    <div style={{ textAlign: "center", padding: "20px" }}>
-      <Typography variant="h3" component="h1" gutterBottom>
-        CS Tutor Match
-      </Typography>
-      <Box
-        display="flex"
-        height="50vh"
-        justifyContent="space-around"
-        alignItems="center"
-        style={{ backgroundColor: "#f0f0f0" }}
-      >
+    <div style={containerStyle}>
+    <div style={{ textAlign: "center", padding: "20px", color: "white", textShadow: "2px 2px black" }}>
+    <div style={{ fontFamily: "Georgia", fontSize: "3rem" }}>
+  CS Tutor Match
+</div>
+
         {/* ... other components */}
         <div style={{ marginTop: "20px" }}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleGoogleSignUp}
-          >
-            Sign up with Google
-          </Button>
-        </div>
-        <div style={{ marginTop: "20px" }}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleGoogleLogin}
-          >
-            Sign in with Google
-          </Button>
-        </div>
-      </Box>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleGoogleSignUp}
+              style={{ background: "white", color: "#1976D2" }}
+            >
+              Sign up with Google
+            </Button>
+          </div>
+          <div style={{ marginTop: "20px" }}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleGoogleLogin}
+              style={{ background: "white", color: "#1976D2" }}
+            >
+              Sign in with Google
+            </Button>
+          </div>
+      
       <Modal
         open={isVerificationPopupOpen}
         onClose={() => setVerificationPopupOpen(false)}
@@ -196,6 +204,7 @@ const Login = () => {
           </Button>
         </div>
       </Modal>
+    </div>
     </div>
   );
 };

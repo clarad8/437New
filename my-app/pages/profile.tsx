@@ -321,14 +321,14 @@ export default function Profile() {
         <Link underline="hover" href="/">
           Home
         </Link>
+        
         <Typography color="text.primary">Profile</Typography>
       </Breadcrumbs>
 
       <Box my={2} />
       <Container>
-      <Typography variant="h4" gutterBottom>
-        Profile
-      </Typography>
+        
+      <div style={{ fontFamily: "system-ui", fontSize: "3rem", fontWeight: "bold", color: "#6fa5ff" }}>Profile</div>
       <Snackbar
         open={isSnackbarOpen}
         autoHideDuration={4000}
