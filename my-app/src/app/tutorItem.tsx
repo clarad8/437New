@@ -13,6 +13,10 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { auth, db } from "../../index";
+import StarIcon from '@mui/icons-material/Star';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
+import ReactStars from "react-stars";
+
 
 interface Tutor {
   id: string;
@@ -20,7 +24,7 @@ interface Tutor {
   tutoringClasses?: string[]; // Make tutoringClasses optional
   zoom: string;
   online: boolean;
-  ratings?: number[]; 
+  ratings?: number[];
   image: string;
 }
 
@@ -98,6 +102,15 @@ const TutorItem: React.FC<Tutor> = ({
     }
   };
 
+  const calculateStarRating = (averageRating: string) => {
+    const rating = parseFloat(averageRating);
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      stars.push(i <= rating ? <StarIcon key={i} /> : <StarBorderIcon key={i} />);
+    }
+    return stars;
+  };
+
   const averageRating =
     ratings && ratings.length > 0
       ? (
@@ -106,64 +119,73 @@ const TutorItem: React.FC<Tutor> = ({
       : "None";
 
   return (
-    <div
-      className="tutor-box"
-      style={{ width: "200px", height: "200px", cursor: "pointer" }}
-    >
-      <Link href={`/tutors/${id}`}>
-        <div className="tutor-content">
-          <div><img src={image} alt={`${name}'s profile`} className="tutor-image" /></div>
+    <div className="tutor-wrapper">
+      <div className="tutor-box">
+        <Link href={`/tutors/${id}`}>
+          <div className="profile-image-container">
+            <img
+              src={image}
+              alt={`${name}'s profile`}
+              className="tutor-image rounded"
+            />
+          </div>
+        </Link>
+        <div className="tutor-details">
+          <Link href={`/tutors/${id}`}>
+            <div>
+              <Typography variant="h6" gutterBottom>
+                {name}
+              </Typography>
 
-          <Typography variant="h5" gutterBottom>
-            {name}
-          </Typography>
+              {tutoringClasses && tutoringClasses.length > 0 ? (
+                <Typography variant="body1" gutterBottom>
+                  Class Name: {tutoringClasses.join(", ")}
+                </Typography>
+              ) : (
+                <Typography variant="body1" gutterBottom>
+                  No classes available
+                </Typography>
+              )}
 
-          {tutoringClasses && tutoringClasses.length > 0 ? (
+              <Typography variant="body1" gutterBottom>
+                {online ? "Online" : "Offline"}
+              </Typography>
+            </div>
+          </Link>
+
+          <div className="rating">
             <Typography variant="body1" gutterBottom>
-              Class Name: {tutoringClasses.join(", ")}
+              Average Rating: {averageRating}{" "}
+              <ReactStars
+                count={5}
+                size={24}
+                color2={"#ffd700"}
+                value={parseFloat(averageRating)}
+                edit={false}
+              />
             </Typography>
-          ) : (
-            <Typography variant="body1" gutterBottom>
-              No classes available
-            </Typography>
-          )}
-          {online ? (
-            <Typography variant="body1" gutterBottom>
-              Online
-            </Typography>
-          ) : (
-            <Typography variant="body1" gutterBottom>
-              Offline
-            </Typography>
-          )}
-          <Typography variant="body1" gutterBottom>
-            Average Rating: {averageRating}
-          </Typography>
+          </div>
+
+          <div className="rating-and-like" onClick={(e) => e.stopPropagation()}>
+            <IconButton
+              color={isLiked ? "primary" : "default"}
+              style={{
+                cursor: "pointer",
+                color: isLiked ? "#d9534f" : "rgba(0, 0, 0, 0.54)",
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleLikeClick();
+              }}
+            >
+              <FavoriteIcon />
+            </IconButton>
+          </div>
         </div>
-      </Link>
-      <div
-        onClick={(e) => {
-          e.stopPropagation(); // Prevent the event from propagating
-          // Handle click logic for the entire tutor box here
-        }}
-      >
-        <IconButton
-          color={isLiked ? "primary" : "default"}
-          style={{
-            cursor: "pointer",
-            color: isLiked ? "#d9534f" : "rgba(0, 0, 0, 0.54)", // Adjust shades of red and gray
-          }}
-          onClick={(e) => {
-            e.stopPropagation(); // Prevent the event from propagating
-            // Handle "like" logic for the icon button here
-            handleLikeClick();
-          }}
-        >
-          <FavoriteIcon />
-        </IconButton>
       </div>
     </div>
   );
+
 };
 
 export default TutorItem;

@@ -317,11 +317,13 @@ export default function Home() {
         ))}
       </div>
       <br></br>
-      <div className="tutor-container">
-        {tutors.map((tutor) => (
-          <TutorItem key={tutor.id} {...tutor} />
-        ))}
-      </div>
+      <Grid container spacing={2}>
+    {tutors.map((tutor) => (
+        <Grid item key={tutor.id} xs={12} sm={6} md={6} lg={6} xl={6}>
+            <TutorItem {...tutor} />
+        </Grid>
+    ))}
+</Grid>
       <Box my={2} />
       </div>
       </Container>
