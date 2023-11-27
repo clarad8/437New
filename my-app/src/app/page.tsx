@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import getTutors from "./tutors";
 import TutorItem from "./tutorItem";
 import getClassNames from "./classes";
-import { Alert, Box, Button, Typography, TextField, Chip } from "@mui/material";
+import { Alert, Box, Button, Typography, TextField, Chip, Container, Grid } from "@mui/material";
 import Select from "react-select";
 
 import NavBar from "../../components/nav";
@@ -198,6 +198,7 @@ export default function Home() {
   return (
     <>
       <NavBar />
+      <Container>
       {/* <Typography variant="body1" gutterBottom>
         Welcome {session?.data?.user?.name}!
   </Typography>*/}
@@ -322,6 +323,7 @@ export default function Home() {
       </div>
       <Box my={2} />
       </div>
+      </Container>
     </>
   );
 }

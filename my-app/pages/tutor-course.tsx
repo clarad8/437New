@@ -10,6 +10,7 @@ import {
   Link,
   MenuItem,
   Typography,
+  Container
 } from "@mui/material";
 import Select from "react-select";
 
@@ -231,8 +232,7 @@ export default function TutorCourse() {
         <Typography color="text.primary">Tutor Course</Typography>
       </Breadcrumbs>
       <br></br>
-      <Box my={1} />
-
+      <Container>
       <Typography variant="h5" gutterBottom>
         Select CS Classes You've Taken (multiple selections allowed):
       </Typography>
@@ -313,19 +313,14 @@ export default function TutorCourse() {
         </div>
       ))}
 
-    <Box my={1} />
+      <Button variant="contained" onClick={addTakenClasses} style = {{marginTop: "25px", marginRight: "10px"}}>
+        Submit
+      </Button>
+      <Button variant="contained" onClick={clearSelections} style = {{marginTop: "25px"}}>
+        Clear
+      </Button>
 
-    <Box>
-  <Button variant="contained" onClick={addTutoringClasses} style={{ marginRight: '6px' }}>
-    Submit
-  </Button>
-
-  <Button variant="contained" onClick={clearSelections}>
-    Clear
-  </Button>
-  </Box>
-
-      <Box my={5} />
+      <Box my={2} />
 
       <Typography variant="h5" gutterBottom>
         Select CS Classes You Want to Tutor (multiple selections allowed):
@@ -391,26 +386,14 @@ export default function TutorCourse() {
         placeholder="Select classes"
       />
 
-    <Box my={1} />
-
-      {/* <Button variant="contained" onClick={addTutoringClasses}>
+      <Button variant="contained" onClick={addTutoringClasses} style = {{marginTop: "25px", marginRight: "10px"}}>
         Submit
       </Button>
 
-      <Button variant="contained" onClick={clearSelections}>
+      <Button variant="contained" onClick={clearSelections} style = {{marginTop: "25px"}}>
         Clear
-      </Button> */}
-
-  <Box>
-  <Button variant="contained" onClick={addTutoringClasses} style={{ marginRight: '6px' }}>
-    Submit
-  </Button>
-
-  <Button variant="contained" onClick={clearSelections}>
-    Clear
-  </Button>
-  </Box>
-
+      </Button>
+      </Container>
     </div>
   );
 }
