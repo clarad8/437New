@@ -115,7 +115,7 @@ export default function NavBar() {
                 Discussion
               </Typography>
             </Box>
-            <IconButton color="inherit" onClick={handleBellIconClick}>
+            <IconButton color="inherit" onClick={handleBellIconClick} sx={{ marginRight: 2 }}>
             <NotificationsIcon />
             </IconButton>
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>

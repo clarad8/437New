@@ -3,6 +3,7 @@ import { collection, query, where, getDocs, updateDoc, doc } from "firebase/fire
 import { db } from "../../index"; // Import your Firestore database configuration
 import { Button, List, ListItem, Typography } from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
+import Alert from "@mui/material/Alert";
 import { getAuth } from "firebase/auth";
 
 interface NotificationProps {
@@ -61,7 +62,7 @@ const Notification: React.FC<NotificationProps> = ({ isClicked, setIsVisible }) 
           });
 
           setNotifications(tutorNotifications);
-
+          console.log(tutorNotifications.length);
 
         } catch (error) {
           console.error("Error fetching notifications: ", error);
@@ -113,10 +114,47 @@ const Notification: React.FC<NotificationProps> = ({ isClicked, setIsVisible }) 
     setIsVisible(false);
   };
 
+  // if(!isTutor) {
+  //   if(notifications.length === 0) {
+  //     return (
+  //       <Alert severity="info" onClose={() => setIsVisible(false)}>
+  //         You don't have any notifications.
+  //       </Alert>
+  //     );
+  //   }
+  //   return null;
+  // }
+  
+
   // if user is not a tutor, don't show the notification box at all
-  if (!isTutor || !isClicked) {
+  // if (!isTutor || !isClicked) {
+  //   return null;
+  // }
+  // console.log(notifications.length);
+  if(!isClicked) {
     return null;
   }
+
+  console.log(notifications.length);
+  if (isClicked && notifications.length === 0) {
+    console.log("this is error 1");
+    return (
+      <Alert severity="info" onClose={() => setIsVisible(false)}>
+        You don't have any notifications.
+      </Alert>
+    );
+  }
+
+  // console.log(isTutor);
+  // if (isClicked && !isTutor) {
+  //   console.log("this is error 2");
+
+  //   return (
+  //     <Alert severity="info" onClose={() => setIsVisible(false)}>
+  //       You don't have any notifications.
+  //     </Alert>
+  //   );
+  // }
 
   return (
     <div
