@@ -199,13 +199,14 @@ export default function Home() {
   return (
     <>
       <NavBar />
-      <Container>
+      
         {/* <Typography variant="body1" gutterBottom>
         Welcome {session?.data?.user?.name}!
   </Typography>*/}
         <br />
         <br />
-        <div style={{ marginLeft: "30px" }}>
+        <div style ={{marginBottom: "30px",backgroundImage: "url('https://img.freepik.com/premium-vector/white-background-with-blue-technology-circuit_583398-369.jpg')"}}>
+        <div style={{ marginLeft: "50px", marginRight: "50px" }}>
           <div style={{ fontFamily: "system-ui", fontSize: "3rem", fontWeight: "bold", color: "#6fa5ff" }}>
             Find a CS Tutor
           </div>      <Typography variant="body1" gutterBottom>
@@ -316,6 +317,9 @@ export default function Home() {
             ))}
           </div>
           <br></br>
+          </div>
+          </div>
+          <Container>
           <Grid container spacing={2}>
             {tutors.map((tutor) => (
               <Grid item key={tutor.id} xs={12} sm={6} md={6} lg={6} xl={6}>
@@ -323,9 +327,8 @@ export default function Home() {
               </Grid>
             ))}
           </Grid>
+          </Container>
           <Box my={2} />
-        </div>
-      </Container>
     </>
   );
 }
