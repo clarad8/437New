@@ -100,6 +100,17 @@ export default function NavBar() {
                 variant="h6"
                 noWrap
                 component="a"
+                href="/discussion"
+                sx={{ my: 2, color: "white", display: "block" }}
+              >
+                Discussion
+              </Typography>
+            </Box>
+            <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+              <Typography
+                variant="h6"
+                noWrap
+                component="a"
                 href="/"
                 sx={{ my: 2, color: "white", display: "block" }}
                 onClick={async () => {
@@ -141,6 +152,11 @@ export default function NavBar() {
         <Link href="/tutor-course">
           <MenuItem>
             <Typography textAlign="center">Tutor Course</Typography>
+          </MenuItem>
+        </Link>
+        <Link href="/discussion">
+          <MenuItem>
+            <Typography textAlign="center">Discussion</Typography>
           </MenuItem>
         </Link>
         <MenuItem
