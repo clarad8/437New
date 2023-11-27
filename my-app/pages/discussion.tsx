@@ -8,6 +8,8 @@ import {
   arrayUnion,
   getDoc,
 } from "firebase/firestore";
+import { onSnapshot } from "firebase/firestore";
+
 import { db, auth } from "../index";
 import {
   Button,
@@ -66,12 +68,11 @@ const FirestoreDiscussionComponent = () => {
   useState<AlertColor>("success");
 
   useEffect(() => {
-    const fetchFirestoreDiscussions = async () => {
+    const fetchFirestoreDiscussions = () => {
       const discussionsCollection = collection(db, "discussions");
-      const discussionsSnapshot = await getDocs(discussionsCollection);
 
-      setFirestoreDiscussions(
-        discussionsSnapshot.docs.map((doc) => {
+      const unsubscribe = onSnapshot(discussionsCollection, (snapshot) => {
+        const discussions = snapshot.docs.map((doc) => {
           const data = doc.data();
           return {
             id: doc.id,
@@ -82,40 +83,44 @@ const FirestoreDiscussionComponent = () => {
             class: data.class || "",
             type: data.type,
           };
-        })
-      );
+        });
 
-      const newPastPosts = discussionsSnapshot.docs.map((doc) => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          posts: data.posts || [], // Assuming posts field is an array in your document
-        };
+        setFirestoreDiscussions(discussions);
+
+        const newPastPosts = snapshot.docs.map((doc) => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            posts: data.posts || [],
+          };
+        });
+
+        setPastPosts(newPastPosts);
+
+        // Set selected class posts to the posts of the initially selected class
+        const initialSelectedClassData = newPastPosts.find(
+          (post) => post.id === selectedClass
+        );
+
+        setSelectedClassPosts(
+          initialSelectedClassData ? initialSelectedClassData.posts : []
+        );
       });
 
-      setPastPosts(newPastPosts);
-
-      // Set selected class posts to the posts of the initially selected class
-      const initialSelectedClassData = newPastPosts.find(
-        (post) => post.id === selectedClass
-      );
-
-      setSelectedClassPosts(
-        initialSelectedClassData ? initialSelectedClassData.posts : []
-      );
+      return unsubscribe;
     };
 
     fetchFirestoreDiscussions();
+    const unsubscribe = fetchFirestoreDiscussions();
+
+    return () => {
+      unsubscribe(); // Cleanup the listener when the component unmounts
+    };
   }, [selectedClass]); // Update selectedClassPosts when selectedClass changes
 
   const handlePostClick = (post: FirestoreDiscussion) => {
     setSelectedPost(post);
     setNewPostVisibility(false);
-  };
-
-  const handleBackToPosts = () => {
-    setSelectedPost(null);
-    setNewPostVisibility(true);
   };
 
   interface FirestoreDiscussion {
@@ -129,27 +134,27 @@ const FirestoreDiscussionComponent = () => {
     studentResponses?: string[];
     tutorResponses?: string[];
   }
-  
+
   // ... (rest of your code)
-  
+
   const handleStudentResponseSubmit = async () => {
     if (selectedPost && selectedClass) {
       const currentUser = auth.currentUser;
-  
+
       if (currentUser) {
         const discussionsCollection = collection(db, "discussions");
         const classDocRef = doc(discussionsCollection, selectedClass);
-  
+
         try {
           // Get the current posts array
           const classDoc = await getDoc(classDocRef);
           const currentPosts = classDoc.data()?.posts || [];
-  
+
           // Find the index of the selected post in the array
           const postIndex = currentPosts.findIndex(
             (post: { id: string }) => post.id === selectedPost.id
           );
-  
+
           if (postIndex !== -1) {
             // Update the selected post with the student's response
             currentPosts[postIndex] = {
@@ -159,13 +164,13 @@ const FirestoreDiscussionComponent = () => {
                 studentResponse,
               ],
             };
-  
+
             // Update the document with the modified posts array
             await updateDoc(classDocRef, { posts: currentPosts });
-  
+
             // Reset student response input field
             setStudentResponse("");
-  
+
             setSnackbarSeverity("success");
             setSnackbarMessage("Student's response submitted successfully!");
             setSnackbarOpen(true);
@@ -190,25 +195,25 @@ const FirestoreDiscussionComponent = () => {
       }
     }
   };
-  
+
   const handleTutorResponseSubmit = async () => {
     if (selectedPost && selectedClass) {
       const currentUser = auth.currentUser;
-  
+
       if (currentUser) {
         const discussionsCollection = collection(db, "discussions");
         const classDocRef = doc(discussionsCollection, selectedClass);
-  
+
         try {
           // Get the current posts array
           const classDoc = await getDoc(classDocRef);
           const currentPosts = classDoc.data()?.posts || [];
-  
+
           // Find the index of the selected post in the array
           const postIndex = currentPosts.findIndex(
             (post: { id: string }) => post.id === selectedPost.id
           );
-  
+
           if (postIndex !== -1) {
             // Update the selected post with the tutor's response
             currentPosts[postIndex] = {
@@ -218,13 +223,13 @@ const FirestoreDiscussionComponent = () => {
                 tutorResponse,
               ],
             };
-  
+
             // Update the document with the modified posts array
             await updateDoc(classDocRef, { posts: currentPosts });
-  
+
             // Reset tutor response input field
             setTutorResponse("");
-  
+
             setSnackbarSeverity("success");
             setSnackbarMessage("Tutor's response submitted successfully!");
             setSnackbarOpen(true);
@@ -249,8 +254,6 @@ const FirestoreDiscussionComponent = () => {
       }
     }
   };
-  
-
 
   const renderPostDetails = () => {
     if (selectedPost) {
@@ -275,95 +278,95 @@ const FirestoreDiscussionComponent = () => {
             </Typography>
           </Box>
 
-           {/* Container for Past and New Student's Response */}
-        <Box
-          style={{
-            marginBottom: "20px",
-            border: "2px solid #2196f3",
-            padding: "10px",
-            borderRadius: "5px",
-          }}
-        >
-          {/* Past Student's Response */}
-          {selectedPost.studentResponses && (
+          {/* Container for Past and New Student's Response */}
+          <Box
+            style={{
+              marginBottom: "20px",
+              border: "2px solid #2196f3",
+              padding: "10px",
+              borderRadius: "5px",
+            }}
+          >
+            {/* Past Student's Response */}
+            {selectedPost.studentResponses && (
+              <div>
+                <Typography variant="h5">Past Student's Responses</Typography>
+                {selectedPost.studentResponses.map((response, index) => (
+                  <Typography key={index} variant="body1">
+                    {response}
+                  </Typography>
+                ))}
+              </div>
+            )}
+
+            {/* New Student's Response */}
             <div>
-              <Typography variant="h5">Past Student's Responses</Typography>
-              {selectedPost.studentResponses.map((response, index) => (
-                <Typography key={index} variant="body1">
-                  {response}
-                </Typography>
-              ))}
+              <Typography variant="h5">Student's Response</Typography>
+              <TextField
+                label="Enter your response"
+                variant="outlined"
+                multiline
+                rows={4}
+                fullWidth
+                value={studentResponse}
+                onChange={(e) => setStudentResponse(e.target.value)}
+                style={{ marginBottom: "10px" }}
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleStudentResponseSubmit}
+              >
+                Submit Student's Response
+              </Button>
             </div>
-          )}
+          </Box>
 
-          {/* New Student's Response */}
-          <div>
-            <Typography variant="h5">Student's Response</Typography>
-            <TextField
-              label="Enter your response"
-              variant="outlined"
-              multiline
-              rows={4}
-              fullWidth
-              value={studentResponse}
-              onChange={(e) => setStudentResponse(e.target.value)}
-              style={{ marginBottom: "10px" }}
-            />
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleStudentResponseSubmit}
-            >
-              Submit Student's Response
-            </Button>
-          </div>
-        </Box>
+          {/* Container for Past and New Tutor's Response */}
+          <Box
+            style={{
+              marginBottom: "20px",
+              border: "2px solid #2196f3",
+              padding: "10px",
+              borderRadius: "5px",
+            }}
+          >
+            {/* Past Tutor's Response */}
+            {selectedPost.tutorResponses && (
+              <div>
+                <Typography variant="h5">Past Tutor's Responses</Typography>
+                {selectedPost.tutorResponses.map((response, index) => (
+                  <Typography key={index} variant="body1">
+                    {response}
+                  </Typography>
+                ))}
+              </div>
+            )}
 
-        {/* Container for Past and New Tutor's Response */}
-        <Box
-          style={{
-            marginBottom: "20px",
-            border: "2px solid #2196f3",
-            padding: "10px",
-            borderRadius: "5px",
-          }}
-        >
-          {/* Past Tutor's Response */}
-          {selectedPost.tutorResponses && (
+            {/* New Tutor's Response */}
             <div>
-              <Typography variant="h5">Past Tutor's Responses</Typography>
-              {selectedPost.tutorResponses.map((response, index) => (
-                <Typography key={index} variant="body1">
-                  {response}
-                </Typography>
-              ))}
+              <Typography variant="h5">Tutor's Response</Typography>
+              <TextField
+                label="Enter your response"
+                variant="outlined"
+                multiline
+                rows={4}
+                fullWidth
+                value={tutorResponse}
+                onChange={(e) => setTutorResponse(e.target.value)}
+                style={{ marginBottom: "10px" }}
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleTutorResponseSubmit}
+              >
+                Submit Tutor's Response
+              </Button>
             </div>
-          )}
-
-          {/* New Tutor's Response */}
-          <div>
-            <Typography variant="h5">Tutor's Response</Typography>
-            <TextField
-              label="Enter your response"
-              variant="outlined"
-              multiline
-              rows={4}
-              fullWidth
-              value={tutorResponse}
-              onChange={(e) => setTutorResponse(e.target.value)}
-              style={{ marginBottom: "10px" }}
-            />
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleTutorResponseSubmit}
-            >
-              Submit Tutor's Response
-            </Button>
-          </div>
-        </Box>
-      </div>
-    );
+          </Box>
+        </div>
+      );
     }
   };
 
@@ -373,7 +376,19 @@ const FirestoreDiscussionComponent = () => {
         <div>
           {/* Post Type Selection */}
           <Box>
-          <div style={{ fontFamily: "system-ui", fontSize: "1.75rem", color: "#6fa5ff", marginTop : "20px", fontWeight: "semi-bold", marginBottom: "10px", textDecoration: "underline"  }}>Make a New Post</div>
+            <div
+              style={{
+                fontFamily: "system-ui",
+                fontSize: "1.75rem",
+                color: "#6fa5ff",
+                marginTop: "20px",
+                fontWeight: "semi-bold",
+                marginBottom: "10px",
+                textDecoration: "underline",
+              }}
+            >
+              Make a New Post
+            </div>
             <Typography variant="h6">Post Type:</Typography>
             <ButtonGroup color="primary" style={{ marginRight: 10 }}>
               <Button
@@ -528,6 +543,8 @@ const FirestoreDiscussionComponent = () => {
 
   const handleClassButtonClick = (selectedClass: string) => {
     setSelectedClass(selectedClass);
+    setSelectedPost(null);
+    setNewPostVisibility(true);
     const selectedClassData = pastPosts.find(
       (post) => post.id === selectedClass
     );
@@ -539,92 +556,115 @@ const FirestoreDiscussionComponent = () => {
     <Box style={{ marginLeft: "30px" }}>
       <NavBar></NavBar>
       <Container>
-      <br></br>
-      <div style={{ fontFamily: "system-ui", fontSize: "3rem", fontWeight: "bold", color: "#6fa5ff", marginBottom : "10px" }}>Discussion Board</div>
+        <br></br>
+        <div
+          style={{
+            fontFamily: "system-ui",
+            fontSize: "3rem",
+            fontWeight: "bold",
+            color: "#6fa5ff",
+            marginBottom: "10px",
+          }}
+        >
+          Discussion Board
+        </div>
 
-      <Box>
-        {[
-          "CSE330",
-          "CSE217",
-          "CSE231",
-          "CSE240",
-          "CSE256",
-          "CSE311",
-          "CSE411",
-          "CSE412",
-          "CSE417",
-          "CSE433",
-          "CSE131",
-          "CSE247",
-          "CSE437",
-          "CSE332",
-          "CSE132",
-          "CSE361",
-          "CSE347",
-          "CSE204",
-        ].map((className) => (
-          <Button
-            key={className}
-            variant="outlined"
-            onClick={() => handleClassButtonClick(className)}
-            style={{
-              marginRight: 10,
-              marginBottom: 10,
-              backgroundColor:
-                selectedClass === className ? "#2196f3" : "white",
-              color: selectedClass === className ? "white" : "black",
-            }}
-          >
-            {className}
-          </Button>
-        ))}
-      </Box>
-
-      <Grid container spacing={2}>
-        <Grid item xs={2}>
-        <div style={{ fontFamily: "system-ui", fontSize: "1.75rem", color: "#6fa5ff", marginTop : "20px", fontWeight: "semi-bold", marginBottom: "10px", textDecoration: "underline" }}>Past Posts</div>
-
-          {/* Display past posts for the selected class */}
-          {selectedClassPosts.map((p: any, idx: number) => (
-            <Box
-              key={idx}
+        <Box>
+          {[
+            "CSE330",
+            "CSE217",
+            "CSE231",
+            "CSE240",
+            "CSE256",
+            "CSE311",
+            "CSE411",
+            "CSE412",
+            "CSE417",
+            "CSE433",
+            "CSE131",
+            "CSE247",
+            "CSE437",
+            "CSE332",
+            "CSE132",
+            "CSE361",
+            "CSE347",
+            "CSE204",
+          ].map((className) => (
+            <Button
+              key={className}
+              variant="outlined"
+              onClick={() => handleClassButtonClick(className)}
               style={{
-                border: "2px solid #2196f3", // Blue border
+                marginRight: 10,
                 marginBottom: 10,
-                padding: "10px", // Add padding for better spacing
-                borderRadius: "5px", // Add rounded corners
-                cursor: "pointer", // Add pointer cursor for indicating clickability
+                backgroundColor:
+                  selectedClass === className ? "#2196f3" : "white",
+                color: selectedClass === className ? "white" : "black",
               }}
-              onClick={() => handlePostClick(p)}
             >
-              <Chip label={p.title} style={{ margin: "5px" }} />
-            </Box>
+              {className}
+            </Button>
           ))}
-        </Grid>
+        </Box>
 
-        <Grid item xs={8} style={{ marginLeft: "30px" }}>
-          {" "}
-          {/* Right side: 3/4 of the page */}
-          {renderPostDetails()} {/* Conditionally render post details */}
-          {renderNewPostSection()} {/* Conditionally render new post section */}
-          {/* Snackbar for displaying alert messages */}
-          <Snackbar
-            open={isSnackbarOpen}
-            autoHideDuration={4000}
-            onClose={() => setSnackbarOpen(false)}
-          >
-            <Alert
-              severity={snackbarSeverity}
+        <Grid container spacing={2}>
+          <Grid item xs={2}>
+            <div
+              style={{
+                fontFamily: "system-ui",
+                fontSize: "1.75rem",
+                color: "#6fa5ff",
+                marginTop: "20px",
+                fontWeight: "semi-bold",
+                marginBottom: "10px",
+                textDecoration: "underline",
+              }}
+            >
+              Past Posts
+            </div>
+
+            {/* Display past posts for the selected class */}
+            {selectedClassPosts.map((p: any, idx: number) => (
+              <Box
+                key={idx}
+                style={{
+                  border: "2px solid #2196f3", // Blue border
+                  marginBottom: 10,
+                  padding: "10px", // Add padding for better spacing
+                  borderRadius: "5px", // Add rounded corners
+                  cursor: "pointer", // Add pointer cursor for indicating clickability
+                }}
+                onClick={() => handlePostClick(p)}
+              >
+                <Chip label={p.title} style={{ margin: "5px" }} />
+              </Box>
+            ))}
+          </Grid>
+
+          <Grid item xs={8} style={{ marginLeft: "30px" }}>
+            {" "}
+            {/* Right side: 3/4 of the page */}
+            {renderPostDetails()} {/* Conditionally render post details */}
+            {renderNewPostSection()}{" "}
+            {/* Conditionally render new post section */}
+            {/* Snackbar for displaying alert messages */}
+            <Snackbar
+              open={isSnackbarOpen}
+              autoHideDuration={4000}
               onClose={() => setSnackbarOpen(false)}
             >
-              <AlertTitle>
-                {snackbarSeverity === "success" ? "Success" : "Error"}
-              </AlertTitle>
-              {snackbarMessage}
-            </Alert>
-          </Snackbar>
+              <Alert
+                severity={snackbarSeverity}
+                onClose={() => setSnackbarOpen(false)}
+              >
+                <AlertTitle>
+                  {snackbarSeverity === "success" ? "Success" : "Error"}
+                </AlertTitle>
+                {snackbarMessage}
+              </Alert>
+            </Snackbar>
+          </Grid>
         </Grid>
-      </Grid>
       </Container>
     </Box>
   );
