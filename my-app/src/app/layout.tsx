@@ -5,7 +5,7 @@ import "./globals.css";
 import SessionProvider from "./SessionProvider";
 import Login from "./Login";
 import Home from "./page";
-import TutorCourse from "../../pages/tutor-course";
+// import TutorCourse from "../../pages/tutor-course";
 import React from "react";
 
 export default async function RootLayout({

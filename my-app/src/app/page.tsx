@@ -314,7 +314,6 @@ export default function Home() {
         ))}
       </div>
       <br></br>
-      <Notification />
       <div className="tutor-container">
         {tutors.map((tutor) => (
           <TutorItem key={tutor.id} {...tutor} />
