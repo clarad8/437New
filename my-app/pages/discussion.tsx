@@ -18,6 +18,7 @@ import {
   IconButton,
   ButtonGroup,
   Grid,
+  Container,
 } from "@mui/material";
 import { RadioButtonChecked, HelpOutline, Poll } from "@mui/icons-material";
 import Snackbar from "@mui/material/Snackbar";
@@ -372,7 +373,7 @@ const FirestoreDiscussionComponent = () => {
         <div>
           {/* Post Type Selection */}
           <Box>
-            <Typography variant="h4">New Post</Typography>
+            <Typography variant="h4" style = {{marginTop: "20px"}}>Make a New Post</Typography>
             <Typography variant="h6">Post Type:</Typography>
             <ButtonGroup color="primary" style={{ marginRight: 10 }}>
               <Button
@@ -537,8 +538,9 @@ const FirestoreDiscussionComponent = () => {
   return (
     <Box style={{ marginLeft: "30px" }}>
       <NavBar></NavBar>
+      <Container>
       <br></br>
-      <Typography variant="h4">Firestore Discussions</Typography>
+      <Typography variant="h4" style = {{marginBottom: "20px"}}>Discussion Board</Typography>
 
       <Box>
         {[
@@ -580,7 +582,7 @@ const FirestoreDiscussionComponent = () => {
 
       <Grid container spacing={2}>
         <Grid item xs={2}>
-          <Typography variant="h4">Past Posts</Typography>
+          <Typography variant="h4" style = {{marginTop: "20px"}}>Past Posts</Typography>
           {/* Display past posts for the selected class */}
           {selectedClassPosts.map((p: any, idx: number) => (
             <Box
@@ -622,6 +624,7 @@ const FirestoreDiscussionComponent = () => {
           </Snackbar>
         </Grid>
       </Grid>
+      </Container>
     </Box>
   );
 };

@@ -19,6 +19,7 @@ interface Tutor {
   tutoringClasses: string[];
   zoom: string;
   online: boolean;
+  image: string;
 }
 
 interface classes {

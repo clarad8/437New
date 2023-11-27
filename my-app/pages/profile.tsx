@@ -18,6 +18,7 @@ import {
   Snackbar,
   TextField,
   Typography,
+  Container
 } from "@mui/material";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 
@@ -241,32 +242,32 @@ export default function Profile() {
 
   const handleImageUpload = async (files: FileList | null, uid: string) => {
     setIsLoading(true);
-
+  
     if (files && files.length > 0) {
       const file = files[0];
       const reader = new FileReader();
-
+  
       reader.onloadend = async () => {
         if (typeof reader.result === "string") {
           const userDocRef = doc(db, "users", uid);
           const tutorDocRef = doc(db, "tutors", uid); // Reference to the tutor document
-
+  
           try {
             const userDocSnap = await getDoc(userDocRef);
             const tutorDocSnap = await getDoc(tutorDocRef); // Check if the tutor document exists
-
+  
             if (userDocSnap.exists()) {
               const userData = userDocSnap.data();
-
+  
               // Update 'image' field in 'users' database
               await setDoc(userDocRef, {
                 ...userData,
                 image: reader.result,
               });
-
+  
               setIsLoading(false);
               setProfileImage(reader.result);
-
+  
               if (tutorDocSnap.exists()) {
                 // If the user also exists as a tutor, update 'image' field in 'tutors' database
                 const tutorData = tutorDocSnap.data();
@@ -275,7 +276,7 @@ export default function Profile() {
                   image: reader.result,
                 });
               }
-
+  
               console.log("Image updated successfully in Cloud Firestore!");
             } else {
               console.error("User not found in 'users' database.");
@@ -287,13 +288,13 @@ export default function Profile() {
           }
         }
       };
-
+  
       reader.readAsDataURL(file);
     } else {
       setProfileImage(null);
       setIsLoading(false);
     }
-  };
+  };  
 
 
   const circleButtonStyle: React.CSSProperties = {
@@ -324,7 +325,7 @@ export default function Profile() {
       </Breadcrumbs>
 
       <Box my={2} />
-
+      <Container>
       <Typography variant="h4" gutterBottom>
         Profile
       </Typography>
@@ -610,6 +611,7 @@ export default function Profile() {
 
         </>
       )}
+      </Container>
     </div>
   );
 }

@@ -20,7 +20,8 @@ interface Tutor {
   tutoringClasses?: string[]; // Make tutoringClasses optional
   zoom: string;
   online: boolean;
-  ratings?: number[]; // Add ratings field to the Tutor interface
+  ratings?: number[]; 
+  image: string;
 }
 
 const TutorItem: React.FC<Tutor> = ({
@@ -30,6 +31,7 @@ const TutorItem: React.FC<Tutor> = ({
   zoom,
   online,
   ratings,
+  image,
 }) => {
   const [userId, setUserId] = useState(""); // State to store the current user's ID
   const [isLiked, setIsLiked] = useState(() => {
@@ -110,6 +112,8 @@ const TutorItem: React.FC<Tutor> = ({
     >
       <Link href={`/tutors/${id}`}>
         <div className="tutor-content">
+          <div><img src={image} alt={`${name}'s profile`} className="tutor-image" /></div>
+
           <Typography variant="h5" gutterBottom>
             {name}
           </Typography>

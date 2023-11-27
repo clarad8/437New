@@ -11,6 +11,7 @@ import {
   Link,
   TextField,
   Typography,
+  Container,
 } from "@mui/material";
 import React from "react";
 import ReactStars from "react-stars";
@@ -291,7 +292,7 @@ const TutorProfile = () => {
         </Link>
         <Typography color="text.primary">Tutor Profile</Typography>
       </Breadcrumbs>
-
+      <Container>
       <Typography variant="h3" gutterBottom>
         Tutor Profile
       </Typography>
@@ -302,12 +303,12 @@ const TutorProfile = () => {
           style={{ width: "150px", height: "150px", borderRadius: "50%" }}
         />
       )}
-      <Typography variant="h4" gutterBottom>
-        {tutor.name}
+      <Typography variant="h5" gutterBottom>
+        Name: {tutor.name}
       </Typography>
       
       <Typography variant="h5" gutterBottom>
-        Class Name: {tutor.tutoringClasses.join(", ")}
+        Class: {tutor.tutoringClasses.join(", ")}
       </Typography>
 
      
@@ -431,13 +432,13 @@ const TutorProfile = () => {
           }}
         />
       </div>
-      <div>
+      <div style = {{marginBottom: "10px"}}>
         {/* Submit button */}
         <Button
           variant="contained"
           color="primary"
           style={{ marginTop: "10px" }}
-          onClick={handleSubmitComment} // Call handleSubmitComment function on button click
+          onClick={handleSubmitComment}
         >
           Submit Comment
         </Button>
@@ -484,6 +485,7 @@ const TutorProfile = () => {
           </Typography>
         )}
       </div>
+      </Container>
     </div>
   );
 };

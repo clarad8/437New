@@ -11,6 +11,7 @@ interface Tutor {
   profileImage: string | null;
   ratings: number[];
   comments: string[];
+  image: string;
 }
 
 const tutorsData: Tutor[] = [];
@@ -32,7 +33,8 @@ const getTutors = async () => {
         profileImage: tutor.image,
         online: tutor.online,
         ratings: tutor.ratings,
-        comments: tutor.comments
+        comments: tutor.comments,
+        image: tutor.image
       });
     });
     return tutorsData;
