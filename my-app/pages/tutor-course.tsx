@@ -231,6 +231,8 @@ export default function TutorCourse() {
         <Typography color="text.primary">Tutor Course</Typography>
       </Breadcrumbs>
       <br></br>
+      <Box my={1} />
+
       <Typography variant="h5" gutterBottom>
         Select CS Classes You've Taken (multiple selections allowed):
       </Typography>
@@ -311,14 +313,19 @@ export default function TutorCourse() {
         </div>
       ))}
 
-      <Button variant="contained" onClick={addTakenClasses}>
-        Submit
-      </Button>
-      <Button variant="contained" onClick={clearSelections}>
-        Clear
-      </Button>
+    <Box my={1} />
 
-      <Box my={2} />
+    <Box>
+  <Button variant="contained" onClick={addTutoringClasses} style={{ marginRight: '6px' }}>
+    Submit
+  </Button>
+
+  <Button variant="contained" onClick={clearSelections}>
+    Clear
+  </Button>
+  </Box>
+
+      <Box my={5} />
 
       <Typography variant="h5" gutterBottom>
         Select CS Classes You Want to Tutor (multiple selections allowed):
@@ -384,13 +391,26 @@ export default function TutorCourse() {
         placeholder="Select classes"
       />
 
-      <Button variant="contained" onClick={addTutoringClasses}>
+    <Box my={1} />
+
+      {/* <Button variant="contained" onClick={addTutoringClasses}>
         Submit
       </Button>
 
       <Button variant="contained" onClick={clearSelections}>
         Clear
-      </Button>
+      </Button> */}
+
+  <Box>
+  <Button variant="contained" onClick={addTutoringClasses} style={{ marginRight: '6px' }}>
+    Submit
+  </Button>
+
+  <Button variant="contained" onClick={clearSelections}>
+    Clear
+  </Button>
+  </Box>
+
     </div>
   );
 }
