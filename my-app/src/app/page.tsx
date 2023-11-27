@@ -203,6 +203,7 @@ export default function Home() {
   </Typography>*/}
       <br />
       <br />
+      <div style={{marginLeft: "30px"}}>
       <Typography variant="h3" gutterBottom>
         Find a CS Tutor
       </Typography>
@@ -320,6 +321,7 @@ export default function Home() {
         ))}
       </div>
       <Box my={2} />
+      </div>
     </>
   );
 }
