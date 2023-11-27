@@ -35,6 +35,7 @@ interface Tutor {
   profileImage: string | null;
   ratings: number[];
   comments: string[];
+  online: boolean;
 }
 
 interface Comment {
@@ -308,6 +309,22 @@ const TutorProfile = () => {
       <Typography variant="h5" gutterBottom>
         Class Name: {tutor.tutoringClasses.join(", ")}
       </Typography>
+
+     
+      <Typography variant="body1" gutterBottom>
+  Status:{" "}
+  <Typography
+    variant="body1"
+    gutterBottom
+    style={{
+      color: tutor.online ? "green" : "red",
+      display: "inline",
+    }}
+  >
+    {tutor.online ? "Online" : "Offline"}
+  </Typography>
+</Typography>
+    
 
       <Typography variant="body1" gutterBottom>
         Average Rating:{" "}
