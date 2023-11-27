@@ -90,8 +90,8 @@ const TutorItem: React.FC<Tutor> = ({
   const averageRating =
     ratings && ratings.length > 0
       ? (
-          ratings.reduce((acc, rating) => acc + rating, 0) / ratings.length
-        ).toFixed(1)
+        ratings.reduce((acc, rating) => acc + rating, 0) / ratings.length
+      ).toFixed(1)
       : "None";
 
   return (
@@ -136,7 +136,10 @@ const TutorItem: React.FC<Tutor> = ({
       >
         <IconButton
           color={isLiked ? "primary" : "default"}
-          style={{ cursor: "pointer" }}
+          style={{
+            cursor: "pointer",
+            color: isLiked ? "#d9534f" : "rgba(0, 0, 0, 0.54)", // Adjust shades of red and gray
+          }}
           onClick={(e) => {
             e.stopPropagation(); // Prevent the event from propagating
             // Handle "like" logic for the icon button here
