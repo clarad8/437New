@@ -5,7 +5,13 @@ import { Button, List, ListItem, Typography } from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
 import { getAuth } from "firebase/auth";
 
-const Notification: React.FC = () => {
+interface NotificationProps {
+  isClicked: boolean;
+  setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
+
+}
+
+const Notification: React.FC<NotificationProps> = ({ isClicked, setIsVisible }) => {
   const [notifications, setNotifications] = useState<
     { question: string; contact: string }[]
   >([]);
@@ -13,7 +19,7 @@ const Notification: React.FC = () => {
   const user = auth.currentUser;
   const [isTutor, setIsTutor] = useState(false);
   const [tutorId, setTutorId] = useState("");
-  const [isVisible, setIsVisible] = useState(true); // State variable to track visibility
+  // const [isVisible, setIsVisible] = useState(true); 
 
 
   useEffect(() => {
@@ -62,9 +68,11 @@ const Notification: React.FC = () => {
         }
       }
     };
-
-    fetchNotifications();
-  }, [user?.displayName]);
+    if(isClicked) {
+      fetchNotifications();
+      console.log("showing");
+    }
+  }, [isClicked, user?.displayName]);
 
   // button to resolve/delete the question for tutors
   // const handleResolve = async (contact: string, question: string) => {
@@ -106,7 +114,7 @@ const Notification: React.FC = () => {
   };
 
   // if user is not a tutor, don't show the notification box at all
-  if (!isTutor || !isVisible) {
+  if (!isTutor || !isClicked) {
     return null;
   }
 
