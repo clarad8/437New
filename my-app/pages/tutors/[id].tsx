@@ -258,6 +258,24 @@ const TutorProfile = () => {
   const handleGoBack = () => {
     router.back(); // Navigates back to the previous page
   };
+  
+  const averageRating =
+    tutor.ratings && tutor.ratings.length > 0
+      ? (
+          tutor.ratings.reduce((acc, rating) => acc + rating, 0) /
+          tutor.ratings.length
+        ).toFixed(1)
+      : "None";
+
+      const scrollToComments = () => {
+        const commentsSection = document.getElementById("comments-section");
+        if (commentsSection) {
+          commentsSection.scrollIntoView({ behavior: "smooth" });
+        }
+      };
+      
+      
+    
 
   return (
     <div>
@@ -272,6 +290,7 @@ const TutorProfile = () => {
         </Link>
         <Typography color="text.primary">Tutor Profile</Typography>
       </Breadcrumbs>
+
       <Typography variant="h3" gutterBottom>
         Tutor Profile
       </Typography>
@@ -285,8 +304,16 @@ const TutorProfile = () => {
       <Typography variant="h4" gutterBottom>
         {tutor.name}
       </Typography>
+      
       <Typography variant="h5" gutterBottom>
         Class Name: {tutor.tutoringClasses.join(", ")}
+      </Typography>
+
+      <Typography variant="body1" gutterBottom>
+        Average Rating:{" "}
+        <Link style={{ color: "blue", cursor: "pointer" }} onClick={scrollToComments}>
+          {averageRating}
+        </Link>
       </Typography>
 
       <Typography variant="body1" gutterBottom>
