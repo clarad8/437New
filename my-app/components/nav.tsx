@@ -171,7 +171,7 @@ export default function NavBar() {
         </Link>
         <Link href="/discussion">
           <MenuItem>
-            <Typography textAlign="center">Discussion</Typography>
+            <Typography textAlign="center">Discussion Board</Typography>
           </MenuItem>
         </Link>
         <MenuItem
