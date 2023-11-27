@@ -20,94 +20,7 @@ const googleProvider = new GoogleAuthProvider();
 const Login = () => {
   const [isVerificationPopupOpen, setVerificationPopupOpen] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
-
   const [isErrorPopupOpen, setErrorPopupOpen] = useState(false);
-
-  // const router = useRouter();
-
-  // const handleGoogleSignIn = () => {
-  //   signInWithPopup(auth, googleProvider)
-  //     .then((userCredential) => {
-  //       const user = userCredential.user;
-  //       const db = getFirestore();
-  //       const userDocRef = doc(db, "users", user.uid);
-
-  //       // checks if user already exists in database
-  //       getDoc(userDocRef)
-  //         .then((docSnap) => {
-  //           if (docSnap.exists() && docSnap.data().verified) {
-  //             // User exists, proceed with the login
-  //             signIn("google");
-  //             console.log(
-  //               "User exists in the database. Signing in with Google."
-  //             );
-  //           } else {
-  //             // User does not exist, handle as needed
-  //             if (user) {
-  //               // Send email verification
-  //               console.log(user.emailVerified);
-
-  //                 sendEmailVerification(user)
-  //                   .then(() => {
-  //                     // Email verification sent
-  //                     const message = `Email verification sent to: ${user.email}`;
-  //                     setPopupMessage(message);
-  //                     console.log("Email verification sent to:", user.email);
-  //                     setVerificationPopupOpen(true);
-
-  //                     // Resolve the promise to indicate successful email verification
-  //                     return Promise.resolve(user);
-  //                   })
-  //                   .then((user) => {
-  //                     // Get a reference to the user's document in Firestore
-  //                     const db = getFirestore();
-  //                     const userDocRef = doc(db, "users", user.uid);
-
-  //                     // Update the verified status in the user's document
-  //                     return setDoc(
-  //                       userDocRef,
-  //                       {
-  //                         verified: true,
-  //                         name: user.displayName,
-  //                         email: user.email,
-  //                       },
-  //                       { merge: true }
-  //                     );
-  //                   })
-  //                   .then(() => {
-  //                     console.log("User verified status updated in Firestore.");
-  //                     //signIn("google");
-  //                   })
-
-  //                   .catch((error) => {
-
-  //                     console.error(
-  //                       "Error sending email verification:",
-  //                       error.message
-  //                     );
-  //                   });
-
-  //               console.log("Google User:", user);
-  //               // router.push("/Users/claradu/Desktop/1/437New/my-app/src/app/page");
-  //             }
-  //           }
-  //         })
-  //         .catch((error) => {
-  //           console.error("Error getting user document:", error.message);
-  //         });
-
-  //       //  else {
-  //       //   console.error("User is not signed in.");
-  //       // }
-  //     })
-  //     .catch((error) => {
-  //       const errorCode = error.code;
-  //       const errorMessage = error.message;
-  //       console.error(
-  //         `Error during Google sign-in: ${errorCode} - ${errorMessage}`
-  //       );
-  //     });
-  // };
 
   const handleGoogleSignUp = () => {
     signInWithPopup(auth, googleProvider)
@@ -132,6 +45,7 @@ const Login = () => {
                 verified: true,
                 name: user.displayName,
                 email: user.email,
+                uid: user.uid,
               },
               { merge: true }
             )

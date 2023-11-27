@@ -42,12 +42,21 @@ const TutorItem: React.FC<Tutor> = ({
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUserId(user.uid);
+        // Retrieve liked status for the current user from Firestore
+        const userDocRef = doc(db, "users", user.uid);
+        getDoc(userDocRef).then((docSnap) => {
+          if (docSnap.exists()) {
+            const userData = docSnap.data();
+            if (userData && userData.favorite) {
+              setIsLiked(userData.favorite.includes(name));
+            }
+          }
+        });
       }
     });
 
-    // Clean up the subscription on component unmount
     return () => unsubscribe();
-  }, []); // Empty dependency array ensures this effect runs once after the initial render
+  }, [name]);
 
   const handleLikeClick = async () => {
     setIsLiked(!isLiked);
@@ -64,25 +73,25 @@ const TutorItem: React.FC<Tutor> = ({
 
     if (userId) {
       const userDocRef = doc(db, "users", userId);
-      const docSnap = await getDoc(userDocRef);
 
-      if (docSnap.exists()) {
-        const userData = docSnap.data();
+      try {
+        const userData = (await getDoc(userDocRef)).data();
+
         if (userData) {
           const { favorite } = userData;
 
           if (favorite && favorite.includes(name)) {
-            // If the tutor's name is already in 'favorite' array, remove it
             await updateDoc(userDocRef, {
               favorite: arrayRemove(name),
             });
           } else {
-            // If the tutor's name is not in 'favorite' array, add it
             await updateDoc(userDocRef, {
               favorite: arrayUnion(name),
             });
           }
         }
+      } catch (error) {
+        console.error("Error updating liked status:", error);
       }
     }
   };

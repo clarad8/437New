@@ -67,18 +67,18 @@ export default function Home() {
           userRef,
           where("name", "==", session?.data?.user?.name)
         );
-
+  
         try {
           const querySnapshot = await getDocs(q);
-
+  
           const favoriteTutorsList: string[] = [];
-
+  
           querySnapshot.forEach((doc) => {
             const userData = doc.data();
             const favoriteTutors = userData.favorite || [];
             favoriteTutorsList.push(...favoriteTutors);
           });
-
+  
           setFavoriteTutors(favoriteTutorsList);
         } catch (error) {
           console.error("Error fetching favorite tutors: ", error);
@@ -86,7 +86,7 @@ export default function Home() {
       }
     };
     fetchFavoriteTutors();
-  }, [allTutors, selectedFilters]);
+  }, [allTutors, selectedFilters]);  
 
   useEffect(() => {
     if (searchQuery) {
