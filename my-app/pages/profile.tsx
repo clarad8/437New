@@ -36,6 +36,7 @@ import {
 import React from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { CurrencyYenTwoTone } from "@mui/icons-material";
 
 interface classes {
   id: string;
@@ -96,6 +97,17 @@ export default function Profile() {
 
         if (docSnap.exists()) {
           const userData = docSnap.data();
+          
+          // if user did not like a tutor yet, the favorite doesn't exist in database yet
+          if("favorite" in userData) {
+            console.log("yes favorites");
+          }
+          else {
+            console.log("no favorites");
+            const none: string[] = ["None"];
+            setFavorite(none);
+          }
+          
           if (userData) {
             const { name, email, grade, image, favorite } = userData;
 
