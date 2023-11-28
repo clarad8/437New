@@ -138,6 +138,21 @@ const TutorItem: React.FC<Tutor> = ({
           >
             {online ? "Online" : "Offline"}
           </Typography>
+          <div className="rating-and-like" onClick={(e) => e.stopPropagation()}>
+            <IconButton
+              color={isLiked ? "primary" : "default"}
+              style={{
+                cursor: "pointer",
+                color: isLiked ? "#d9534f" : "rgba(0, 0, 0, 0.54)",
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleLikeClick();
+              }}
+            >
+              <FavoriteIcon />
+            </IconButton>
+          </div>
         </div>
 
         <div className="tutor-details">
@@ -148,9 +163,9 @@ const TutorItem: React.FC<Tutor> = ({
               </Typography>
 
               {tutoringClasses && tutoringClasses.length > 0 ? (
-                <Typography variant="body1" gutterBottom>
-                  Class Name: {tutoringClasses.join(", ")}
-                </Typography>
+                <Typography variant="subtitle1" gutterBottom>
+                <span style={{ textDecoration: 'underline' }}>Classes</span>: {tutoringClasses.join(", ")}
+              </Typography>
               ) : (
                 <Typography variant="body1" gutterBottom>
                   No classes available
@@ -167,7 +182,7 @@ const TutorItem: React.FC<Tutor> = ({
           </Link>
 
           <div className="rating">
-            <Typography variant="body1" gutterBottom>
+            <Typography variant="subtitle1" gutterBottom>
               Average Rating: {averageRating}{" "}
               <ReactStars
                 count={5}
@@ -177,22 +192,6 @@ const TutorItem: React.FC<Tutor> = ({
                 edit={false}
               />
             </Typography>
-          </div>
-
-          <div className="rating-and-like" onClick={(e) => e.stopPropagation()}>
-            <IconButton
-              color={isLiked ? "primary" : "default"}
-              style={{
-                cursor: "pointer",
-                color: isLiked ? "#d9534f" : "rgba(0, 0, 0, 0.54)",
-              }}
-              onClick={(e) => {
-                e.stopPropagation();
-                handleLikeClick();
-              }}
-            >
-              <FavoriteIcon />
-            </IconButton>
           </div>
         </div>
       </div>

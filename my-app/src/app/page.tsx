@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, CSSProperties } from "react";
 import { useSession } from "next-auth/react";
 import getTutors from "./tutors";
 import TutorItem from "./tutorItem";
@@ -205,9 +205,45 @@ export default function Home() {
     }
   };
 
+  const containerStyle: CSSProperties = {
+    minHeight: "100vh",
+    display: "flex",
+    flexDirection: "row",
+  };
+
+  const leftContainerStyle: CSSProperties = {
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "100px",
+  };
+
+  const rightContainerStyle: CSSProperties = {
+    flex: 1,
+    backgroundImage:
+      "url('https://img.freepik.com/free-vector/webinar-concept-illustration_114360-4874.jpg?w=1480&t=st=1701195212~exp=1701195812~hmac=d97e052cab174955557e86ece8a16b8604be08e722402991a83e5c62d2825f1a')",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    color: "white",
+    textShadow: "2px 2px black",
+  };
+
+  const buttonContainerStyle: CSSProperties = {
+    display: "flex",
+    flexDirection: "row",
+    marginTop: "20px",
+  };
+
   return (
     <>
       <NavBar />
+
       <div
         style={{
           backgroundImage: `url("https://i.postimg.cc/N0N5H5jN/Screenshot-2023-11-28-at-10-28-51-AM.png")`,
@@ -223,30 +259,33 @@ export default function Home() {
         }}
       >
         <Container>
-          Find a CS Tutor
+          {/* Find a CS Tutor */}
+          <br />
+        
+
+          <Typography variant="h2" style={{ fontWeight: '600' }}>
+            Find a CS Tutor.
+          </Typography>
+
           <div
             style={{
               textAlign: "justify",
               maxWidth: "1000px", // Set a maximum width for the centered paragraph
-              marginRight: "50%",
-              padding: "20px", // Adjust the padding as needed
+              marginRight: "55%",
+              padding: "5px", // Adjust the padding as needed
               // fontFamily: "Comic Sans MS",
               fontSize: "1.25rem", // Adjust the font size as needed
               color: "white !important", // Adjust the text color as needed
               fontWeight: "normal",
             }}
           >
-            <br />
-            <br />
-            <p>
-              Our platform is here to connect you with experienced tutors who
-              can help you succeed.
-            </p>
 
-            <p>
-              Filter by classes or find tutors that are active right now to find
+            <Typography variant="body1" style={{ fontWeight: 'normal', }} gutterBottom>
+            Our platform is here to connect you with experienced tutors who
+            can help you succeed. Filter by classes or find tutors that are active right now to find
               the perfect tutor match to support your learning journey.
-            </p>
+            </Typography>
+
             <br />
             <br />
             <br />
@@ -304,57 +343,57 @@ export default function Home() {
           </div>
           <br />
           <div
-  style={{
-    // fontFamily: "Georgia",
-    fontWeight: "semi-bold",
-    fontSize: "1.25rem",
-    display: "flex", // Add display: flex; to make the children appear in a row
-    alignItems: "center", // Adjust alignment as needed
-  }}
->
-  <div style={{ marginRight: "20px" }}>
-    <div style={{ marginBottom: "0.35rem" }}>Select Class:</div>
-    <Select
-      value={{ label: selectedClass, value: selectedClass }}
-      onChange={(selectedOption) => {
-        if (selectedOption) {
-          setSelectedClass(selectedOption.label);
-        } else {
-          setSelectedClass("");
-        }
-      }}
-      options={[
-        { label: "Show All Tutors", value: "Show All Tutors" },
-        ...classes.map((classItem) => ({
-          label: classItem.name,
-          value: classItem.name,
-        })),
-      ]}
-      isSearchable={true}
-      isClearable={true}
-      placeholder="Select a class"
-      styles={{
-        // Adjust the width as needed
-        control: (provided) => ({ ...provided, width: "300px", height: "55px", }),
-      }}
-    />
-  </div>
-  <div>
-    <div style={{ marginBottom: "0.35rem" }}>Search for a Tutor:</div>
-    <TextField
-      variant="outlined"
-      value={searchQuery}
-      style={{
-        // Adjust the width as needed
-        width: "300px",
-       
-      }}
-      onChange={(e) => setSearchQuery(e.target.value)}
-    />
-  </div>
-  <Box my={2} />
-  {/* ... (remaining code) */}
-</div>
+            style={{
+              // fontFamily: "Georgia",
+              fontWeight: "semi-bold",
+              fontSize: "1.25rem",
+              display: "flex", // Add display: flex; to make the children appear in a row
+              alignItems: "center", // Adjust alignment as needed
+            }}
+          >
+            <div style={{ marginRight: "20px" }}>
+              <div style={{ marginBottom: "0.35rem" }}>Select Class:</div>
+              <Select
+                value={{ label: selectedClass, value: selectedClass }}
+                onChange={(selectedOption) => {
+                  if (selectedOption) {
+                    setSelectedClass(selectedOption.label);
+                  } else {
+                    setSelectedClass("");
+                  }
+                }}
+                options={[
+                  { label: "Show All Tutors", value: "Show All Tutors" },
+                  ...classes.map((classItem) => ({
+                    label: classItem.name,
+                    value: classItem.name,
+                  })),
+                ]}
+                isSearchable={true}
+                isClearable={true}
+                placeholder="Select a class"
+                styles={{
+                  // Adjust the width as needed
+                  control: (provided) => ({ ...provided, width: "300px", height: "55px", }),
+                }}
+              />
+            </div>
+            <div>
+              <div style={{ marginBottom: "0.35rem" }}>Search for a Tutor:</div>
+              <TextField
+                variant="outlined"
+                value={searchQuery}
+                style={{
+                  // Adjust the width as needed
+                  width: "300px",
+
+                }}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            <Box my={2} />
+            {/* ... (remaining code) */}
+          </div>
           <Box my={2} />
           <div
             style={{
