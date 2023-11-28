@@ -216,7 +216,7 @@ export default function Home() {
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
           padding: "20px", // Adjust the padding as needed
-          fontFamily: "Georgia",
+          // fontFamily: "Georgia",
           fontSize: "3rem",
           fontWeight: "bold",
           color: "white",
@@ -230,7 +230,7 @@ export default function Home() {
               maxWidth: "1000px", // Set a maximum width for the centered paragraph
               marginRight: "50%",
               padding: "20px", // Adjust the padding as needed
-              fontFamily: "Comic Sans MS",
+              // fontFamily: "Comic Sans MS",
               fontSize: "1.25rem", // Adjust the font size as needed
               color: "white !important", // Adjust the text color as needed
               fontWeight: "normal",
@@ -264,7 +264,7 @@ export default function Home() {
       <Container>
         <div
           style={{
-            fontFamily: "Georgia",
+            // fontFamily: "Georgia",
             fontWeight: "semi-bold",
             fontSize: "1.25rem",
           }}
@@ -305,7 +305,7 @@ export default function Home() {
           <br />
           <div
   style={{
-    fontFamily: "Georgia",
+    // fontFamily: "Georgia",
     fontWeight: "semi-bold",
     fontSize: "1.25rem",
     display: "flex", // Add display: flex; to make the children appear in a row
