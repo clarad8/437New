@@ -122,6 +122,19 @@ export default function NavBar() {
                 Discussion Board
               </Typography>
             </Box>
+            <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+              <Typography
+                variant="overline"
+                noWrap
+                component="a"
+                fontFamily="Roboto, sans-serif" 
+
+                href="/messages"
+                sx={{ my: 2, color: "white", display: "block" }}
+              >
+                Message
+              </Typography>
+            </Box>
             <IconButton color="inherit" onClick={handleBellIconClick} sx={{ marginRight: 2 }}>
             <NotificationsIcon />
             </IconButton>
@@ -181,6 +194,11 @@ export default function NavBar() {
         <Link href="/discussion">
           <MenuItem>
             <Typography textAlign="center">Discussion Board</Typography>
+          </MenuItem>
+        </Link>
+        <Link href="/messages">
+          <MenuItem>
+            <Typography textAlign="center">Message</Typography>
           </MenuItem>
         </Link>
         <MenuItem
