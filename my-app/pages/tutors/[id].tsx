@@ -378,7 +378,17 @@ const TutorProfile = () => {
         <Typography color="text.primary">Tutor Profile</Typography>
       </Breadcrumbs>
       <Container>
-        <Typography variant="h3" style = {{fontFamily: "Georgia", fontSize: "2.5rem", marginTop: "20px", fontWeight: "bold", color: "#6fa5ff",}} gutterBottom>
+        <Typography
+          variant="h3"
+          style={{
+            fontFamily: "Georgia",
+            fontSize: "2.5rem",
+            marginTop: "20px",
+            fontWeight: "bold",
+            color: "#6fa5ff",
+          }}
+          gutterBottom
+        >
           Tutor Profile
         </Typography>
         {profileImage && (
@@ -388,16 +398,55 @@ const TutorProfile = () => {
             style={{ width: "150px", height: "150px", borderRadius: "50%" }}
           />
         )}
-        <Typography variant="h5" style = {{fontSize: "1.25rem", fontFamily: "Georgia"}} gutterBottom>
-          <span style = {{fontFamily: "Georgia", fontSize: "1.25rem", fontWeight: "bold"}}>Name: </span>{tutor.name}
+        <Typography
+          variant="h5"
+          style={{ fontSize: "1.25rem", fontFamily: "Georgia" }}
+          gutterBottom
+        >
+          <span
+            style={{
+              fontFamily: "Georgia",
+              fontSize: "1.25rem",
+              fontWeight: "bold",
+            }}
+          >
+            Name:{" "}
+          </span>
+          {tutor.name}
         </Typography>
 
-        <Typography variant="h5" style = {{fontSize: "1.25rem", fontFamily: "Georgia"}} gutterBottom>
-        <span style = {{fontFamily: "Georgia", fontSize: "1.25rem", fontWeight: "bold"}}>Class: </span> {tutor.tutoringClasses.join(", ")}
+        <Typography
+          variant="h5"
+          style={{ fontSize: "1.25rem", fontFamily: "Georgia" }}
+          gutterBottom
+        >
+          <span
+            style={{
+              fontFamily: "Georgia",
+              fontSize: "1.25rem",
+              fontWeight: "bold",
+            }}
+          >
+            Class:{" "}
+          </span>{" "}
+          {tutor.tutoringClasses.join(", ")}
         </Typography>
 
-        <Typography variant="body1" style = {{fontSize: "1.25rem", fontFamily: "Georgia"}} gutterBottom>
-          <span style = {{fontFamily: "Georgia", fontSize: "1.25rem", fontWeight: "bold"}}> Average Rating:{" "} </span>
+        <Typography
+          variant="body1"
+          style={{ fontSize: "1.25rem", fontFamily: "Georgia" }}
+          gutterBottom
+        >
+          <span
+            style={{
+              fontFamily: "Georgia",
+              fontSize: "1.25rem",
+              fontWeight: "bold",
+            }}
+          >
+            {" "}
+            Average Rating:{" "}
+          </span>
           <Link
             style={{ color: "blue", cursor: "pointer", fontFamily: "Georgia" }}
             onClick={scrollToComments}
@@ -406,9 +455,21 @@ const TutorProfile = () => {
           </Link>
         </Typography>
 
-        <Typography variant="body1" style = {{fontSize: "1.25rem", fontFamily: "Georgia"}} gutterBottom>
-          
-          <span style = {{fontFamily: "Georgia", fontSize: "1.25rem", fontWeight: "bold"}}> Status:{" "} </span>
+        <Typography
+          variant="body1"
+          style={{ fontSize: "1.25rem", fontFamily: "Georgia" }}
+          gutterBottom
+        >
+          <span
+            style={{
+              fontFamily: "Georgia",
+              fontSize: "1.25rem",
+              fontWeight: "bold",
+            }}
+          >
+            {" "}
+            Status:{" "}
+          </span>
           <Typography
             variant="body1"
             gutterBottom
@@ -422,34 +483,101 @@ const TutorProfile = () => {
           </Typography>
         </Typography>
 
-       
-
         <Typography variant="body1" gutterBottom>
           {tutor.online ? (
             <span>
-               <Typography variant="body1" style = {{fontSize: "1rem", fontFamily: "Comic Sans MS"}} gutterBottom>
-            Below is the tutor's zoom meeting room! Please join whenever you are
-            ready.
-        </Typography>
-             
-              <span style = {{fontFamily: "Georgia", fontSize: "1.25rem", fontWeight: "bold"}}>  Zoom:{" "} </span>
+              <Typography
+                variant="body1"
+                style={{ fontSize: "1rem", fontFamily: "Comic Sans MS" }}
+                gutterBottom
+              >
+                Below is the tutor's zoom meeting room! Please join whenever you
+                are ready.
+              </Typography>
 
-            <a href={tutor.zoom} target="_blank" rel="noopener noreferrer">
-              <div style = {{fontSize: "1rem", fontFamily: "Comic Sans MS"}}>
-              {tutor.zoom}
-              </div>
-            </a>
+              <span
+                style={{
+                  fontFamily: "Georgia",
+                  fontSize: "1.25rem",
+                  fontWeight: "bold",
+                }}
+              >
+                {" "}
+                Zoom:{" "}
+              </span>
+
+              <a href={tutor.zoom} target="_blank" rel="noopener noreferrer">
+                <div style={{ fontSize: "1rem", fontFamily: "Comic Sans MS" }}>
+                  {tutor.zoom}
+                </div>
+              </a>
             </span>
           ) : (
             "Tutor is not available at this time. Please check back later to join the zoom room!"
           )}
-          
         </Typography>
+        <div
+          style={{ borderBottom: "1px solid #ccc", marginTop: "2rem" }}
+        ></div>
+        <div style={{ marginTop: "20px" }}>
+          <Typography
+            variant="body1"
+            style={{ fontSize: "1rem", fontFamily: "Georgia" }}
+            gutterBottom
+          >
+            Tutor not available? Schedule a Meeting:
+          </Typography>
+          <DatePicker
+            selected={scheduledDate}
+            onChange={(date) => handleScheduledDateChange(date)}
+            showTimeSelect
+            timeFormat="HH:mm"
+            timeIntervals={15}
+            dateFormat="MMMM d, yyyy h:mm aa"
+            className="custom-datepicker"
+          />
+        </div>
+        <Button
+          variant="contained"
+          color="primary"
+          style={{ marginTop: "10px" }}
+          onClick={handleScheduleMeeting}
+        >
+          Schedule Meeting
+        </Button>
+        <div
+          style={{ borderBottom: "1px solid #ccc", marginTop: "2rem" }}
+        ></div>
 
+        {alert2 && (
+          <Box my={2}>
+            <Alert severity="success" onClose={() => setAlert2(false)}>
+              Meeting scheduled successfully!
+            </Alert>
+          </Box>
+        )}
+        {alert3 && (
+          <Box my={2}>
+            <Alert severity="error" onClose={() => setAlert3(false)}>
+              Tutor not available!
+            </Alert>
+          </Box>
+        )}
         <div style={{ marginTop: "20px" }}>
           <form>
             <div style={{ marginTop: "20px" }}>
-              <Typography variant="body1" style = {{fontSize: "1rem", fontFamily: "Georgia"}} gutterBottom>
+              <Typography
+                variant="body1"
+                style={{ fontSize: "1rem", fontFamily: "Georgia" }}
+                gutterBottom
+              >
+                Ask a quick question below:
+              </Typography>
+              <Typography
+                variant="body1"
+                style={{ fontSize: "1rem", fontFamily: "Georgia" }}
+                gutterBottom
+              >
                 Enter your contact information:
               </Typography>
               <TextField
@@ -466,7 +594,11 @@ const TutorProfile = () => {
             </div>
 
             <div style={{ marginTop: "20px" }}>
-              <Typography variant="body1" style = {{fontSize: "1rem", fontFamily: "Georgia"}} gutterBottom>
+              <Typography
+                variant="body1"
+                style={{ fontSize: "1rem", fontFamily: "Georgia" }}
+                gutterBottom
+              >
                 Enter your question:
               </Typography>
               <TextField
@@ -499,12 +631,18 @@ const TutorProfile = () => {
                 </Box>
               )}
             </div>
-            <div style={{ borderBottom: '1px solid #ccc', marginTop: "2rem"}}></div>          
-            </form>
+            <div
+              style={{ borderBottom: "1px solid #ccc", marginTop: "2rem" }}
+            ></div>
+          </form>
         </div>
 
         <div style={{ marginTop: "20px" }}>
-          <Typography variant="body1" style = {{fontSize: "1rem", fontFamily: "Georgia"}} gutterBottom>
+          <Typography
+            variant="body1"
+            style={{ fontSize: "1rem", fontFamily: "Georgia" }}
+            gutterBottom
+          >
             Rate this tutor:
           </Typography>
           <ReactStars
@@ -518,7 +656,11 @@ const TutorProfile = () => {
 
         {/* Comment box */}
         <div style={{ marginTop: "20px" }}>
-          <Typography variant="body1" style = {{fontSize: "1rem", fontFamily: "Georgia"}} gutterBottom>
+          <Typography
+            variant="body1"
+            style={{ fontSize: "1rem", fontFamily: "Georgia" }}
+            gutterBottom
+          >
             Leave a comment:
           </Typography>
           <TextField
@@ -543,7 +685,9 @@ const TutorProfile = () => {
             Submit Comment
           </Button>
         </div>
-        <div style={{ borderBottom: '1px solid #ccc', marginTop: "2rem"}}></div>          
+        <div
+          style={{ borderBottom: "1px solid #ccc", marginTop: "2rem" }}
+        ></div>
 
         {alert && (
           <Box my={2}>
@@ -553,48 +697,17 @@ const TutorProfile = () => {
           </Box>
         )}
 
-          <div style={{ marginTop: "20px" }}>
-            <Typography variant="body1" style = {{fontSize: "1rem", fontFamily: "Georgia"}} gutterBottom>
-              Schedule a Meeting:
-            </Typography>
-            <DatePicker
-              selected={scheduledDate}
-              onChange={(date) => handleScheduledDateChange(date)}
-              showTimeSelect
-              timeFormat="HH:mm"
-              timeIntervals={15}
-              dateFormat="MMMM d, yyyy h:mm aa"
-              className="custom-datepicker"
-            />
-            
-          </div>
-          <Button
-              variant="contained"
-              color="primary"
-              style={{ marginTop: "10px"}}
-              onClick={handleScheduleMeeting}
-            >
-              Schedule Meeting
-            </Button>
-          <div style={{ borderBottom: '1px solid #ccc', marginTop: "2rem"}}></div>          
-
-          {alert2 && (
-            <Box my={2}>
-              <Alert severity="success" onClose={() => setAlert2(false)}>
-                Meeting scheduled successfully!
-              </Alert>
-            </Box>
-          )}
-          {alert3 && (
-            <Box my={2}>
-              <Alert severity="error" onClose={() => setAlert3(false)}>
-                Tutor not available!
-              </Alert>
-            </Box>
-          )}
         {/* Display past comments and ratings */}
         <div style={{ marginTop: "20px" }}>
-          <Typography variant="h6" style = {{fontSize: "1.5rem", fontFamily: "Georgia", fontWeight: "bold"}} gutterBottom>
+          <Typography
+            variant="h6"
+            style={{
+              fontSize: "1.5rem",
+              fontFamily: "Georgia",
+              fontWeight: "bold",
+            }}
+            gutterBottom
+          >
             Past Comments and Ratings
           </Typography>
           {comments.length > 0 ? (
@@ -609,7 +722,10 @@ const TutorProfile = () => {
                       value={comment.rating}
                       edit={false}
                     />
-                    <Typography variant="body1" style={{ marginLeft: "10px", fontFamily: "Georgia", }}>
+                    <Typography
+                      variant="body1"
+                      style={{ marginLeft: "10px", fontFamily: "Georgia" }}
+                    >
                       <strong>Comment:</strong> {comment.comment}
                     </Typography>
                   </Box>
