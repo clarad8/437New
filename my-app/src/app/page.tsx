@@ -210,44 +210,42 @@ export default function Home() {
       <NavBar />
       <div
         style={{
-          backgroundImage: 'url("https://cdn.shrm.org/image/upload/c_crop%2Ch_706%2Cw_1254%2Cx_0%2Cy_118/c_fit%2Cq_auto%2Cw_767/v1/Organizational%20and%20Employee%20Development/student_burnout_mli3ii.webp?databtoa=eyIxNng5Ijp7IngiOjAsInkiOjExOCwieDIiOjEyNTQsInkyIjo4MjQsInciOjEyNTQsImgiOjcwNn19")',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          padding: '20px', // Adjust the padding as needed
-          fontFamily: 'Georgia',
-          fontSize: '3rem',
-          fontWeight: 'bold',
-          color: '#6fa5ff',
+          backgroundImage: `url("https://i.postimg.cc/N0N5H5jN/Screenshot-2023-11-28-at-10-28-51-AM.png")`,
+          backgroundSize: "cover",
+          maxHeight: "400px",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          padding: "20px", // Adjust the padding as needed
+          fontFamily: "Georgia",
+          fontSize: "3rem",
+          fontWeight: "bold",
+          color: "white",
         }}
       >
         <Container>
           Find a CS Tutor
-
           <div
             style={{
-              textAlign: 'justify',
-              maxWidth: '600px', // Set a maximum width for the centered paragraph
-              margin: '0 auto', // Center the paragraph horizontally
-              padding: '20px', // Adjust the padding as needed
-              fontFamily: 'Comic Sans MS',
-              fontSize: '1.25rem', // Adjust the font size as needed
-              color: 'white !important', // Adjust the text color as needed
-              fontWeight: 'normal',
+              textAlign: "justify",
+              maxWidth: "1000px", // Set a maximum width for the centered paragraph
+              marginRight: "50%",
+              padding: "20px", // Adjust the padding as needed
+              fontFamily: "Comic Sans MS",
+              fontSize: "1.25rem", // Adjust the font size as needed
+              color: "white !important", // Adjust the text color as needed
+              fontWeight: "normal",
             }}
           >
             <br />
             <br />
             <p>
-              Whether you're struggling with a particular class or looking to
-              enhance your understanding of a class, our platform is here to connect
-              you with experienced tutors who can help you succeed.
+              Our platform is here to connect you with experienced tutors who
+              can help you succeed.
             </p>
 
             <p>
-              Explore our diverse range of tutors. Filter by classes or find tutors
-              that are active right now to find the perfect tutor match to support
-              your learning journey.
+              Filter by classes or find tutors that are active right now to find
+              the perfect tutor match to support your learning journey.
             </p>
             <br />
             <br />
@@ -255,7 +253,6 @@ export default function Home() {
             <br />
             <br />
           </div>
-
         </Container>
       </div>
       <br />
@@ -265,9 +262,14 @@ export default function Home() {
         </Alert>
       )}
       <Container>
-        <div style={{ fontFamily: 'Georgia', fontWeight: "semi-bold", fontSize: "1.25rem" }}>
-          <div style={{ marginBottom: "0.35rem" }}>          Filters:
-          </div>
+        <div
+          style={{
+            fontFamily: "Georgia",
+            fontWeight: "semi-bold",
+            fontSize: "1.25rem",
+          }}
+        >
+          <div style={{ marginBottom: "0.35rem" }}> Filters:</div>
           <div style={{ display: "flex", alignItems: "center" }}>
             <Button
               variant={
@@ -303,7 +305,6 @@ export default function Home() {
           <br />
           <div style={{ marginBottom: "0.35rem" }}>Select Class:</div>
 
-
           <Select
             value={{ label: selectedClass, value: selectedClass }}
             onChange={(selectedOption) => {
@@ -326,16 +327,24 @@ export default function Home() {
           />
 
           <Box my={1} />
-          <div style={{ marginBottom: "0.35rem" }}>
-            Search for a Tutor:
-          </div>
+          <div style={{ marginBottom: "0.35rem" }}>Search for a Tutor:</div>
           <TextField
             variant="outlined"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
           <Box my={2} />
-          <div style={{ marginBottom: "0.75rem", textDecoration: "underline", fontWeight: "bold", color: '#6fa5ff', fontSize: "1.8rem" }}>          Tutors
+          <div
+            style={{
+              marginBottom: "0.75rem",
+              textDecoration: "underline",
+              fontWeight: "bold",
+              color: "#6fa5ff",
+              fontSize: "1.8rem",
+            }}
+          >
+            {" "}
+            Tutors
           </div>
           <div style={{ display: "flex", alignItems: "center" }}>
             <Button
