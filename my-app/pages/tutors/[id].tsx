@@ -397,6 +397,16 @@ const TutorProfile = () => {
         </Typography>
 
         <Typography variant="body1" gutterBottom>
+          Average Rating:{" "}
+          <Link
+            style={{ color: "blue", cursor: "pointer" }}
+            onClick={scrollToComments}
+          >
+            {averageRating}
+          </Link>
+        </Typography>
+
+        <Typography variant="body1" gutterBottom>
           Status:{" "}
           <Typography
             variant="body1"
@@ -410,27 +420,24 @@ const TutorProfile = () => {
           </Typography>
         </Typography>
 
-        <Typography variant="body1" gutterBottom>
-          Average Rating:{" "}
-          <Link
-            style={{ color: "blue", cursor: "pointer" }}
-            onClick={scrollToComments}
-          >
-            {averageRating}
-          </Link>
-        </Typography>
+       
 
         <Typography variant="body1" gutterBottom>
-          Below is the tutor's zoom meeting room! Please join whenever you are
-          ready.
+          {tutor.online ? (
+            <span>
+               <Typography variant="body1" gutterBottom>
+            Below is the tutor's zoom meeting room! Please join whenever you are
+            ready.
         </Typography>
-
-        {/* make zoom link clickable */}
-        <Typography variant="body1" gutterBottom>
-          Zoom:{" "}
-          <a href={tutor.zoom} target="_blank" rel="noopener noreferrer">
-            {tutor.zoom}
-          </a>
+              Zoom:{" "}
+            <a href={tutor.zoom} target="_blank" rel="noopener noreferrer">
+              {tutor.zoom}
+            </a>
+            </span>
+          ) : (
+            "Tutor is not available at this time. Please check back later to join the zoom room!"
+          )}
+          
         </Typography>
 
         <div style={{ marginTop: "20px" }}>
