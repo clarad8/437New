@@ -72,25 +72,25 @@ export default function NavBar() {
               sx={{
                 mr: 2,
                 display: { xs: "none", md: "flex" },
-                fontFamily: "monospace",
+                fontFamily:"Roboto, sans-serif" ,
                 fontWeight: 700,
                 letterSpacing: ".3rem",
                 color: "inherit",
                 textDecoration: "none",
-                marginRight: "2rem",
+                marginRight: "10rem",
                 marginLeft: "0"
               }}
             >
-              Find a CS Tutor
+              CS TutorMatch
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               <Typography
-                variant="h6"
+                variant="overline" 
                 noWrap
                 component="a"
                 href="/profile"
-                fontFamily= "Georgia"
+                fontFamily="Roboto, sans-serif" 
                 sx={{ my: 2, color: "white", display: "block" }}
               >
                 Profile
@@ -98,11 +98,12 @@ export default function NavBar() {
             </Box>
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               <Typography
-                variant="h6"
+                variant="overline" 
                 noWrap
                 component="a"
                 href="/tutor-course"
-                fontFamily= "Georgia"
+                // fontFamily= "Georgia"
+                fontFamily="Roboto, sans-serif" 
                 sx={{ my: 2, color: "white", display: "block" }}
               >
                 Tutor a Course
@@ -110,14 +111,28 @@ export default function NavBar() {
             </Box>
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               <Typography
-                variant="h6"
+                variant="overline" 
                 noWrap
                 component="a"
-                fontFamily= "Georgia"
+          
+                fontFamily="Roboto, sans-serif" 
                 href="/discussion"
                 sx={{ my: 2, color: "white", display: "block" }}
               >
                 Discussion Board
+              </Typography>
+            </Box>
+            <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+              <Typography
+                variant="overline"
+                noWrap
+                component="a"
+                fontFamily="Roboto, sans-serif" 
+
+                href="/messages"
+                sx={{ my: 2, color: "white", display: "block" }}
+              >
+                Message
               </Typography>
             </Box>
             <IconButton color="inherit" onClick={handleBellIconClick} sx={{ marginRight: 2 }}>
@@ -125,11 +140,11 @@ export default function NavBar() {
             </IconButton>
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               <Typography
-                variant="h6"
+                variant="overline"
                 noWrap
                 component="a"
                 href="/"
-                fontFamily= "Georgia"
+                fontFamily="Roboto, sans-serif" 
 
                 sx={{ my: 2, color: "white", display: "block" }}
                 onClick={async () => {
@@ -179,6 +194,11 @@ export default function NavBar() {
         <Link href="/discussion">
           <MenuItem>
             <Typography textAlign="center">Discussion Board</Typography>
+          </MenuItem>
+        </Link>
+        <Link href="/messages">
+          <MenuItem>
+            <Typography textAlign="center">Message</Typography>
           </MenuItem>
         </Link>
         <MenuItem

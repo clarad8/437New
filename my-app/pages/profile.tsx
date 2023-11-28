@@ -98,9 +98,9 @@ export default function Profile() {
 
         if (docSnap.exists()) {
           const userData = docSnap.data();
-          
+
           // if user did not like a tutor yet, the favorite doesn't exist in database yet
-          if("favorite" in userData) {
+          if ("favorite" in userData) {
             console.log("yes favorites");
           }
           else {
@@ -108,7 +108,7 @@ export default function Profile() {
             const none: string[] = ["None"];
             setFavorite(none);
           }
-          
+
           if (userData) {
             const { name, email, grade, image, favorite } = userData;
 
@@ -242,32 +242,32 @@ export default function Profile() {
 
   const handleImageUpload = async (files: FileList | null, uid: string) => {
     setIsLoading(true);
-  
+
     if (files && files.length > 0) {
       const file = files[0];
       const reader = new FileReader();
-  
+
       reader.onloadend = async () => {
         if (typeof reader.result === "string") {
           const userDocRef = doc(db, "users", uid);
           const tutorDocRef = doc(db, "tutors", uid); // Reference to the tutor document
-  
+
           try {
             const userDocSnap = await getDoc(userDocRef);
             const tutorDocSnap = await getDoc(tutorDocRef); // Check if the tutor document exists
-  
+
             if (userDocSnap.exists()) {
               const userData = userDocSnap.data();
-  
+
               // Update 'image' field in 'users' database
               await setDoc(userDocRef, {
                 ...userData,
                 image: reader.result,
               });
-  
+
               setIsLoading(false);
               setProfileImage(reader.result);
-  
+
               if (tutorDocSnap.exists()) {
                 // If the user also exists as a tutor, update 'image' field in 'tutors' database
                 const tutorData = tutorDocSnap.data();
@@ -276,7 +276,7 @@ export default function Profile() {
                   image: reader.result,
                 });
               }
-  
+
               console.log("Image updated successfully in Cloud Firestore!");
             } else {
               console.error("User not found in 'users' database.");
@@ -288,13 +288,13 @@ export default function Profile() {
           }
         }
       };
-  
+
       reader.readAsDataURL(file);
     } else {
       setProfileImage(null);
       setIsLoading(false);
     }
-  };  
+  };
 
 
   const circleButtonStyle: React.CSSProperties = {
@@ -321,138 +321,155 @@ export default function Profile() {
         <Link underline="hover" href="/">
           Home
         </Link>
-        
+
         <Typography color="text.primary">Profile</Typography>
       </Breadcrumbs>
 
       <Box my={2} />
       <Container>
-        
-      <div style={{ fontFamily: "Georgia", fontSize: "2.5rem", fontWeight: "bold", color: "#6fa5ff" }}>Profile</div>
-      <Snackbar
-        open={isSnackbarOpen}
-        autoHideDuration={4000}
-        onClose={() => setSnackbarOpen(false)}
-      >
-        <Alert
-          severity={snackbarSeverity}
+
+        <div style={{ fontFamily: "Georgia", fontSize: "2.5rem", fontWeight: "bold", color: "#6fa5ff" }}>Profile</div>
+        <Snackbar
+          open={isSnackbarOpen}
+          autoHideDuration={4000}
           onClose={() => setSnackbarOpen(false)}
         >
-          <AlertTitle>
-            {snackbarSeverity === "success" ? "Success" : "Error"}
-          </AlertTitle>
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
-
-      {profileImage ? (
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-          {/* Display the uploaded image here */}
-          {profileImage && (
-            <img
-              src={profileImage}
-              alt="Profile"
-              style={{
-                borderRadius: "50%",
-                width: "150px",
-                height: "150px",
-                marginTop: "10px", // Adjust the margin-top to align the image
-              }}
-            />
-          )}
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => {
-              const input = document.getElementById('profile-image-input');
-              if (input) {
-                input.click();
-              }
-            }}
+          <Alert
+            severity={snackbarSeverity}
+            onClose={() => setSnackbarOpen(false)}
           >
-            Change Profile Picture
-          </Button>
-        </div>
-      ) : (
-        <label style={circleButtonStyle}>
-          <span>Upload a profile picture!</span>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => handleImageUpload(e.target.files, uid)}
-            style={{ display: "none" }}
-          />
-        </label>
-      )}
+            <AlertTitle>
+              {snackbarSeverity === "success" ? "Success" : "Error"}
+            </AlertTitle>
+            {snackbarMessage}
+          </Alert>
+        </Snackbar>
 
-      <input
-        type="file"
-        accept="image/*"
-        id="profile-image-input"
-        onChange={(e) => handleImageUpload(e.target.files, uid)}
-        style={{ display: 'none' }}
-      />
+        {profileImage ? (
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+            {/* Display the uploaded image here */}
+            {profileImage && (
+              <img
+                src={profileImage}
+                alt="Profile"
+                style={{
+                  borderRadius: "50%",
+                  width: "150px",
+                  height: "150px",
+                  marginTop: "10px", // Adjust the margin-top to align the image
+                }}
+              />
+            )}
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                const input = document.getElementById('profile-image-input');
+                if (input) {
+                  input.click();
+                }
+              }}
+            >
+              Change Profile Picture
+            </Button>
+          </div>
+        ) : (
+          <label style={circleButtonStyle}>
+            <span>Upload a profile picture!</span>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleImageUpload(e.target.files, uid)}
+              style={{ display: "none" }}
+            />
+          </label>
+        )}
 
-      {/* Hide the tutor status if the user is not a tutor */}
+        <input
+          type="file"
+          accept="image/*"
+          id="profile-image-input"
+          onChange={(e) => handleImageUpload(e.target.files, uid)}
+          style={{ display: 'none' }}
+        />
 
-      {isTutor && (    
-        <>
-        <div style = {{fontFamily: "Georgia", fontWeight: "bold", fontSize: "1.25rem", marginBottom: "0.5rem", marginTop: "1rem"}}> 
+        {/* Hide the tutor status if the user is not a tutor */}
+
+        {isTutor && (
+          <>
+            {/* <div style = {{fontFamily: "Roboto", fontWeight: "bold", fontSize: "1.25rem", marginBottom: "0.5rem", marginTop: "1rem"}}> 
           Tutor Status: 
-        </div>
+        </div> */}
+            <Typography variant="button" display="block" gutterBottom style={{ fontWeight: 'bold', fontSize: '1rem' }}>
+              Tutor Status:
+            </Typography>
 
-        <div style = {{fontFamily: "Georgia", marginRight: "0.35rem"}}> 
+            {/* <div style = {{fontFamily: "Georgia", marginRight: "0.35rem"}}> 
           Please only select "online" if you are currently
           available to tutor.
-          </div> 
-          <FormControlLabel
-            value="online"
-            checked={isOnline}
-            onChange={() => {
-              setIsOnline(true);
-              handleOnlineStatusChange(true); // Call the function with true when Online is selected
-            }}
-            control={<Radio />}
-            label="Online"
-          />
-          <FormControlLabel
-            value="offline"
-            checked={!isOnline}
-            onChange={() => {
-              setIsOnline(false);
-              handleOnlineStatusChange(false); // Call the function with false when Offline is selected
-            }}
-            control={<Radio />}
-            label="Offline"
-          />
-          {/* <Typography variant="body1" gutterBottom>
+          </div>  */}
+            <Typography variant="caption" display="block" gutterBottom style={{ fontSize: '1rem' }}>
+              Please only select "online" if you are currently
+              available to tutor.
+            </Typography>
+            <FormControlLabel
+              value="online"
+              checked={isOnline}
+              onChange={() => {
+                setIsOnline(true);
+                handleOnlineStatusChange(true); // Call the function with true when Online is selected
+              }}
+              control={<Radio />}
+              label="Online"
+            />
+            <FormControlLabel
+              value="offline"
+              checked={!isOnline}
+              onChange={() => {
+                setIsOnline(false);
+                handleOnlineStatusChange(false); // Call the function with false when Offline is selected
+              }}
+              control={<Radio />}
+              label="Offline"
+            />
+            {/* <Typography variant="body1" gutterBottom>
             Your Status: {isOnline ? "Online" : "Offline"}
           </Typography> */}
           </>
-          
-      )}
+
+        )}
 
 
-      <Box my={3} />
-      <div style = {{fontFamily: "Georgia", fontWeight: "bold", fontSize: "1rem", marginBottom: "1rem"}}>
-        Name: <span>  </span>
-        <div style = {{fontWeight: "normal", marginBottom: "1rem", fontSize: "1rem"}}>
-      <span>{name}</span>
-      </div>
+        <Box my={3} />
+        <div style={{ fontFamily: "Georgia", fontWeight: "bold", fontSize: "1rem", marginBottom: "1rem" }}>
+          {/* Name: <span>  </span>
+          <div style={{ fontWeight: "normal", marginBottom: "1rem", fontSize: "1rem" }}>
+            <span>{name}</span>
+          </div> */}
 
-      <Box my={1} />
+          <Typography variant="button" display="block" gutterBottom style={{ fontSize: '1rem' }}>
+            <span style={{ fontWeight: 'bold' }}>Name:  </span>
+            <span>{name}</span>
+          </Typography>
 
-      Email:  <span>  </span>
-      <div style = {{fontWeight: "normal", marginBottom: "1rem", fontSize: "1rem"}}> <span>{email}</span></div>
-  
-      </div>
-      <Box my={1} />
+          <Box my={1} />
+          {/* 
+          Email:  <span>  </span>
+          <div style={{ fontWeight: "normal", marginBottom: "1rem", fontSize: "1rem" }}> <span>{email}</span></div> */}
 
-      {/* user can't edit their name and email through the edit buttion */}
+          <Typography variant="button" display="block" gutterBottom style={{ fontSize: '1rem' }}>
+            <span style={{ fontWeight: 'bold' }}>Email:  </span>
+            <span>{email}</span>
+          </Typography>
 
-      {isEditing ? (
-        <>
-          {/*
+        </div>
+        <Box my={1} />
+
+        {/* user can't edit their name and email through the edit buttion */}
+
+        {isEditing ? (
+          <>
+            {/*
           <Typography variant="body1" gutterBottom>
             Name:
           </Typography>
@@ -463,89 +480,108 @@ export default function Profile() {
             id="outlined-basic"
             variant="outlined"
       />*/}
-          <div style = {{fontFamily: "Georgia", fontWeight: "bold", fontSize: "1rem", marginBottom: "1rem"}}>
-            Year:
-          <FormControl>
-            <RadioGroup
-              aria-labelledby="demo-row-radio-buttons-group-label"
-              name="radio-buttons-group"
-            >
-              <FormControlLabel
-                value="freshman"
-                onChange={() => setGrade("Freshman")}
-                control={<Radio />}
-                label="Freshman"
-              />
-              <FormControlLabel
-                value="sophomore"
-                onChange={() => setGrade("Sophomore")}
-                control={<Radio />}
-                label="Sophomore"
-              />
-              <FormControlLabel
-                value="junior"
-                onChange={() => setGrade("Junior")}
-                control={<Radio />}
-                label="Junior"
-              />
-              <FormControlLabel
-                value="senior"
-                onChange={() => setGrade("Senior")}
-                control={<Radio />}
-                label="Senior"
-              />
-            </RadioGroup>
-          </FormControl>
+            <div style={{ fontFamily: "Georgia", fontWeight: "bold", fontSize: "1rem", marginBottom: "1rem" }}>
 
-          <Box my={1} />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleSaveChanges}
-          >
-            Save Changes
-          </Button>
-          </div>
-        </>
-      ) : (
-        
-        <>
-                  <div style = {{fontFamily: "Georgia", fontWeight: "bold", fontSize: "1rem", marginBottom: "1rem"}}>
+              <FormControl>
+                <RadioGroup
+                  aria-labelledby="demo-row-radio-buttons-group-label"
+                  name="radio-buttons-group"
+                >
+                  <FormControlLabel
+                    value="freshman"
+                    onChange={() => setGrade("Freshman")}
+                    control={<Radio />}
+                    label="Freshman"
+                  />
+                  <FormControlLabel
+                    value="sophomore"
+                    onChange={() => setGrade("Sophomore")}
+                    control={<Radio />}
+                    label="Sophomore"
+                  />
+                  <FormControlLabel
+                    value="junior"
+                    onChange={() => setGrade("Junior")}
+                    control={<Radio />}
+                    label="Junior"
+                  />
+                  <FormControlLabel
+                    value="senior"
+                    onChange={() => setGrade("Senior")}
+                    control={<Radio />}
+                    label="Senior"
+                  />
+                </RadioGroup>
+              </FormControl>
 
-            Year:
-            <div style = {{fontWeight: "normal", marginBottom: "1rem", fontSize: "1rem"}}> <span>{" " + grade}   </span></div>
-
-           
-          {/* <Box my={2} /> */}
-          <Button variant="contained" color="primary" onClick={handleEdit}>
-            Edit Year
-          </Button>
-          <Box my={1} />
-
-            Classes You&apos;ve Taken:
-            <div style = {{fontWeight: "normal", marginBottom: "1rem", fontSize: "1rem"}}>
-            <span>{" " + takenClasses.join(", ")}</span>
+              <Box my={1} />
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleSaveChanges}
+              >
+                Save Changes
+              </Button>
             </div>
+          </>
+        ) : (
 
-          <Box my={1} />
-         
-            Classes You&apos;re Tutoring:
-            <div style = {{fontWeight: "normal", marginBottom: "1rem", fontSize: "1rem"}}>
-            <span>{" " + tutoredClasses.join(", ")}</span>
+          <>
+            <div style={{ fontWeight: "bold", fontSize: "1rem", marginBottom: "1rem" }}>
+              {/* 
+              Year:
+              <div style={{ fontWeight: "normal", marginBottom: "1rem", fontSize: "1rem" }}> <span>{" " + grade}   </span></div> */}
+
+              <Typography variant="button" gutterBottom style={{ fontSize: '1rem' }}>
+                <span style={{ fontWeight: 'bold' }}>Year:  </span>
+                <span>{grade}   </span>
+              </Typography>
+
+
+              {/* <Box my={2} /> */}
+              <Button variant="contained" color="primary" onClick={handleEdit}>
+                Edit Year
+              </Button>
+              <Box my={1} />
+
+              {/* Classes You&apos;ve Taken:
+              <div style={{ fontWeight: "normal", marginBottom: "1rem", fontSize: "1rem" }}>
+                <span>{" " + takenClasses.join(", ")}</span>
+              </div> */}
+
+              <Typography variant="button" display="block" gutterBottom style={{ fontSize: '1rem' }}>
+                <span style={{ fontWeight: 'bold' }}>Classes you've taken:  </span>
+                <span>{" " + takenClasses.join(", ")}</span>
+              </Typography>
+
+              <Box my={1} />
+
+              {/* Classes You&apos;re Tutoring:
+              <div style={{ fontWeight: "normal", marginBottom: "1rem", fontSize: "1rem" }}>
+                <span>{" " + tutoredClasses.join(", ")}</span>
+              </div> */}
+
+              <Typography variant="button" display="block" gutterBottom style={{ fontSize: '1rem' }}>
+                <span style={{ fontWeight: 'bold' }}>Classes you're tutoring:  </span>
+                <span>{" " + tutoredClasses.join(", ")}</span>
+              </Typography>
+
+              <Box my={1} />
+
+              {/* Your Favorite Tutors:
+              <div style={{ fontWeight: "normal", marginBottom: "1rem", fontSize: "1rem" }}>
+                <span>{" " + favorite.join(", ")}</span>
+              </div> */}
+
+              <Typography variant="button" display="block" gutterBottom style={{ fontSize: '1rem' }}>
+                <span style={{ fontWeight: 'bold' }}>Your Favorite Tutors: </span>
+                <span>{" " + favorite.join(", ")}</span>
+              </Typography>
+
+
             </div>
-
-
-          <Box my={1} />
-
-              Your Favorite Tutors:
-              <div style = {{fontWeight: "normal", marginBottom: "1rem", fontSize: "1rem"}}>
-              <span>{" " + favorite.join(", ")}</span>
-              </div>
-
-              
-              </div>
-        </>
-      )}
+          </>
+        )}
       </Container>
     </div>
   );

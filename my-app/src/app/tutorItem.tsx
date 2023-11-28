@@ -121,51 +121,23 @@ const TutorItem: React.FC<Tutor> = ({
   return (
     <div className="tutor-wrapper">
       <div className="tutor-box">
-        <Link href={`/tutors/${id}`}>
-          <div className="profile-image-container">
-            <img
-              src={image}
-              alt={`${name}'s profile`}
-              className="tutor-image rounded"
-            />
-          </div>
-        </Link>
-        <div className="tutor-details">
+        <div className="left-profile-container">
           <Link href={`/tutors/${id}`}>
-            <div>
-              <Typography variant="h6" gutterBottom>
-                {name}
-              </Typography>
-
-              {tutoringClasses && tutoringClasses.length > 0 ? (
-                <Typography variant="body1" gutterBottom>
-                  Class Name: {tutoringClasses.join(", ")}
-                </Typography>
-              ) : (
-                <Typography variant="body1" gutterBottom>
-                  No classes available
-                </Typography>
-              )}
-
-              <Typography variant="body1" gutterBottom>
-                {online ? "Online" : "Offline"}
-              </Typography>
+            <div className="profile-image-container">
+              <img
+                src={image}
+                alt={`${name}'s profile`}
+                className="tutor-image rounded"
+              />
             </div>
           </Link>
-
-          <div className="rating">
-            <Typography variant="body1" gutterBottom>
-              Average Rating: {averageRating}{" "}
-              <ReactStars
-                count={5}
-                size={24}
-                color2={"#ffd700"}
-                value={parseFloat(averageRating)}
-                edit={false}
-              />
-            </Typography>
-          </div>
-
+          <Typography
+            variant="subtitle1"
+            gutterBottom
+            style={{ color: online ? "green" : "red", fontWeight: '300' }}
+          >
+            {online ? "Online" : "Offline"}
+          </Typography>
           <div className="rating-and-like" onClick={(e) => e.stopPropagation()}>
             <IconButton
               color={isLiked ? "primary" : "default"}
@@ -180,6 +152,46 @@ const TutorItem: React.FC<Tutor> = ({
             >
               <FavoriteIcon />
             </IconButton>
+          </div>
+        </div>
+
+        <div className="tutor-details">
+          <Link href={`/tutors/${id}`}>
+            <div>
+              <Typography variant="h6" style={{ fontWeight: '600' }} gutterBottom>
+                {name}
+              </Typography>
+
+              {tutoringClasses && tutoringClasses.length > 0 ? (
+                <Typography variant="subtitle1" gutterBottom>
+                <span style={{ textDecoration: 'underline' }}>Classes</span>: {tutoringClasses.join(", ")}
+              </Typography>
+              ) : (
+                <Typography variant="body1" gutterBottom>
+                  No classes available
+                </Typography>
+              )}
+              {/* <Typography
+                variant="subtitle1"
+                gutterBottom
+                style={{ color: online ? "green" : "red",  fontWeight: '600'}}
+              >
+                {online ? "Online" : "Offline"}
+              </Typography> */}
+            </div>
+          </Link>
+
+          <div className="rating">
+            <Typography variant="subtitle1" gutterBottom>
+              Average Rating: {averageRating}{" "}
+              <ReactStars
+                count={5}
+                size={24}
+                color2={"#ffd700"}
+                value={parseFloat(averageRating)}
+                edit={false}
+              />
+            </Typography>
           </div>
         </div>
       </div>
