@@ -303,36 +303,58 @@ export default function Home() {
             </Button>
           </div>
           <br />
-          <div style={{ marginBottom: "0.35rem" }}>Select Class:</div>
-
-          <Select
-            value={{ label: selectedClass, value: selectedClass }}
-            onChange={(selectedOption) => {
-              if (selectedOption) {
-                setSelectedClass(selectedOption.label);
-              } else {
-                setSelectedClass("");
-              }
-            }}
-            options={[
-              { label: "Show All Tutors", value: "Show All Tutors" },
-              ...classes.map((classItem) => ({
-                label: classItem.name,
-                value: classItem.name,
-              })),
-            ]}
-            isSearchable={true}
-            isClearable={true}
-            placeholder="Select a class"
-          />
-
-          <Box my={1} />
-          <div style={{ marginBottom: "0.35rem" }}>Search for a Tutor:</div>
-          <TextField
-            variant="outlined"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
+          <div
+  style={{
+    fontFamily: "Georgia",
+    fontWeight: "semi-bold",
+    fontSize: "1.25rem",
+    display: "flex", // Add display: flex; to make the children appear in a row
+    alignItems: "center", // Adjust alignment as needed
+  }}
+>
+  <div style={{ marginRight: "20px" }}>
+    <div style={{ marginBottom: "0.35rem" }}>Select Class:</div>
+    <Select
+      value={{ label: selectedClass, value: selectedClass }}
+      onChange={(selectedOption) => {
+        if (selectedOption) {
+          setSelectedClass(selectedOption.label);
+        } else {
+          setSelectedClass("");
+        }
+      }}
+      options={[
+        { label: "Show All Tutors", value: "Show All Tutors" },
+        ...classes.map((classItem) => ({
+          label: classItem.name,
+          value: classItem.name,
+        })),
+      ]}
+      isSearchable={true}
+      isClearable={true}
+      placeholder="Select a class"
+      styles={{
+        // Adjust the width as needed
+        control: (provided) => ({ ...provided, width: "300px", height: "55px", }),
+      }}
+    />
+  </div>
+  <div>
+    <div style={{ marginBottom: "0.35rem" }}>Search for a Tutor:</div>
+    <TextField
+      variant="outlined"
+      value={searchQuery}
+      style={{
+        // Adjust the width as needed
+        width: "300px",
+       
+      }}
+      onChange={(e) => setSearchQuery(e.target.value)}
+    />
+  </div>
+  <Box my={2} />
+  {/* ... (remaining code) */}
+</div>
           <Box my={2} />
           <div
             style={{
