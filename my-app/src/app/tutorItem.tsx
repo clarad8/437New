@@ -121,19 +121,29 @@ const TutorItem: React.FC<Tutor> = ({
   return (
     <div className="tutor-wrapper">
       <div className="tutor-box">
-        <Link href={`/tutors/${id}`}>
-          <div className="profile-image-container">
-            <img
-              src={image}
-              alt={`${name}'s profile`}
-              className="tutor-image rounded"
-            />
-          </div>
-        </Link>
+        <div className="left-profile-container">
+          <Link href={`/tutors/${id}`}>
+            <div className="profile-image-container">
+              <img
+                src={image}
+                alt={`${name}'s profile`}
+                className="tutor-image rounded"
+              />
+            </div>
+          </Link>
+          <Typography
+            variant="subtitle1"
+            gutterBottom
+            style={{ color: online ? "green" : "red", fontWeight: '300' }}
+          >
+            {online ? "Online" : "Offline"}
+          </Typography>
+        </div>
+
         <div className="tutor-details">
           <Link href={`/tutors/${id}`}>
             <div>
-              <Typography variant="h6" gutterBottom>
+              <Typography variant="h6" style={{ fontWeight: '600' }} gutterBottom>
                 {name}
               </Typography>
 
@@ -146,10 +156,13 @@ const TutorItem: React.FC<Tutor> = ({
                   No classes available
                 </Typography>
               )}
-
-              <Typography variant="body1" gutterBottom>
+              {/* <Typography
+                variant="subtitle1"
+                gutterBottom
+                style={{ color: online ? "green" : "red",  fontWeight: '600'}}
+              >
                 {online ? "Online" : "Offline"}
-              </Typography>
+              </Typography> */}
             </div>
           </Link>
 
