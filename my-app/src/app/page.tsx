@@ -208,129 +208,154 @@ export default function Home() {
   return (
     <>
       <NavBar />
-
-      {/* <Typography variant="body1" gutterBottom>
-        Welcome {session?.data?.user?.name}!
-  </Typography>*/}
-      <br />
-      <br />
-      <Container>
-        <div
-          style={{
-            fontFamily: "system-ui",
-            fontSize: "3rem",
-            fontWeight: "bold",
-            color: "#6fa5ff",
-          }}
-        >
+      <div
+        style={{
+          backgroundImage: 'url("https://cdn.shrm.org/image/upload/c_crop%2Ch_706%2Cw_1254%2Cx_0%2Cy_118/c_fit%2Cq_auto%2Cw_767/v1/Organizational%20and%20Employee%20Development/student_burnout_mli3ii.webp?databtoa=eyIxNng5Ijp7IngiOjAsInkiOjExOCwieDIiOjEyNTQsInkyIjo4MjQsInciOjEyNTQsImgiOjcwNn19")',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          padding: '20px', // Adjust the padding as needed
+          fontFamily: 'Georgia',
+          fontSize: '3rem',
+          fontWeight: 'bold',
+          color: '#6fa5ff',
+        }}
+      >
+        <Container>
           Find a CS Tutor
-        </div>{" "}
-        <Typography variant="body1" gutterBottom>
-          Whether you're struggling with a particular class or looking to
-          enhance your understanding of a class, our platform is here to connect
-          you with experienced tutors who can help you succeed.
-        </Typography>
-        <Typography variant="body1" gutterBottom>
-          Explore our diverse range of tutors. Filter by classes or find tutors
-          that are active right now to find the perfect tutor match to support
-          your learning journey.
-        </Typography>
-        <br />
-        {showAlert && (
-          <Alert severity="warning" onClose={() => setShowAlert(false)}>
-            {alertMessage}
-          </Alert>
-        )}
-        <Typography variant="h5" gutterBottom>
-          Filters:
-        </Typography>
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <Button
-            variant={
-              selectedFilters.includes("online") ? "contained" : "outlined"
-            }
-            color="primary"
-            onClick={() => toggleFilter("online")}
-            style={{ margin: "0 10px" }}
+
+          <div
+            style={{
+              textAlign: 'justify',
+              maxWidth: '600px', // Set a maximum width for the centered paragraph
+              margin: '0 auto', // Center the paragraph horizontally
+              padding: '20px', // Adjust the padding as needed
+              fontFamily: 'Comic Sans MS',
+              fontSize: '1.25rem', // Adjust the font size as needed
+              color: 'white !important', // Adjust the text color as needed
+              fontWeight: 'normal',
+            }}
           >
-            Online Tutors
-          </Button>
-          <Button
-            variant={
-              selectedFilters.includes("offline") ? "contained" : "outlined"
-            }
-            color="primary"
-            onClick={() => toggleFilter("offline")}
-            style={{ margin: "0 10px" }}
-          >
-            Offline Tutors
-          </Button>
-          <Button
-            variant={
-              selectedFilters.includes("favorite") ? "contained" : "outlined"
-            }
-            color="primary"
-            onClick={() => toggleFilter("favorite")}
-            style={{ margin: "0 10px" }}
-          >
-            Favorite Tutors
-          </Button>
-        </div>
-        <br />
-        <Typography variant="h5" gutterBottom>
-          Select Class:
-        </Typography>
-        <Select
-          value={{ label: selectedClass, value: selectedClass }}
-          onChange={(selectedOption) => {
-            if (selectedOption) {
-              setSelectedClass(selectedOption.label);
-            } else {
-              setSelectedClass("");
-            }
-          }}
-          options={[
-            { label: "Show All Tutors", value: "Show All Tutors" },
-            ...classes.map((classItem) => ({
-              label: classItem.name,
-              value: classItem.name,
-            })),
-          ]}
-          isSearchable={true}
-          isClearable={true}
-          placeholder="Select a class"
-        />
-        <Box my={1} />
-        <Typography variant="h5" gutterBottom>
-          Search for a Tutor:
-        </Typography>
-        <TextField
-          variant="outlined"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-        <Box my={2} />
-        <Typography variant="h5" gutterBottom>
-          Tutors:
-        </Typography>
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={resetPage}
-            style={{ margin: "0 10px" }}
-          >
-            Clear All Filters
-          </Button>
-          {selectedFilters.map((filter) => (
-            <Chip
-              key={filter}
-              label={filter}
-              onDelete={() => toggleFilter(filter)}
+            <br />
+            <br />
+            <p>
+              Whether you're struggling with a particular class or looking to
+              enhance your understanding of a class, our platform is here to connect
+              you with experienced tutors who can help you succeed.
+            </p>
+
+            <p>
+              Explore our diverse range of tutors. Filter by classes or find tutors
+              that are active right now to find the perfect tutor match to support
+              your learning journey.
+            </p>
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+          </div>
+
+        </Container>
+      </div>
+      <br />
+      {showAlert && (
+        <Alert severity="warning" onClose={() => setShowAlert(false)}>
+          {alertMessage}
+        </Alert>
+      )}
+      <Container>
+        <div style={{ fontFamily: 'Georgia', fontWeight: "semi-bold", fontSize: "1.25rem" }}>
+          <div style={{ marginBottom: "0.35rem" }}>          Filters:
+          </div>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <Button
+              variant={
+                selectedFilters.includes("online") ? "contained" : "outlined"
+              }
               color="primary"
+              onClick={() => toggleFilter("online")}
               style={{ margin: "0 10px" }}
-            />
-          ))}
+            >
+              Online Tutors
+            </Button>
+            <Button
+              variant={
+                selectedFilters.includes("offline") ? "contained" : "outlined"
+              }
+              color="primary"
+              onClick={() => toggleFilter("offline")}
+              style={{ margin: "0 10px" }}
+            >
+              Offline Tutors
+            </Button>
+            <Button
+              variant={
+                selectedFilters.includes("favorite") ? "contained" : "outlined"
+              }
+              color="primary"
+              onClick={() => toggleFilter("favorite")}
+              style={{ margin: "0 10px" }}
+            >
+              Favorite Tutors
+            </Button>
+          </div>
+          <br />
+          <div style={{ marginBottom: "0.35rem" }}>Select Class:</div>
+
+
+          <Select
+            value={{ label: selectedClass, value: selectedClass }}
+            onChange={(selectedOption) => {
+              if (selectedOption) {
+                setSelectedClass(selectedOption.label);
+              } else {
+                setSelectedClass("");
+              }
+            }}
+            options={[
+              { label: "Show All Tutors", value: "Show All Tutors" },
+              ...classes.map((classItem) => ({
+                label: classItem.name,
+                value: classItem.name,
+              })),
+            ]}
+            isSearchable={true}
+            isClearable={true}
+            placeholder="Select a class"
+          />
+
+          <Box my={1} />
+          <div style={{ marginBottom: "0.35rem" }}>
+            Search for a Tutor:
+          </div>
+          <TextField
+            variant="outlined"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <Box my={2} />
+          <div style={{ marginBottom: "0.75rem", textDecoration: "underline", fontWeight: "bold", color: '#6fa5ff', fontSize: "1.8rem" }}>          Tutors
+          </div>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={resetPage}
+              style={{ margin: "0 10px" }}
+            >
+              Clear All Filters
+            </Button>
+            {selectedFilters.map((filter) => (
+              <Chip
+                key={filter}
+                label={filter}
+                onDelete={() => toggleFilter(filter)}
+                color="primary"
+                style={{ margin: "0 10px" }}
+              />
+            ))}
+          </div>
         </div>
         <br></br>
         <Grid container spacing={2}>

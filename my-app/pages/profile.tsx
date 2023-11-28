@@ -328,7 +328,7 @@ export default function Profile() {
       <Box my={2} />
       <Container>
         
-      <div style={{ fontFamily: "system-ui", fontSize: "3rem", fontWeight: "bold", color: "#6fa5ff" }}>Profile</div>
+      <div style={{ fontFamily: "Georgia", fontSize: "2.5rem", fontWeight: "bold", color: "#6fa5ff" }}>Profile</div>
       <Snackbar
         open={isSnackbarOpen}
         autoHideDuration={4000}
@@ -395,14 +395,16 @@ export default function Profile() {
 
       {/* Hide the tutor status if the user is not a tutor */}
 
-      {isTutor && (
-        <><Typography variant="h6" gutterBottom fontWeight="bold">
+      {isTutor && (    
+        <>
+        <div style = {{fontFamily: "Georgia", fontWeight: "bold", fontSize: "1.25rem", marginBottom: "0.5rem", marginTop: "1rem"}}> 
           Tutor Status: 
-        </Typography>
-        <Typography variant="body1" gutterBottom>
+        </div>
+
+        <div style = {{fontFamily: "Georgia", marginRight: "0.35rem"}}> 
           Please only select "online" if you are currently
           available to tutor.
-        </Typography>
+          </div> 
           <FormControlLabel
             value="online"
             checked={isOnline}
@@ -427,29 +429,24 @@ export default function Profile() {
             Your Status: {isOnline ? "Online" : "Offline"}
           </Typography> */}
           </>
+          
       )}
 
 
       <Box my={3} />
-
-      <Typography style={{ display: "inline" }} variant="body1" gutterBottom fontWeight="bold">
+      <div style = {{fontFamily: "Georgia", fontWeight: "bold", fontSize: "1rem", marginBottom: "1rem"}}>
         Name: <span>  </span>
-      </Typography>
-      <Typography style={{ display: "inline" }} variant="body1" gutterBottom>
-         <span>{name}</span>
-      </Typography>
+        <div style = {{fontWeight: "normal", marginBottom: "1rem", fontSize: "1rem"}}>
+      <span>{name}</span>
+      </div>
 
       <Box my={1} />
 
-      <Typography style={{ display: "inline" }} variant="body1" gutterBottom fontWeight="bold">
-        Email:  <span>  </span>
-      </Typography>
-      <Typography style={{ display: "inline" }} variant="body1" gutterBottom >
-         <span>{email}</span>
-      </Typography>
-
+      Email:  <span>  </span>
+      <div style = {{fontWeight: "normal", marginBottom: "1rem", fontSize: "1rem"}}> <span>{email}</span></div>
+  
+      </div>
       <Box my={1} />
-
 
       {/* user can't edit their name and email through the edit buttion */}
 
@@ -466,10 +463,8 @@ export default function Profile() {
             id="outlined-basic"
             variant="outlined"
       />*/}
-
-          <Typography variant="body1" gutterBottom fontWeight="bold">
+          <div style = {{fontFamily: "Georgia", fontWeight: "bold", fontSize: "1rem", marginBottom: "1rem"}}>
             Year:
-          </Typography>
           <FormControl>
             <RadioGroup
               aria-labelledby="demo-row-radio-buttons-group-label"
@@ -502,56 +497,6 @@ export default function Profile() {
             </RadioGroup>
           </FormControl>
 
-          {/*
-          <Typography variant="body1" gutterBottom>
-            Classes You&apos;ve Taken:
-          </Typography>
-          {classes.map((classItem) => (
-            <div key={classItem.id}>
-              <label>
-                <input
-                  type="checkbox"
-                  value={classItem.name}
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      setTakenClasses([...takenClasses, classItem.name]);
-                    } else {
-                      const updatedTakenClasses = takenClasses.filter(
-                        (item) => item !== classItem.name
-                      );
-                      setTakenClasses(updatedTakenClasses);
-                    }
-                  }}
-                />
-                {classItem.name}
-              </label>
-            </div>
-          ))}
-          <Typography variant="body1" gutterBottom>
-            Classes You&apos;re Tutoring:
-          </Typography>
-          {classes.map((classItem) => (
-            <div key={classItem.id}>
-              <label>
-                <input
-                  type="checkbox"
-                  value={classItem.name}
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      setTutoredClasses([...tutoredClasses, classItem.name]);
-                    } else {
-                      const updatedTutoredClasses = tutoredClasses.filter(
-                        (item) => item !== classItem.name
-                      );
-                      setTutoredClasses(updatedTutoredClasses);
-                    }
-                  }}
-                />
-                {classItem.name}
-              </label>
-            </div>
-                ))}*/}
-
           <Box my={1} />
           <Button
             variant="contained"
@@ -560,55 +505,45 @@ export default function Profile() {
           >
             Save Changes
           </Button>
+          </div>
         </>
       ) : (
+        
         <>
+                  <div style = {{fontFamily: "Georgia", fontWeight: "bold", fontSize: "1rem", marginBottom: "1rem"}}>
 
-          <Typography
-            style={{ display: "inline" }}
-            variant="body1"
-            gutterBottom
-          >
             Year:
-            <span>{" " + grade}   </span>
-          </Typography>
+            <div style = {{fontWeight: "normal", marginBottom: "1rem", fontSize: "1rem"}}> <span>{" " + grade}   </span></div>
+
+           
           {/* <Box my={2} /> */}
           <Button variant="contained" color="primary" onClick={handleEdit}>
             Edit Year
           </Button>
           <Box my={1} />
 
-          <Typography
-            style={{ display: "inline" }}
-            variant="body1"
-            gutterBottom
-          >
             Classes You&apos;ve Taken:
+            <div style = {{fontWeight: "normal", marginBottom: "1rem", fontSize: "1rem"}}>
             <span>{" " + takenClasses.join(", ")}</span>
-
-          </Typography>
+            </div>
 
           <Box my={1} />
-          <Typography
-            style={{ display: "inline" }}
-            variant="body1"
-            gutterBottom
-          >
+         
             Classes You&apos;re Tutoring:
+            <div style = {{fontWeight: "normal", marginBottom: "1rem", fontSize: "1rem"}}>
             <span>{" " + tutoredClasses.join(", ")}</span>
+            </div>
 
-          </Typography>
 
           <Box my={1} />
 
- 
-              <Typography variant="body1" style={{ display: "inline" }} gutterBottom>
               Your Favorite Tutors:
+              <div style = {{fontWeight: "normal", marginBottom: "1rem", fontSize: "1rem"}}>
               <span>{" " + favorite.join(", ")}</span>
+              </div>
 
-              </Typography>
               
-
+              </div>
         </>
       )}
       </Container>

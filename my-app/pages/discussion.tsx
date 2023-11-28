@@ -28,7 +28,7 @@ import { RadioButtonChecked, HelpOutline, Poll } from "@mui/icons-material";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { AlertColor, AlertTitle } from "@mui/material";
-import NavBar from "@/components/nav";
+import NavBar from "../components/nav";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 
 
@@ -263,7 +263,15 @@ const FirestoreDiscussionComponent = () => {
     if (selectedPost) {
       return (
         <div>
-          <Typography variant="h4">Post Details</Typography>
+          <Typography variant="h4" style={{
+            fontFamily: "Georgia",
+            fontSize: "1.5rem",
+            // color: "#6fa5ff",
+            marginTop: "20px",
+            fontWeight: "semi-bold",
+            marginBottom: "10px",
+            textDecoration: "underline",
+          }}>Post Details</Typography>
 
           {/* Container for Title, Type, and Content */}
           <Box
@@ -275,9 +283,10 @@ const FirestoreDiscussionComponent = () => {
               cursor: "pointer",
             }}
           >
-            <Typography variant="h6">Title: {selectedPost.title}</Typography>
-            <Typography variant="body1">Type: {selectedPost.type}</Typography>
-            <Typography variant="body1">
+            <Typography variant="h6"style={{ fontWeight: "bold", fontFamily: "Comic Sans MS" }}> Title:  {selectedPost.title}
+            </Typography>            
+            <Typography variant="body1" style={{ marginBottom: "20px" }}> Type: {selectedPost.type}</Typography>
+            <Typography variant="body1" style={{ overflowWrap: "break-word", fontSize: "bold" }}>
               Content: {selectedPost.content}
             </Typography>
           </Box>
@@ -294,11 +303,21 @@ const FirestoreDiscussionComponent = () => {
             {/* Past Student's Response */}
             {selectedPost.studentResponses && (
               <div>
-                <Typography variant="h5">Past Student's Responses</Typography>
+                <Typography variant="h5" style={{ marginBottom: "20px", fontWeight: "", fontFamily: "Comic Sans MS"}} >Past Student's Responses</Typography>
                 {selectedPost.studentResponses.map((response, index) => (
-                  <Typography key={index} variant="body1">
-                    {response}
-                  </Typography>
+                  <Box
+                    key={index}
+                    style={{
+                      border: "1px solid #ccc",
+                      borderRadius: "5px",
+                      padding: "10px",
+                      marginBottom: "10px",
+                    }}
+                  >
+                    <Typography variant="body1" style = {{fontWeight: "semi-bold", fontFamily: "Comic Sans MS", marginBottom: "20px"}}>
+                      Student Response {index + 1}: {response}
+                    </Typography>
+                  </Box>
                 ))}
               </div>
             )}
@@ -338,14 +357,25 @@ const FirestoreDiscussionComponent = () => {
             {/* Past Tutor's Response */}
             {selectedPost.tutorResponses && (
               <div>
-                <Typography variant="h5">Past Tutor's Responses</Typography>
+                <Typography variant="h5" style = {{fontWeight: "semi-bold", fontFamily: "Comic Sans MS", marginBottom: "20px"}}>Past Tutor's Responses</Typography>
                 {selectedPost.tutorResponses.map((response, index) => (
-                  <Typography key={index} variant="body1">
-                    {response}
-                  </Typography>
+                  <Box
+                    key={index}
+                    style={{
+                      border: "1px solid #ccc",
+                      borderRadius: "5px",
+                      padding: "10px",
+                      marginBottom: "10px",
+                    }}
+                  >
+                    <Typography variant="body1" style = {{fontWeight: "semi-bold", fontFamily: "Comic Sans MS", marginBottom: "20px"}} >
+                      Tutor Response {index + 1}: {response}
+                    </Typography>
+                  </Box>
                 ))}
               </div>
             )}
+
 
             {/* New Tutor's Response */}
             <div>
@@ -368,6 +398,10 @@ const FirestoreDiscussionComponent = () => {
                 Submit Tutor's Response
               </Button>
             </div>
+            {/* Button to go back to posts */}
+          <Button variant="contained" color="primary" onClick={handleBackToPosts} style={{ marginTop: '30px' }}>
+            Back to post a new discussion
+          </Button>
           </Box>
         </div>
       );
@@ -382,9 +416,9 @@ const FirestoreDiscussionComponent = () => {
           <Box>
             <div
               style={{
-                fontFamily: "system-ui",
-                fontSize: "1.75rem",
-                color: "#6fa5ff",
+                fontFamily: "Georgia",
+                fontSize: "1.5rem",
+                // color: "#6fa5ff",
                 marginTop: "20px",
                 fontWeight: "semi-bold",
                 marginBottom: "10px",
@@ -393,7 +427,7 @@ const FirestoreDiscussionComponent = () => {
             >
               Make a New Post
             </div>
-            <Typography variant="h6">Post Type:</Typography>
+            <Typography variant="h6" style={{ fontFamily: "Comic Sans MS", marginBottom: "0.5rem", marginTop: "0.5rem" }}>Post Type:</Typography>
             <ButtonGroup color="primary" style={{ marginRight: 10 }}>
               <Button
                 onClick={() => setPostType("question")}
@@ -418,7 +452,7 @@ const FirestoreDiscussionComponent = () => {
 
           {/* Post Visibility Selection */}
           <Box>
-            <Typography variant="h6">Post Visibility:</Typography>
+            <Typography variant="h6" style={{ fontFamily: "Comic Sans MS", marginBottom: "0.5rem", marginTop: "0.5rem" }}>Post Visibility:</Typography>
             <ButtonGroup color="primary" style={{ marginRight: 10 }}>
               <Button
                 onClick={() => setPostVisibility("everyone")}
@@ -447,7 +481,7 @@ const FirestoreDiscussionComponent = () => {
 
           {/* Post Title */}
           <Box>
-            <Typography variant="h6">Post Title:</Typography>
+            <Typography variant="h6" style={{ fontFamily: "Comic Sans MS", marginBottom: "0.5rem", marginTop: "0.5rem" }}>Post Title:</Typography>
             <TextField
               label="Post Title"
               variant="outlined"
@@ -476,7 +510,7 @@ const FirestoreDiscussionComponent = () => {
 
           {/* Create discussion input */}
           <Box>
-            <Typography variant="h6">Details:</Typography>
+            <Typography variant="h6" style={{ fontFamily: "Comic Sans MS", marginBottom: "0.5rem", marginTop: "0.5rem" }}>Details:</Typography>
             <TextField
               label="Details"
               variant="outlined"
@@ -556,10 +590,16 @@ const FirestoreDiscussionComponent = () => {
     setSelectedClass(selectedClass);
   };
 
+  const handleBackToPosts = () => {
+    setSelectedPost(null);
+    setNewPostVisibility(true);
+  };
+
+
   return (
     <div>
 
-  <NavBar></NavBar>
+      <NavBar></NavBar>
       <br></br>
       <Breadcrumbs
         separator={<NavigateNextIcon fontSize="small" />}
@@ -569,18 +609,18 @@ const FirestoreDiscussionComponent = () => {
           Home
         </Link>
         <Typography color="text.primary">
-          Discussion
+          Discussion Board
         </Typography>
       </Breadcrumbs>
       <Container>
         <br></br>
         <div
           style={{
-            fontFamily: "system-ui",
-            fontSize: "3rem",
+            fontFamily: "Georgia",
+            fontSize: "2.75rem",
             fontWeight: "bold",
             color: "#6fa5ff",
-            marginBottom: "10px",
+            marginBottom: "20px",
           }}
         >
           Discussion Board
@@ -625,15 +665,15 @@ const FirestoreDiscussionComponent = () => {
         </Box>
 
         <Grid container spacing={2}>
-          <Grid item xs={2}>
+          <Grid item xs={3}>
             <div
               style={{
-                fontFamily: "system-ui",
-                fontSize: "1.75rem",
-                color: "#6fa5ff",
+                fontFamily: "Georgia",
+                fontSize: "1.5rem",
+                // color: "#6fa5ff",
                 marginTop: "20px",
                 fontWeight: "semi-bold",
-                marginBottom: "10px",
+                marginBottom: "25px",
                 textDecoration: "underline",
               }}
             >
@@ -650,6 +690,7 @@ const FirestoreDiscussionComponent = () => {
                   padding: "10px", // Add padding for better spacing
                   borderRadius: "5px", // Add rounded corners
                   cursor: "pointer", // Add pointer cursor for indicating clickability
+                  fontFamily: "Comic Sans MS",
                 }}
                 onClick={() => handlePostClick(p)}
               >

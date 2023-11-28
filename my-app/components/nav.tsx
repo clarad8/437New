@@ -11,7 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import { signOut, useSession } from "next-auth/react";
-import { SetStateAction, useEffect, useState } from "react";
+import React, { SetStateAction, useEffect, useState } from "react";
 import "./nav.css";
 import Notification from "../src/app/notification";
 import NotificationsIcon from "@mui/icons-material/Notifications"; 
@@ -77,6 +77,8 @@ export default function NavBar() {
                 letterSpacing: ".3rem",
                 color: "inherit",
                 textDecoration: "none",
+                marginRight: "2rem",
+                marginLeft: "0"
               }}
             >
               Find a CS Tutor
@@ -88,6 +90,7 @@ export default function NavBar() {
                 noWrap
                 component="a"
                 href="/profile"
+                fontFamily= "Georgia"
                 sx={{ my: 2, color: "white", display: "block" }}
               >
                 Profile
@@ -99,6 +102,7 @@ export default function NavBar() {
                 noWrap
                 component="a"
                 href="/tutor-course"
+                fontFamily= "Georgia"
                 sx={{ my: 2, color: "white", display: "block" }}
               >
                 Tutor a Course
@@ -109,10 +113,11 @@ export default function NavBar() {
                 variant="h6"
                 noWrap
                 component="a"
+                fontFamily= "Georgia"
                 href="/discussion"
                 sx={{ my: 2, color: "white", display: "block" }}
               >
-                Discussion
+                Discussion Board
               </Typography>
             </Box>
             <IconButton color="inherit" onClick={handleBellIconClick} sx={{ marginRight: 2 }}>
@@ -124,6 +129,8 @@ export default function NavBar() {
                 noWrap
                 component="a"
                 href="/"
+                fontFamily= "Georgia"
+
                 sx={{ my: 2, color: "white", display: "block" }}
                 onClick={async () => {
                   await signOut();

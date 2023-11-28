@@ -233,7 +233,7 @@ export default function TutorCourse() {
       </Breadcrumbs>
       <br></br>
       <Container>
-      <div style={{ fontFamily: "system-ui", fontSize: "1.25rem", color: "#6fa5ff" }}>Select CS Classes You've Taken (multiple selections allowed):
+      <div style={{ fontFamily: "Georgia", fontSize: "1.25rem", color: "#6fa5ff", fontWeight: "bold" }}>Select CS Classes You've Taken (multiple selections allowed):
       </div>
 
       <Box my={1} />
@@ -321,10 +321,10 @@ export default function TutorCourse() {
 
       <Box my={2} />
 
-      <div style={{ fontFamily: "system-ui", fontSize: "1.25rem", color: "#6fa5ff" }}> Select CS Classes You Want to Tutor (multiple selections allowed):
+      <div style={{ fontFamily: "Georgia", fontSize: "1.25rem", color: "#6fa5ff", fontWeight: "bold" }}> Select CS Classes You Want to Tutor (multiple selections allowed):
       </div>
     
-      <Typography variant="body1" gutterBottom>
+      <Typography variant="body1" style = {{fontFamily: "Comic Sans MS"}} gutterBottom>
         Thank you for signing up to tutor! Please use the dropdown menu below to
         select the class you would like to tutor for.{" "}
       </Typography>
