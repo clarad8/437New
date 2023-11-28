@@ -21,12 +21,16 @@ import {
   ButtonGroup,
   Grid,
   Container,
+  Breadcrumbs,
+  Link,
 } from "@mui/material";
 import { RadioButtonChecked, HelpOutline, Poll } from "@mui/icons-material";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { AlertColor, AlertTitle } from "@mui/material";
 import NavBar from "@/components/nav";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+
 
 interface FirestoreDiscussion {
   id: string;
@@ -553,8 +557,21 @@ const FirestoreDiscussionComponent = () => {
   };
 
   return (
-    <Box style={{ marginLeft: "30px" }}>
-      <NavBar></NavBar>
+    <div>
+
+  <NavBar></NavBar>
+      <br></br>
+      <Breadcrumbs
+        separator={<NavigateNextIcon fontSize="small" />}
+        aria-label="breadcrumb"
+      >
+        <Link underline="hover" href="/">
+          Home
+        </Link>
+        <Typography color="text.primary">
+          Discussion
+        </Typography>
+      </Breadcrumbs>
       <Container>
         <br></br>
         <div
@@ -666,7 +683,8 @@ const FirestoreDiscussionComponent = () => {
           </Grid>
         </Grid>
       </Container>
-    </Box>
+    </div>
+
   );
 };
 
