@@ -328,7 +328,20 @@ export default function Profile() {
       <Box my={2} />
       <Container>
 
-        <div style={{ fontFamily: "Georgia", fontSize: "2.5rem", fontWeight: "bold", color: "#6fa5ff" }}>Profile</div>
+      <Box
+              my={3}
+              p={3}
+              // border={1}
+              // borderColor="grey.400"
+              // borderRadius={8}
+              textAlign="center"
+              style={{ width: "40%", margin: "auto" }}
+            >
+        <div style={{ fontFamily: "Georgia", fontSize: "2.5rem", fontWeight: "bold", color: '#2196f3' }}>My Profile</div>
+        </Box>
+        {/* <Typography variant="h4" gutterBottom style={{ fontWeight: '600' , color: '#2196f3'}}>
+        My Profile
+      </Typography> */}
         <Snackbar
           open={isSnackbarOpen}
           autoHideDuration={4000}
@@ -360,6 +373,7 @@ export default function Profile() {
                 }}
               />
             )}
+            <br />
             <Button
               variant="contained"
               color="primary"
@@ -372,7 +386,9 @@ export default function Profile() {
             >
               Change Profile Picture
             </Button>
+            <br />
           </div>
+
         ) : (
           <label style={circleButtonStyle}>
             <span>Upload a profile picture!</span>
@@ -397,41 +413,46 @@ export default function Profile() {
 
         {isTutor && (
           <>
-            {/* <div style = {{fontFamily: "Roboto", fontWeight: "bold", fontSize: "1.25rem", marginBottom: "0.5rem", marginTop: "1rem"}}> 
-          Tutor Status: 
-        </div> */}
-            <Typography variant="button" display="block" gutterBottom style={{ fontWeight: 'bold', fontSize: '1rem' }}>
-              Tutor Status:
-            </Typography>
+            <Box
+              my={3}
+              p={3}
+              border={1}
+              borderColor="grey.400"
+              // borderRadius={8}
+              textAlign="center"
+              style={{ width: "40%", margin: "auto" }}
+            >
 
-            {/* <div style = {{fontFamily: "Georgia", marginRight: "0.35rem"}}> 
-          Please only select "online" if you are currently
-          available to tutor.
-          </div>  */}
-            <Typography variant="caption" display="block" gutterBottom style={{ fontSize: '1rem' }}>
-              Please only select "online" if you are currently
-              available to tutor.
-            </Typography>
-            <FormControlLabel
-              value="online"
-              checked={isOnline}
-              onChange={() => {
-                setIsOnline(true);
-                handleOnlineStatusChange(true); // Call the function with true when Online is selected
-              }}
-              control={<Radio />}
-              label="Online"
-            />
-            <FormControlLabel
-              value="offline"
-              checked={!isOnline}
-              onChange={() => {
-                setIsOnline(false);
-                handleOnlineStatusChange(false); // Call the function with false when Offline is selected
-              }}
-              control={<Radio />}
-              label="Offline"
-            />
+              <Typography variant="button" display="block" gutterBottom style={{ fontWeight: 'bold', fontSize: '1rem' }}>
+                Tutor Status:
+              </Typography>
+
+
+              <Typography variant="caption" display="block" gutterBottom style={{ fontSize: '1rem' }}>
+                Please only select "online" if you are currently
+                available to tutor.
+              </Typography>
+              <FormControlLabel
+                value="online"
+                checked={isOnline}
+                onChange={() => {
+                  setIsOnline(true);
+                  handleOnlineStatusChange(true); // Call the function with true when Online is selected
+                }}
+                control={<Radio />}
+                label="Online"
+              />
+              <FormControlLabel
+                value="offline"
+                checked={!isOnline}
+                onChange={() => {
+                  setIsOnline(false);
+                  handleOnlineStatusChange(false); // Call the function with false when Offline is selected
+                }}
+                control={<Radio />}
+                label="Offline"
+              />
+            </Box>
             {/* <Typography variant="body1" gutterBottom>
             Your Status: {isOnline ? "Online" : "Offline"}
           </Typography> */}
@@ -439,9 +460,16 @@ export default function Profile() {
 
         )}
 
-
-        <Box my={3} />
-        <div style={{ fontFamily: "Georgia", fontWeight: "bold", fontSize: "1rem", marginBottom: "1rem" }}>
+        <Box
+          my={3}
+          p={3}
+          border={1}
+          borderColor="grey.400"
+          // borderRadius={8}
+          textAlign="center"
+          style={{ width: "40%", margin: "auto" }}
+        >
+          <Box my={3} />
           {/* Name: <span>  </span>
           <div style={{ fontWeight: "normal", marginBottom: "1rem", fontSize: "1rem" }}>
             <span>{name}</span>
@@ -461,26 +489,25 @@ export default function Profile() {
             <span style={{ fontWeight: 'bold' }}>Email:  </span>
             <span>{email}</span>
           </Typography>
+        </Box>
 
-        </div>
-        <Box my={1} />
+
+        {/* <Box my={1} /> */}
 
         {/* user can't edit their name and email through the edit buttion */}
 
         {isEditing ? (
           <>
-            {/*
-          <Typography variant="body1" gutterBottom>
-            Name:
-          </Typography>
-          <TextField
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            id="outlined-basic"
-            variant="outlined"
-      />*/}
-            <div style={{ fontFamily: "Georgia", fontWeight: "bold", fontSize: "1rem", marginBottom: "1rem" }}>
+            <Box
+              my={3}
+              p={3}
+              border={1}
+              borderColor="grey.400"
+              // borderRadius={8}
+              textAlign="center"
+              style={{ width: "40%", margin: "auto" }}
+            >
+              {/* <div style={{ fontFamily: "Georgia", fontWeight: "bold", fontSize: "1rem", marginBottom: "1rem" }}> */}
 
               <FormControl>
                 <RadioGroup
@@ -522,7 +549,8 @@ export default function Profile() {
               >
                 Save Changes
               </Button>
-            </div>
+              {/* </div> */}
+            </Box>
           </>
         ) : (
 
@@ -532,51 +560,99 @@ export default function Profile() {
               Year:
               <div style={{ fontWeight: "normal", marginBottom: "1rem", fontSize: "1rem" }}> <span>{" " + grade}   </span></div> */}
 
-              <Typography variant="button" gutterBottom style={{ fontSize: '1rem' }}>
-                <span style={{ fontWeight: 'bold' }}>Year:  </span>
-                <span>{grade}   </span>
-              </Typography>
+              <Box
+                my={3}
+                p={3}
+                border={1}
+                borderColor="grey.400"
+                // borderRadius={8}
+                textAlign="center"
+                style={{ width: "40%", margin: "auto" }}
+              >
+
+                <Typography variant="button" gutterBottom style={{ fontSize: '1rem' }}>
+                  <span style={{ fontWeight: 'bold' }}>Year:  </span>
+                  <span>{grade}   </span>
+                </Typography>
 
 
-              {/* <Box my={2} /> */}
-              <Button variant="contained" color="primary" onClick={handleEdit}>
-                Edit Year
-              </Button>
-              <Box my={1} />
+                {/* <Box my={2} /> */}
+                <Button variant="contained" color="primary" onClick={handleEdit}>
+                  Edit Year
+                </Button>
 
-              {/* Classes You&apos;ve Taken:
+              </Box>
+              {/* <Box my={1} /> */}
+
+              <Box
+                my={3}
+                p={3}
+                border={1}
+                borderColor="grey.400"
+                // borderRadius={8}
+                textAlign="center"
+                style={{ width: "40%", margin: "auto" }}
+              >
+
+                {/* Classes You&apos;ve Taken:
               <div style={{ fontWeight: "normal", marginBottom: "1rem", fontSize: "1rem" }}>
                 <span>{" " + takenClasses.join(", ")}</span>
               </div> */}
 
-              <Typography variant="button" display="block" gutterBottom style={{ fontSize: '1rem' }}>
-                <span style={{ fontWeight: 'bold' }}>Classes you've taken:  </span>
-                <span>{" " + takenClasses.join(", ")}</span>
-              </Typography>
+                <Typography variant="button" display="block" gutterBottom style={{ fontSize: '1rem' }}>
+                  <span style={{ fontWeight: 'bold' }}>Classes you've taken:  </span>
+                  <span>{" " + takenClasses.join(", ")}</span>
+                </Typography>
 
-              <Box my={1} />
+              </Box>
+
+              {/* <Box my={1} /> */}
 
               {/* Classes You&apos;re Tutoring:
               <div style={{ fontWeight: "normal", marginBottom: "1rem", fontSize: "1rem" }}>
                 <span>{" " + tutoredClasses.join(", ")}</span>
               </div> */}
 
-              <Typography variant="button" display="block" gutterBottom style={{ fontSize: '1rem' }}>
-                <span style={{ fontWeight: 'bold' }}>Classes you're tutoring:  </span>
-                <span>{" " + tutoredClasses.join(", ")}</span>
-              </Typography>
+              <Box
+                my={3}
+                p={3}
+                border={1}
+                borderColor="grey.400"
+                // borderRadius={8}
+                textAlign="center"
+                style={{ width: "40%", margin: "auto" }}
+              >
 
-              <Box my={1} />
+                <Typography variant="button" display="block" gutterBottom style={{ fontSize: '1rem' }}>
+                  <span style={{ fontWeight: 'bold' }}>Classes you're tutoring:  </span>
+                  <span>{" " + tutoredClasses.join(", ")}</span>
+                </Typography>
+
+              </Box>
+
+              {/* <Box my={1} /> */}
 
               {/* Your Favorite Tutors:
               <div style={{ fontWeight: "normal", marginBottom: "1rem", fontSize: "1rem" }}>
                 <span>{" " + favorite.join(", ")}</span>
               </div> */}
 
-              <Typography variant="button" display="block" gutterBottom style={{ fontSize: '1rem' }}>
-                <span style={{ fontWeight: 'bold' }}>Your Favorite Tutors: </span>
-                <span>{" " + favorite.join(", ")}</span>
-              </Typography>
+              <Box
+                my={3}
+                p={3}
+                border={1}
+                borderColor="grey.400"
+                // borderRadius={8}
+                textAlign="center"
+                style={{ width: "40%", margin: "auto" }}
+              >
+
+                <Typography variant="button" display="block" gutterBottom style={{ fontSize: '1rem' }}>
+                  <span style={{ fontWeight: 'bold' }}>Your Favorite Tutors: </span>
+                  <span>{" " + favorite.join(", ")}</span>
+                </Typography>
+
+              </Box>
 
 
             </div>
