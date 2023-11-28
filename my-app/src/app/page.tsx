@@ -4,7 +4,16 @@ import { useSession } from "next-auth/react";
 import getTutors from "./tutors";
 import TutorItem from "./tutorItem";
 import getClassNames from "./classes";
-import { Alert, Box, Button, Typography, TextField, Chip, Container, Grid } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  Typography,
+  TextField,
+  Chip,
+  Container,
+  Grid,
+} from "@mui/material";
 import Select from "react-select";
 
 import NavBar from "../../components/nav";
@@ -199,25 +208,33 @@ export default function Home() {
   return (
     <>
       <NavBar />
-      
-        {/* <Typography variant="body1" gutterBottom>
+
+      {/* <Typography variant="body1" gutterBottom>
         Welcome {session?.data?.user?.name}!
   </Typography>*/}
-        <br />
-        <br />
-        <div style ={{marginBottom: "30px",backgroundImage: "url('https://img.freepik.com/premium-vector/white-background-with-blue-technology-circuit_583398-369.jpg')"}}>
+      <br />
+      <br />
+      <div style={{ marginBottom: "30px" }}>
         <div style={{ marginLeft: "50px", marginRight: "50px" }}>
-          <div style={{ fontFamily: "system-ui", fontSize: "3rem", fontWeight: "bold", color: "#6fa5ff" }}>
+          <div
+            style={{
+              fontFamily: "system-ui",
+              fontSize: "3rem",
+              fontWeight: "bold",
+              color: "#6fa5ff",
+            }}
+          >
             Find a CS Tutor
-          </div>      <Typography variant="body1" gutterBottom>
-            Whether you're struggling with a particular class or looking to enhance
-            your understanding of a class, our platform is here to connect you with
-            experienced tutors who can help you succeed.
+          </div>{" "}
+          <Typography variant="body1" gutterBottom>
+            Whether you're struggling with a particular class or looking to
+            enhance your understanding of a class, our platform is here to
+            connect you with experienced tutors who can help you succeed.
           </Typography>
           <Typography variant="body1" gutterBottom>
-            Explore our diverse range of tutors. Filter by classes or find tutors
-            that are active right now to find the perfect tutor match to support
-            your learning journey.
+            Explore our diverse range of tutors. Filter by classes or find
+            tutors that are active right now to find the perfect tutor match to
+            support your learning journey.
           </Typography>
           <br />
           {showAlert && (
@@ -317,18 +334,18 @@ export default function Home() {
             ))}
           </div>
           <br></br>
-          </div>
-          </div>
-          <Container>
-          <Grid container spacing={2}>
-            {tutors.map((tutor) => (
-              <Grid item key={tutor.id} xs={12} sm={6} md={6} lg={6} xl={6}>
-                <TutorItem {...tutor} />
-              </Grid>
-            ))}
-          </Grid>
-          </Container>
-          <Box my={2} />
+        </div>
+      </div>
+      <Container>
+        <Grid container spacing={2}>
+          {tutors.map((tutor) => (
+            <Grid item key={tutor.id} xs={12} sm={6} md={6} lg={6} xl={6}>
+              <TutorItem {...tutor} />
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
+      <Box my={2} />
     </>
   );
 }
