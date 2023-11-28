@@ -308,7 +308,10 @@ export default function Home() {
             fontSize: "1.25rem",
           }}
         >
-          <div style={{ marginBottom: "0.35rem" }}> Filters:</div>
+          {/* <div style={{ marginBottom: "0.35rem" }}> Filters:</div> */}
+          <Typography variant="button" display="block" gutterBottom style={{ fontSize: '1.2rem'}}>
+        Filters
+      </Typography>
           <div style={{ display: "flex", alignItems: "center" }}>
             <Button
               variant={
@@ -352,7 +355,9 @@ export default function Home() {
             }}
           >
             <div style={{ marginRight: "20px" }}>
-              <div style={{ marginBottom: "0.35rem" }}>Select Class:</div>
+              <Typography variant="button" display="block" gutterBottom style={{ fontSize: '1.2rem'}}>
+        Select Class:
+      </Typography>
               <Select
                 value={{ label: selectedClass, value: selectedClass }}
                 onChange={(selectedOption) => {
@@ -379,7 +384,9 @@ export default function Home() {
               />
             </div>
             <div>
-              <div style={{ marginBottom: "0.35rem" }}>Search for a Tutor:</div>
+            <Typography variant="button" display="block" gutterBottom style={{ fontSize: '1.2rem'}}>
+        Search for a Tutor: 
+      </Typography>
               <TextField
                 variant="outlined"
                 value={searchQuery}
