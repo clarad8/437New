@@ -127,23 +127,24 @@ const Notification: React.FC<NotificationProps> = ({ isClicked, setIsVisible }) 
   
 
   // if user is not a tutor, don't show the notification box at all
-  // if (!isTutor || !isClicked) {
-  //   return null;
-  // }
-  // console.log(notifications.length);
-  if(!isClicked) {
+  if (!isTutor || !isClicked) {
     return null;
   }
+  
+  // console.log(notifications.length);
+  // if(!isClicked) {
+  //   return null;
+  // }
 
-  console.log(notifications.length);
-  if (isClicked && notifications.length === 0) {
-    console.log("this is error 1");
-    return (
-      <Alert severity="info" onClose={() => setIsVisible(false)}>
-        You don't have any notifications.
-      </Alert>
-    );
-  }
+  // console.log(notifications.length);
+  // if (isClicked && notifications.length === 0) {
+  //   console.log("this is error 1");
+  //   return (
+  //     <Alert severity="info" onClose={() => setIsVisible(false)}>
+  //       You don't have any notifications.
+  //     </Alert>
+  //   );
+  // }
 
   // console.log(isTutor);
   // if (isClicked && !isTutor) {
