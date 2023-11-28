@@ -4,6 +4,7 @@ import {
   addDoc,
   getDocs,
   doc,
+  setDoc,
   updateDoc,
   arrayUnion,
   getDoc,
@@ -43,6 +44,31 @@ interface FirestoreDiscussion {
   studentResponses?: string[];
   tutorResponses?: string[];
 }
+const addPostToMyPosts = async (userId: string | undefined, post: { type: string; visibility: string; title: string; content: string; timestamp: Date; }) => {
+  const myPostsCollection = collection(db, "myPosts");
+
+  try {
+    // Use the user's UID as the document name
+    const userDocRef = doc(myPostsCollection, userId);
+
+    // Get the current posts array or initialize it if it doesn't exist
+    const userDoc = await getDoc(userDocRef);
+    const currentPosts = userDoc.exists() ? userDoc.data().posts || [] : [];
+
+    // Update the posts array with the new post
+    const updatedPosts = [...currentPosts, post];
+
+    // Add or update the document in the "myPosts" collection
+    await setDoc(userDocRef, {
+      userId,
+      posts: updatedPosts,
+    });
+
+  } catch (error) {
+    console.error("Error adding post to myPosts collection:", error);
+  }
+};
+
 
 const FirestoreDiscussionComponent = () => {
   const [firestoreDiscussions, setFirestoreDiscussions] = useState<
@@ -57,9 +83,10 @@ const FirestoreDiscussionComponent = () => {
 
   const [pastPosts, setPastPosts] = useState<any[]>([]); // State to store past posts
   const [selectedClassPosts, setSelectedClassPosts] = useState<any[]>([]);
-  const [selectedPost, setSelectedPost] = useState<FirestoreDiscussion | null>(
-    null
-  );
+  const [selectedPost, setSelectedPost] = useState<FirestoreDiscussion | null>(null);
+  const [myPosts, setMyPosts] = useState<any[]>([]);
+
+
   const [isNewPostVisible, setNewPostVisibility] = useState(true);
 
   const [studentResponse, setStudentResponse] = useState("");
@@ -109,7 +136,8 @@ const FirestoreDiscussionComponent = () => {
         setSelectedClassPosts(
           initialSelectedClassData ? initialSelectedClassData.posts : []
         );
-      });
+      }
+      );
 
       return unsubscribe;
     };
@@ -121,6 +149,29 @@ const FirestoreDiscussionComponent = () => {
       unsubscribe(); // Cleanup the listener when the component unmounts
     };
   }, [selectedClass]); // Update selectedClassPosts when selectedClass changes
+  useEffect(() => {
+    const fetchMyPosts = async () => {
+      const currentUser = auth.currentUser;
+    
+      if (currentUser) {
+        const myPostsCollection = collection(db, "myPosts");
+        const userDocRef = doc(myPostsCollection, currentUser.uid);
+    
+        try {
+          const userDoc = await getDoc(userDocRef);
+    
+          if (userDoc.exists()) {
+            const userPosts = userDoc.data()?.posts || [];
+            setMyPosts(userPosts);
+          }
+        } catch (error) {
+          console.error("Error fetching myPosts:", error);
+        }
+      }
+    };    
+  
+    fetchMyPosts();
+  }, [selectedClass]);
 
   const handlePostClick = (post: FirestoreDiscussion) => {
     setSelectedPost(post);
@@ -398,11 +449,11 @@ const FirestoreDiscussionComponent = () => {
                 Submit Tutor's Response
               </Button>
             </div>
-            {/* Button to go back to posts */}
+          </Box>
+          {/* Button to go back to posts */}
           <Button variant="contained" color="primary" onClick={handleBackToPosts} style={{ marginTop: '30px' }}>
             Back to post a new discussion
           </Button>
-          </Box>
         </div>
       );
     }
@@ -563,6 +614,10 @@ const FirestoreDiscussionComponent = () => {
           posts: arrayUnion(postDetails),
         });
 
+        // Add the post to "myPosts" collection
+    await addPostToMyPosts(currentUser.uid, postDetails);
+
+
         // Reset input fields
         setNewDiscussion("");
         setPostTitle("");
@@ -594,6 +649,8 @@ const FirestoreDiscussionComponent = () => {
     setSelectedPost(null);
     setNewPostVisibility(true);
   };
+
+  
 
 
   return (
@@ -722,6 +779,38 @@ const FirestoreDiscussionComponent = () => {
               </Alert>
             </Snackbar>
           </Grid>
+          <Grid item xs={3}>
+  <div
+    style={{
+      fontFamily: "Georgia",
+      fontSize: "1.5rem",
+      marginTop: "20px",
+      fontWeight: "semi-bold",
+      marginBottom: "25px",
+      textDecoration: "underline",
+    }}
+  >
+    My Posts
+  </div>
+
+  {myPosts.map((post, idx) => (
+    <Box
+      key={idx}
+      style={{
+        border: "2px solid #2196f3",
+        marginBottom: 10,
+        padding: "10px",
+        borderRadius: "5px",
+        cursor: "pointer",
+        fontFamily: "Comic Sans MS",
+      }}
+      onClick={() => handlePostClick(post)}
+    >
+      <Chip label={post.title} style={{ margin: "5px" }} />
+    </Box>
+  ))}
+</Grid>
+
         </Grid>
       </Container>
     </div>
